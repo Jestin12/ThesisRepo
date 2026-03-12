@@ -1,0 +1,353 @@
+Timestamp,Data
+2025-10-22 11:13:26.336,XC3732 Dual Sensor Test (MMA8452Q)
+2025-10-22 11:13:26.347,XC3732 Sensor 1 (0x1C) initialized
+2025-10-22 11:13:26.358,XC3732 Sensor 2 (0x1D) initialized
+2025-10-22 11:13:26.370,Sensor 1 (0x1C) - X: 0.053 Y: 0.147 Z: 0.996 | Orientation: Portrait Up
+2025-10-22 11:13:26.382,Sensor 2 (0x1D) - X: -0.089 Y: -0.013 Z: 0.982 | Orientation: Flat
+2025-10-22 11:13:26.394,Sensor 1 (0x1C) - X: 0.059 Y: 0.145 Z: 1.000 | Orientation: Flat
+2025-10-22 11:13:26.406,Sensor 2 (0x1D) - X: -0.087 Y: -0.022 Z: 0.987 | Orientation: Flat
+2025-10-22 11:13:26.620,Sensor 1 (0x1C) - X: 0.059 Y: 0.147 Z: 1.001 | Orientation: Flat
+2025-10-22 11:13:26.661,Sensor 2 (0x1D) - X: -0.084 Y: -0.017 Z: 0.987 | Orientation: Flat
+2025-10-22 11:13:27.198,Sensor 1 (0x1C) - X: 0.061 Y: 0.145 Z: 1.004 | Orientation: Flat
+2025-10-22 11:13:27.239,Sensor 2 (0x1D) - X: -0.089 Y: -0.012 Z: 0.985 | Orientation: Flat
+2025-10-22 11:13:27.776,Sensor 1 (0x1C) - X: 0.057 Y: 0.144 Z: 0.997 | Orientation: Flat
+2025-10-22 11:13:27.817,Sensor 2 (0x1D) - X: -0.085 Y: -0.009 Z: 0.981 | Orientation: Flat
+2025-10-22 11:13:28.354,Sensor 1 (0x1C) - X: 0.063 Y: 0.146 Z: 1.000 | Orientation: Flat
+2025-10-22 11:13:28.395,Sensor 2 (0x1D) - X: -0.088 Y: -0.020 Z: 0.989 | Orientation: Flat
+2025-10-22 11:13:28.932,Sensor 1 (0x1C) - X: 0.063 Y: 0.143 Z: 1.001 | Orientation: Flat
+2025-10-22 11:13:28.974,Sensor 2 (0x1D) - X: -0.085 Y: -0.016 Z: 0.980 | Orientation: Flat
+2025-10-22 11:13:29.510,Sensor 1 (0x1C) - X: 0.059 Y: 0.144 Z: 1.001 | Orientation: Flat
+2025-10-22 11:13:29.552,Sensor 2 (0x1D) - X: -0.087 Y: -0.010 Z: 0.985 | Orientation: Flat
+2025-10-22 11:13:30.088,Sensor 1 (0x1C) - X: 0.060 Y: 0.146 Z: 0.998 | Orientation: Flat
+2025-10-22 11:13:30.130,Sensor 2 (0x1D) - X: -0.085 Y: -0.017 Z: 0.984 | Orientation: Flat
+2025-10-22 11:13:30.666,Sensor 1 (0x1C) - X: 0.060 Y: 0.146 Z: 1.000 | Orientation: Flat
+2025-10-22 11:13:30.708,Sensor 2 (0x1D) - X: -0.092 Y: -0.016 Z: 0.984 | Orientation: Flat
+2025-10-22 11:13:31.245,Sensor 1 (0x1C) - X: 0.057 Y: 0.146 Z: 1.004 | Orientation: Flat
+2025-10-22 11:13:31.286,Sensor 2 (0x1D) - X: -0.085 Y: -0.019 Z: 0.983 | Orientation: Flat
+2025-10-22 11:13:31.823,Sensor 1 (0x1C) - X: 0.058 Y: 0.147 Z: 1.002 | Orientation: Flat
+2025-10-22 11:13:31.864,Sensor 2 (0x1D) - X: -0.088 Y: -0.021 Z: 0.990 | Orientation: Flat
+2025-10-22 11:13:32.401,Sensor 1 (0x1C) - X: 0.059 Y: 0.163 Z: 0.938 | Orientation: Flat
+2025-10-22 11:13:32.442,Sensor 2 (0x1D) - X: -0.071 Y: -0.051 Z: 0.951 | Orientation: Flat
+2025-10-22 11:13:32.979,Sensor 1 (0x1C) - X: 0.063 Y: 0.149 Z: 1.003 | Orientation: Flat
+2025-10-22 11:13:33.020,Sensor 2 (0x1D) - X: -0.085 Y: -0.025 Z: 0.986 | Orientation: Flat
+2025-10-22 11:13:33.557,Sensor 1 (0x1C) - X: 0.062 Y: 0.145 Z: 0.995 | Orientation: Flat
+2025-10-22 11:13:33.598,Sensor 2 (0x1D) - X: -0.082 Y: -0.018 Z: 0.988 | Orientation: Flat
+2025-10-22 11:13:34.135,Sensor 1 (0x1C) - X: 0.064 Y: 0.149 Z: 1.001 | Orientation: Flat
+2025-10-22 11:13:34.177,Sensor 2 (0x1D) - X: -0.084 Y: -0.021 Z: 0.990 | Orientation: Flat
+2025-10-22 11:13:34.713,Sensor 1 (0x1C) - X: 0.063 Y: 0.146 Z: 0.993 | Orientation: Flat
+2025-10-22 11:13:34.754,Sensor 2 (0x1D) - X: -0.090 Y: -0.019 Z: 0.987 | Orientation: Flat
+2025-10-22 11:13:35.291,Sensor 1 (0x1C) - X: 0.059 Y: 0.145 Z: 0.992 | Orientation: Flat
+2025-10-22 11:13:35.332,Sensor 2 (0x1D) - X: -0.091 Y: -0.021 Z: 0.983 | Orientation: Flat
+2025-10-22 11:27:03.841,XC3732 Dual Sensor Test (MMA8452Q)
+2025-10-22 11:27:03.852,XC3732 Sensor 1 (0x1C) initialized
+2025-10-22 11:27:03.863,XC3732 Sensor 2 (0x1D) initialized
+2025-10-22 11:27:03.874,Sensor 1 (0x1C) - X: 0.573 Y: 0.914 Z: 0.446 | Orientation: Portrait Up
+2025-10-22 11:27:03.886,Sensor 2 (0x1D) - X: 0.114 Y: 0.755 Z: 1.177 | Orientation: Portrait Up
+2025-10-22 11:27:03.898,Sensor 1 (0x1C) - X: -0.339 Y: 0.057 Z: 1.035 | Orientation: Flat
+2025-10-22 11:27:03.909,Sensor 2 (0x1D) - X: -0.352 Y: 0.095 Z: 0.995 | Orientation: Flat
+2025-10-22 11:27:04.131,Sensor 1 (0x1C) - X: -0.115 Y: -0.023 Z: 0.966 | Orientation: Flat
+2025-10-22 11:27:04.173,Sensor 2 (0x1D) - X: -0.110 Y: 0.145 Z: 0.860 | Orientation: Flat
+2025-10-22 11:27:04.710,Sensor 1 (0x1C) - X: -0.136 Y: 0.291 Z: 1.019 | Orientation: Flat
+2025-10-22 11:27:04.752,Sensor 2 (0x1D) - X: -0.115 Y: 0.050 Z: 0.990 | Orientation: Flat
+2025-10-22 11:27:05.288,Sensor 1 (0x1C) - X: -0.139 Y: 0.329 Z: 0.961 | Orientation: Flat
+2025-10-22 11:27:05.331,Sensor 2 (0x1D) - X: -0.193 Y: -0.121 Z: 0.984 | Orientation: Flat
+2025-10-22 11:27:05.867,Sensor 1 (0x1C) - X: -0.092 Y: 0.376 Z: 1.013 | Orientation: Flat
+2025-10-22 11:27:05.910,Sensor 2 (0x1D) - X: -0.160 Y: -0.154 Z: 0.999 | Orientation: Flat
+2025-10-22 11:27:06.447,Sensor 1 (0x1C) - X: -0.165 Y: 0.327 Z: 0.924 | Orientation: Flat
+2025-10-22 11:27:06.499,Sensor 2 (0x1D) - X: -0.903 Y: 0.189 Z: 0.498 | Orientation: Landscape Left
+2025-10-22 11:27:07.035,Sensor 1 (0x1C) - X: -0.166 Y: 0.269 Z: 0.986 | Orientation: Flat
+2025-10-22 11:27:07.088,Sensor 2 (0x1D) - X: -0.989 Y: 0.236 Z: -0.033 | Orientation: Landscape Left
+2025-10-22 11:27:07.625,Sensor 1 (0x1C) - X: -0.112 Y: 0.306 Z: 0.968 | Orientation: Flat
+2025-10-22 11:27:07.677,Sensor 2 (0x1D) - X: -0.968 Y: 0.176 Z: -0.037 | Orientation: Landscape Left
+2025-10-22 11:27:08.214,Sensor 1 (0x1C) - X: -0.539 Y: 0.239 Z: 0.938 | Orientation: Flat
+2025-10-22 11:27:08.267,Sensor 2 (0x1D) - X: -0.970 Y: 0.330 Z: -0.249 | Orientation: Landscape Left
+2025-10-22 11:27:08.805,Sensor 1 (0x1C) - X: -0.983 Y: 0.231 Z: 0.299 | Orientation: Landscape Left
+2025-10-22 11:27:08.857,Sensor 2 (0x1D) - X: -0.062 Y: 0.384 Z: -0.967 | Orientation: Flat
+2025-10-22 11:27:09.394,Sensor 1 (0x1C) - X: -0.998 Y: 0.118 Z: 0.010 | Orientation: Landscape Left
+2025-10-22 11:27:09.445,Sensor 2 (0x1D) - X: 0.283 Y: 0.370 Z: -0.894 | Orientation: Flat
+2025-10-22 11:27:09.983,Sensor 1 (0x1C) - X: -0.981 Y: 0.104 Z: -0.036 | Orientation: Landscape Left
+2025-10-22 11:27:10.035,Sensor 2 (0x1D) - X: 0.286 Y: 0.341 Z: -0.874 | Orientation: Flat
+2025-10-22 11:27:10.572,Sensor 1 (0x1C) - X: -0.999 Y: 0.105 Z: -0.026 | Orientation: Landscape Left
+2025-10-22 11:27:10.624,Sensor 2 (0x1D) - X: 0.298 Y: 0.322 Z: -0.883 | Orientation: Flat
+2025-10-22 11:27:11.161,Sensor 1 (0x1C) - X: -0.991 Y: 0.106 Z: -0.053 | Orientation: Landscape Left
+2025-10-22 11:27:11.214,Sensor 2 (0x1D) - X: 0.286 Y: 0.328 Z: -0.895 | Orientation: Flat
+2025-10-22 11:27:11.752,Sensor 1 (0x1C) - X: -1.003 Y: 0.118 Z: -0.055 | Orientation: Landscape Left
+2025-10-22 11:27:11.804,Sensor 2 (0x1D) - X: 0.227 Y: 0.330 Z: -0.948 | Orientation: Flat
+2025-10-22 11:27:12.340,Sensor 1 (0x1C) - X: -0.294 Y: 0.387 Z: 0.857 | Orientation: Landscape Left
+2025-10-22 11:27:12.402,Sensor 2 (0x1D) - X: -0.858 Y: 0.523 Z: 0.069 | Orientation: Portrait Down
+2025-10-22 11:27:12.938,Sensor 1 (0x1C) - X: 0.085 Y: 0.318 Z: 0.982 | Orientation: Flat
+2025-10-22 11:27:12.989,Sensor 2 (0x1D) - X: -0.809 Y: 0.147 Z: 0.557 | Orientation: Landscape Left
+2025-10-22 11:27:13.526,Sensor 1 (0x1C) - X: 0.098 Y: 0.307 Z: 0.945 | Orientation: Flat
+2025-10-22 11:27:13.577,Sensor 2 (0x1D) - X: -0.765 Y: 0.061 Z: 0.557 | Orientation: Landscape Left
+2025-10-22 11:27:14.114,Sensor 1 (0x1C) - X: 0.125 Y: 0.331 Z: 0.926 | Orientation: Flat
+2025-10-22 11:27:14.164,Sensor 2 (0x1D) - X: -0.743 Y: 0.087 Z: 0.742 | Orientation: Landscape Left
+2025-10-22 11:27:14.701,Sensor 1 (0x1C) - X: -0.073 Y: 0.250 Z: 0.822 | Orientation: Flat
+2025-10-22 11:27:14.741,Sensor 2 (0x1D) - X: 0.005 Y: 0.074 Z: 0.926 | Orientation: Flat
+2025-10-22 11:27:15.278,Sensor 1 (0x1C) - X: -0.016 Y: 0.255 Z: 0.854 | Orientation: Flat
+2025-10-22 11:27:15.319,Sensor 2 (0x1D) - X: -0.708 Y: 0.380 Z: 0.551 | Orientation: Flat
+2025-10-22 11:27:15.856,Sensor 1 (0x1C) - X: -0.147 Y: 0.227 Z: 1.023 | Orientation: Flat
+2025-10-22 11:27:15.908,Sensor 2 (0x1D) - X: -0.117 Y: 0.320 Z: 0.706 | Orientation: Landscape Left
+2025-10-22 11:27:16.445,Sensor 1 (0x1C) - X: 0.012 Y: 0.313 Z: 1.003 | Orientation: Flat
+2025-10-22 11:27:16.496,Sensor 2 (0x1D) - X: -0.568 Y: 0.317 Z: 0.934 | Orientation: Landscape Left
+2025-10-22 11:27:17.032,Sensor 1 (0x1C) - X: 0.306 Y: 0.836 Z: 0.341 | Orientation: Portrait Down
+2025-10-22 11:27:17.091,Sensor 2 (0x1D) - X: 0.051 Y: 0.731 Z: 0.600 | Orientation: Portrait Down
+2025-10-22 11:27:17.627,Sensor 1 (0x1C) - X: 0.105 Y: -2.000 Z: -1.905 | Orientation: Portrait Down
+2025-10-22 11:27:17.692,Sensor 2 (0x1D) - X: -0.538 Y: -0.664 Z: -2.000 | Orientation: Portrait Down
+2025-10-22 11:27:18.228,Sensor 1 (0x1C) - X: -0.818 Y: -2.000 Z: -0.942 | Orientation: Portrait Down
+2025-10-22 11:27:18.293,Sensor 2 (0x1D) - X: -2.000 Y: -2.000 Z: -2.000 | Orientation: Portrait Down
+2025-10-22 11:27:18.829,Sensor 1 (0x1C) - X: -2.000 Y: -0.010 Z: -0.193 | Orientation: Portrait Down
+2025-10-22 11:27:18.893,Sensor 2 (0x1D) - X: -2.000 Y: 0.582 Z: -0.361 | Orientation: Portrait Down
+2025-10-22 11:27:19.429,Sensor 1 (0x1C) - X: -2.000 Y: 0.330 Z: 1.999 | Orientation: Portrait Down
+2025-10-22 11:27:19.490,Sensor 2 (0x1D) - X: -2.000 Y: 1.750 Z: 1.884 | Orientation: Portrait Down
+2025-10-22 11:27:20.026,Sensor 1 (0x1C) - X: -2.000 Y: -1.083 Z: -1.371 | Orientation: Portrait Down
+2025-10-22 11:27:20.091,Sensor 2 (0x1D) - X: -2.000 Y: -2.000 Z: -2.000 | Orientation: Portrait Down
+2025-10-22 11:27:20.627,Sensor 1 (0x1C) - X: -2.000 Y: 0.691 Z: 1.999 | Orientation: Portrait Down
+2025-10-22 11:27:20.687,Sensor 2 (0x1D) - X: -2.000 Y: 1.571 Z: 1.611 | Orientation: Portrait Down
+2025-10-22 11:27:21.224,Sensor 1 (0x1C) - X: -0.148 Y: -0.104 Z: 1.176 | Orientation: Flat
+2025-10-22 11:27:21.265,Sensor 2 (0x1D) - X: 0.023 Y: 0.112 Z: 1.318 | Orientation: Flat
+2025-10-22 11:27:21.802,Sensor 1 (0x1C) - X: -0.148 Y: -0.227 Z: 0.933 | Orientation: Flat
+2025-10-22 11:27:21.845,Sensor 2 (0x1D) - X: -0.183 Y: -0.022 Z: 0.921 | Orientation: Flat
+2025-10-22 11:27:22.382,Sensor 1 (0x1C) - X: 0.037 Y: 0.496 Z: 0.739 | Orientation: Portrait Down
+2025-10-22 11:27:22.441,Sensor 2 (0x1D) - X: -0.079 Y: 0.180 Z: 0.463 | Orientation: Portrait Down
+2025-10-22 11:27:22.978,Sensor 1 (0x1C) - X: 0.259 Y: 0.520 Z: 0.796 | Orientation: Portrait Down
+2025-10-22 11:27:23.036,Sensor 2 (0x1D) - X: 0.029 Y: 0.666 Z: 0.608 | Orientation: Portrait Down
+2025-10-22 11:27:23.573,Sensor 1 (0x1C) - X: 0.467 Y: 0.675 Z: 0.447 | Orientation: Portrait Down
+2025-10-22 11:27:23.632,Sensor 2 (0x1D) - X: 0.537 Y: 0.790 Z: -0.054 | Orientation: Portrait Down
+2025-10-22 11:27:24.169,Sensor 1 (0x1C) - X: 0.501 Y: 0.634 Z: 0.583 | Orientation: Portrait Down
+2025-10-22 11:27:24.227,Sensor 2 (0x1D) - X: 0.176 Y: 0.652 Z: 0.711 | Orientation: Portrait Down
+2025-10-22 11:27:24.764,Sensor 1 (0x1C) - X: 0.117 Y: -0.454 Z: -1.366 | Orientation: Portrait Down
+2025-10-22 11:27:24.827,Sensor 2 (0x1D) - X: -0.375 Y: -0.312 Z: -1.756 | Orientation: Portrait Down
+2025-10-22 11:27:25.364,Sensor 1 (0x1C) - X: -0.858 Y: 0.746 Z: -0.574 | Orientation: Portrait Down
+2025-10-22 11:27:25.425,Sensor 2 (0x1D) - X: -1.752 Y: 0.331 Z: 0.374 | Orientation: Portrait Down
+2025-10-22 11:27:25.962,Sensor 1 (0x1C) - X: 0.363 Y: 0.925 Z: 1.898 | Orientation: Portrait Down
+2025-10-22 11:27:26.020,Sensor 2 (0x1D) - X: 0.104 Y: 0.397 Z: 1.999 | Orientation: Portrait Down
+2025-10-22 11:27:26.557,Sensor 1 (0x1C) - X: -0.955 Y: -0.711 Z: -0.564 | Orientation: Portrait Down
+2025-10-22 11:27:26.621,Sensor 2 (0x1D) - X: -1.728 Y: -0.978 Z: -1.600 | Orientation: Portrait Down
+2025-10-22 11:27:27.158,Sensor 1 (0x1C) - X: -0.353 Y: -0.769 Z: -2.000 | Orientation: Portrait Down
+2025-10-22 11:27:27.221,Sensor 2 (0x1D) - X: -1.174 Y: 0.358 Z: -0.321 | Orientation: Portrait Down
+2025-10-22 11:27:27.758,Sensor 1 (0x1C) - X: -1.050 Y: 0.935 Z: -0.691 | Orientation: Portrait Down
+2025-10-22 11:27:27.820,Sensor 2 (0x1D) - X: -1.956 Y: 1.217 Z: 0.347 | Orientation: Portrait Down
+2025-10-22 11:27:28.356,Sensor 1 (0x1C) - X: -0.300 Y: 0.785 Z: -0.166 | Orientation: Portrait Down
+2025-10-22 11:27:28.417,Sensor 2 (0x1D) - X: -1.081 Y: 0.645 Z: 0.277 | Orientation: Portrait Down
+2025-10-22 11:27:28.954,Sensor 1 (0x1C) - X: -0.673 Y: 0.606 Z: 1.905 | Orientation: Portrait Down
+2025-10-22 11:27:29.005,Sensor 2 (0x1D) - X: -1.116 Y: 0.239 Z: 1.999 | Orientation: Flat
+2025-10-22 11:27:29.541,Sensor 1 (0x1C) - X: -0.278 Y: 0.383 Z: 1.790 | Orientation: Portrait Up
+2025-10-22 11:27:29.591,Sensor 2 (0x1D) - X: -0.028 Y: -0.245 Z: 1.999 | Orientation: Flat
+2025-10-22 11:27:30.128,Sensor 1 (0x1C) - X: 0.089 Y: 0.433 Z: 0.983 | Orientation: Flat
+2025-10-22 11:27:30.168,Sensor 2 (0x1D) - X: -0.661 Y: 0.453 Z: 1.268 | Orientation: Flat
+2025-10-22 11:27:30.705,Sensor 1 (0x1C) - X: 0.481 Y: 0.433 Z: 1.546 | Orientation: Flat
+2025-10-22 11:27:30.745,Sensor 2 (0x1D) - X: 0.440 Y: -0.116 Z: 1.999 | Orientation: Flat
+2025-10-22 11:27:31.282,Sensor 1 (0x1C) - X: 0.400 Y: -0.357 Z: -0.936 | Orientation: Portrait Up
+2025-10-22 11:27:31.333,Sensor 2 (0x1D) - X: 0.301 Y: -0.264 Z: -1.065 | Orientation: Flat
+2025-10-22 11:27:31.870,Sensor 1 (0x1C) - X: 0.989 Y: 0.138 Z: -0.067 | Orientation: Landscape Right
+2025-10-22 11:27:31.935,Sensor 2 (0x1D) - X: 0.961 Y: 0.169 Z: -0.221 | Orientation: Landscape Right
+2025-10-22 11:27:32.470,Sensor 1 (0x1C) - X: 0.957 Y: 0.144 Z: 0.013 | Orientation: Landscape Right
+2025-10-22 11:27:32.534,Sensor 2 (0x1D) - X: 0.967 Y: 0.181 Z: -0.097 | Orientation: Landscape Right
+2025-10-22 11:27:33.071,Sensor 1 (0x1C) - X: 0.972 Y: 0.140 Z: -0.025 | Orientation: Landscape Right
+2025-10-22 11:27:33.135,Sensor 2 (0x1D) - X: 0.966 Y: 0.177 Z: -0.133 | Orientation: Landscape Right
+2025-10-22 11:27:33.672,Sensor 1 (0x1C) - X: 0.961 Y: 0.136 Z: -0.017 | Orientation: Landscape Right
+2025-10-22 11:27:33.736,Sensor 2 (0x1D) - X: 0.946 Y: 0.155 Z: -0.146 | Orientation: Landscape Right
+2025-10-22 11:27:34.273,Sensor 1 (0x1C) - X: 0.969 Y: 0.136 Z: -0.016 | Orientation: Landscape Right
+2025-10-22 11:27:34.338,Sensor 2 (0x1D) - X: 0.944 Y: 0.146 Z: -0.139 | Orientation: Landscape Right
+2025-10-22 11:27:34.874,Sensor 1 (0x1C) - X: 0.801 Y: 0.008 Z: 0.155 | Orientation: Landscape Right
+2025-10-22 11:27:34.938,Sensor 2 (0x1D) - X: 0.998 Y: 0.002 Z: 0.034 | Orientation: Landscape Right
+2025-10-22 11:27:35.473,Sensor 1 (0x1C) - X: -0.021 Y: 0.163 Z: 0.973 | Orientation: Flat
+2025-10-22 11:27:35.514,Sensor 2 (0x1D) - X: 0.110 Y: -0.097 Z: 0.957 | Orientation: Flat
+2025-10-22 11:27:36.051,Sensor 1 (0x1C) - X: -0.268 Y: 0.110 Z: 0.982 | Orientation: Flat
+2025-10-22 11:27:36.093,Sensor 2 (0x1D) - X: -0.121 Y: -0.154 Z: 0.942 | Orientation: Flat
+2025-10-22 11:27:36.630,Sensor 1 (0x1C) - X: -0.411 Y: 0.032 Z: 0.921 | Orientation: Flat
+2025-10-22 11:27:36.673,Sensor 2 (0x1D) - X: -0.266 Y: -0.266 Z: 0.964 | Orientation: Flat
+2025-10-22 11:27:37.209,Sensor 1 (0x1C) - X: 0.094 Y: 0.346 Z: 0.871 | Orientation: Flat
+2025-10-22 11:27:37.249,Sensor 2 (0x1D) - X: 0.186 Y: 0.166 Z: 0.895 | Orientation: Flat
+2025-10-22 11:27:37.785,Sensor 1 (0x1C) - X: 0.202 Y: 0.063 Z: 1.215 | Orientation: Flat
+2025-10-22 11:27:37.826,Sensor 2 (0x1D) - X: 0.162 Y: -0.171 Z: 1.059 | Orientation: Flat
+2025-10-22 11:27:38.363,Sensor 1 (0x1C) - X: 0.590 Y: -0.354 Z: 0.492 | Orientation: Landscape Right
+2025-10-22 11:27:38.414,Sensor 2 (0x1D) - X: 0.547 Y: 0.065 Z: 0.678 | Orientation: Flat
+2025-10-22 11:27:38.951,Sensor 1 (0x1C) - X: 0.339 Y: 0.069 Z: 1.002 | Orientation: Flat
+2025-10-22 11:27:38.991,Sensor 2 (0x1D) - X: 0.259 Y: -0.032 Z: 1.030 | Orientation: Flat
+2025-10-22 11:27:39.528,Sensor 1 (0x1C) - X: 0.148 Y: 0.114 Z: 1.128 | Orientation: Flat
+2025-10-22 11:27:39.568,Sensor 2 (0x1D) - X: 0.094 Y: -0.064 Z: 1.076 | Orientation: Flat
+2025-10-22 11:27:40.105,Sensor 1 (0x1C) - X: 0.155 Y: 0.199 Z: 1.028 | Orientation: Flat
+2025-10-22 11:27:40.146,Sensor 2 (0x1D) - X: -0.010 Y: 0.043 Z: 1.025 | Orientation: Flat
+2025-10-22 11:30:40.129,XC3732 Dual Sensor Test (MMA8452Q)
+2025-10-22 11:30:40.140,XC3732 Sensor 1 (0x1C) initialized
+2025-10-22 11:30:40.151,XC3732 Sensor 2 (0x1D) initialized
+2025-10-22 11:30:40.163,Sensor 1 (0x1C) - X: -0.140 Y: 0.020 Z: 0.997 | Orientation: Portrait Up
+2025-10-22 11:30:40.175,Sensor 2 (0x1D) - X: -0.197 Y: 0.169 Z: 0.960 | Orientation: Flat
+2025-10-22 11:30:40.187,Sensor 1 (0x1C) - X: -0.141 Y: 0.018 Z: 1.005 | Orientation: Flat
+2025-10-22 11:30:40.198,Sensor 2 (0x1D) - X: -0.198 Y: 0.164 Z: 0.962 | Orientation: Flat
+2025-10-22 11:30:40.414,Sensor 1 (0x1C) - X: -0.138 Y: 0.017 Z: 0.996 | Orientation: Flat
+2025-10-22 11:30:40.455,Sensor 2 (0x1D) - X: -0.198 Y: 0.167 Z: 0.958 | Orientation: Flat
+2025-10-22 11:30:40.992,Sensor 1 (0x1C) - X: -0.142 Y: 0.018 Z: 1.005 | Orientation: Flat
+2025-10-22 11:30:41.033,Sensor 2 (0x1D) - X: -0.197 Y: 0.166 Z: 0.960 | Orientation: Flat
+2025-10-22 11:30:41.570,Sensor 1 (0x1C) - X: -0.139 Y: 0.013 Z: 1.001 | Orientation: Flat
+2025-10-22 11:30:41.611,Sensor 2 (0x1D) - X: -0.196 Y: 0.164 Z: 0.963 | Orientation: Flat
+2025-10-22 11:30:42.148,Sensor 1 (0x1C) - X: -0.141 Y: 0.021 Z: 1.001 | Orientation: Flat
+2025-10-22 11:30:42.190,Sensor 2 (0x1D) - X: -0.198 Y: 0.164 Z: 0.960 | Orientation: Flat
+2025-10-22 11:30:42.727,Sensor 1 (0x1C) - X: -0.141 Y: 0.018 Z: 0.999 | Orientation: Flat
+2025-10-22 11:30:42.768,Sensor 2 (0x1D) - X: -0.200 Y: 0.168 Z: 0.959 | Orientation: Flat
+2025-10-22 11:30:43.305,Sensor 1 (0x1C) - X: -0.140 Y: 0.021 Z: 0.996 | Orientation: Flat
+2025-10-22 11:30:43.346,Sensor 2 (0x1D) - X: -0.198 Y: 0.167 Z: 0.960 | Orientation: Flat
+2025-10-22 11:30:43.883,Sensor 1 (0x1C) - X: -0.138 Y: 0.019 Z: 1.002 | Orientation: Flat
+2025-10-22 11:30:43.924,Sensor 2 (0x1D) - X: -0.197 Y: 0.166 Z: 0.965 | Orientation: Flat
+2025-10-22 11:30:44.461,Sensor 1 (0x1C) - X: -0.140 Y: 0.021 Z: 1.000 | Orientation: Flat
+2025-10-22 11:30:44.502,Sensor 2 (0x1D) - X: -0.197 Y: 0.166 Z: 0.967 | Orientation: Flat
+2025-10-22 11:30:45.039,Sensor 1 (0x1C) - X: -0.134 Y: 0.020 Z: 1.002 | Orientation: Flat
+2025-10-22 11:30:45.080,Sensor 2 (0x1D) - X: -0.203 Y: 0.162 Z: 0.959 | Orientation: Flat
+2025-10-22 11:30:45.617,Sensor 1 (0x1C) - X: 0.076 Y: -0.136 Z: 1.485 | Orientation: Flat
+2025-10-22 11:30:45.658,Sensor 2 (0x1D) - X: -0.215 Y: 0.048 Z: 1.549 | Orientation: Flat
+2025-10-22 11:30:46.195,Sensor 1 (0x1C) - X: 0.982 Y: 0.212 Z: -0.187 | Orientation: Landscape Right
+2025-10-22 11:30:46.260,Sensor 2 (0x1D) - X: 0.947 Y: 0.396 Z: -0.264 | Orientation: Landscape Right
+2025-10-22 11:30:46.797,Sensor 1 (0x1C) - X: 0.958 Y: 0.094 Z: -0.109 | Orientation: Landscape Right
+2025-10-22 11:30:46.861,Sensor 2 (0x1D) - X: 0.936 Y: 0.185 Z: -0.146 | Orientation: Landscape Right
+2025-10-22 11:30:47.397,Sensor 1 (0x1C) - X: 0.951 Y: 0.061 Z: -0.148 | Orientation: Landscape Right
+2025-10-22 11:30:47.463,Sensor 2 (0x1D) - X: 0.939 Y: 0.185 Z: -0.190 | Orientation: Landscape Right
+2025-10-22 11:30:47.999,Sensor 1 (0x1C) - X: 0.967 Y: 0.068 Z: -0.137 | Orientation: Landscape Right
+2025-10-22 11:30:48.063,Sensor 2 (0x1D) - X: 0.943 Y: 0.189 Z: -0.197 | Orientation: Landscape Right
+2025-10-22 11:30:48.600,Sensor 1 (0x1C) - X: 0.950 Y: 0.071 Z: -0.137 | Orientation: Landscape Right
+2025-10-22 11:30:48.665,Sensor 2 (0x1D) - X: 0.922 Y: 0.203 Z: -0.240 | Orientation: Landscape Right
+2025-10-22 11:30:49.201,Sensor 1 (0x1C) - X: -0.330 Y: -0.149 Z: 0.951 | Orientation: Flat
+2025-10-22 11:30:49.244,Sensor 2 (0x1D) - X: -0.226 Y: -0.032 Z: 0.958 | Orientation: Flat
+2025-10-22 11:30:49.781,Sensor 1 (0x1C) - X: -0.243 Y: -0.124 Z: 1.000 | Orientation: Flat
+2025-10-22 11:30:49.823,Sensor 2 (0x1D) - X: -0.135 Y: 0.058 Z: 0.953 | Orientation: Flat
+2025-10-22 11:30:50.360,Sensor 1 (0x1C) - X: -0.350 Y: -0.128 Z: 0.855 | Orientation: Flat
+2025-10-22 11:30:50.402,Sensor 2 (0x1D) - X: -0.267 Y: 0.462 Z: 0.813 | Orientation: Flat
+2025-10-22 11:30:50.939,Sensor 1 (0x1C) - X: -0.119 Y: -0.237 Z: 0.898 | Orientation: Flat
+2025-10-22 11:30:50.982,Sensor 2 (0x1D) - X: -0.111 Y: 0.041 Z: 0.952 | Orientation: Flat
+2025-10-22 11:30:51.519,Sensor 1 (0x1C) - X: -0.013 Y: 0.042 Z: 0.855 | Orientation: Flat
+2025-10-22 11:30:51.570,Sensor 2 (0x1D) - X: -0.824 Y: 0.097 Z: 0.138 | Orientation: Landscape Left
+2025-10-22 11:30:52.107,Sensor 1 (0x1C) - X: -0.025 Y: 0.090 Z: 1.028 | Orientation: Flat
+2025-10-22 11:30:52.159,Sensor 2 (0x1D) - X: -0.931 Y: 0.105 Z: 0.120 | Orientation: Landscape Left
+2025-10-22 11:30:52.696,Sensor 1 (0x1C) - X: -0.081 Y: 0.114 Z: 0.986 | Orientation: Flat
+2025-10-22 11:30:52.747,Sensor 2 (0x1D) - X: -0.945 Y: 0.068 Z: 0.160 | Orientation: Landscape Left
+2025-10-22 11:30:53.284,Sensor 1 (0x1C) - X: -0.084 Y: 0.100 Z: 1.011 | Orientation: Flat
+2025-10-22 11:30:53.336,Sensor 2 (0x1D) - X: -1.002 Y: 0.104 Z: 0.112 | Orientation: Landscape Left
+2025-10-22 11:30:53.873,Sensor 1 (0x1C) - X: 0.068 Y: 0.085 Z: 1.019 | Orientation: Flat
+2025-10-22 11:30:53.914,Sensor 2 (0x1D) - X: -0.428 Y: -0.057 Z: 0.946 | Orientation: Flat
+2025-10-22 11:30:54.451,Sensor 1 (0x1C) - X: 0.080 Y: 0.088 Z: 0.997 | Orientation: Flat
+2025-10-22 11:30:54.492,Sensor 2 (0x1D) - X: -0.325 Y: -0.049 Z: 0.924 | Orientation: Flat
+2025-10-22 11:30:55.029,Sensor 1 (0x1C) - X: 0.020 Y: 0.113 Z: 0.902 | Orientation: Flat
+2025-10-22 11:30:55.069,Sensor 2 (0x1D) - X: -0.253 Y: 0.003 Z: 0.744 | Orientation: Flat
+2025-10-22 11:30:55.606,Sensor 1 (0x1C) - X: 0.084 Y: 0.122 Z: 1.001 | Orientation: Flat
+2025-10-22 11:30:55.646,Sensor 2 (0x1D) - X: -0.014 Y: 0.238 Z: 1.082 | Orientation: Flat
+2025-10-22 11:30:56.183,Sensor 1 (0x1C) - X: -0.224 Y: 0.181 Z: 0.655 | Orientation: Flat
+2025-10-22 11:30:56.225,Sensor 2 (0x1D) - X: -0.354 Y: 0.223 Z: -0.065 | Orientation: Flat
+2025-10-22 11:30:56.762,Sensor 1 (0x1C) - X: -0.219 Y: -0.104 Z: 0.966 | Orientation: Flat
+2025-10-22 11:30:56.805,Sensor 2 (0x1D) - X: -0.347 Y: -0.007 Z: 0.932 | Orientation: Flat
+2025-10-22 11:31:04.739,XC3732 Dual Sensor Test (MMA8452Q)
+2025-10-22 11:31:04.753,XC3732 Sensor 1 (0x1C) initialized
+2025-10-22 11:31:04.764,XC3732 Sensor 2 (0x1D) initialized
+2025-10-22 11:31:04.776,Sensor 1 (0x1C) - X: 0.912 Y: 0.005 Z: 0.271 | Orientation: Portrait Up
+2025-10-22 11:31:04.787,Sensor 2 (0x1D) - X: 0.951 Y: 0.124 Z: -0.138 | Orientation: Landscape Right
+2025-10-22 11:31:04.799,Sensor 1 (0x1C) - X: 0.924 Y: 0.002 Z: 0.287 | Orientation: Landscape Right
+2025-10-22 11:31:04.811,Sensor 2 (0x1D) - X: 0.955 Y: 0.128 Z: -0.120 | Orientation: Landscape Right
+2025-10-22 11:31:05.053,Sensor 1 (0x1C) - X: 0.924 Y: 0.026 Z: 0.287 | Orientation: Landscape Right
+2025-10-22 11:31:05.116,Sensor 2 (0x1D) - X: 0.972 Y: 0.157 Z: -0.119 | Orientation: Landscape Right
+2025-10-22 11:31:05.653,Sensor 1 (0x1C) - X: 0.932 Y: 0.042 Z: 0.289 | Orientation: Landscape Right
+2025-10-22 11:31:05.716,Sensor 2 (0x1D) - X: 0.960 Y: 0.137 Z: -0.129 | Orientation: Landscape Right
+2025-10-22 11:31:06.253,Sensor 1 (0x1C) - X: 0.928 Y: 0.048 Z: 0.295 | Orientation: Landscape Right
+2025-10-22 11:31:06.316,Sensor 2 (0x1D) - X: 0.959 Y: 0.150 Z: -0.116 | Orientation: Landscape Right
+2025-10-22 11:31:06.853,Sensor 1 (0x1C) - X: 0.931 Y: 0.059 Z: 0.312 | Orientation: Landscape Right
+2025-10-22 11:31:06.917,Sensor 2 (0x1D) - X: 0.933 Y: 0.170 Z: -0.105 | Orientation: Landscape Right
+2025-10-22 11:31:07.453,Sensor 1 (0x1C) - X: 0.930 Y: 0.074 Z: 0.297 | Orientation: Landscape Right
+2025-10-22 11:31:07.518,Sensor 2 (0x1D) - X: 0.948 Y: 0.176 Z: -0.115 | Orientation: Landscape Right
+2025-10-22 11:31:08.054,Sensor 1 (0x1C) - X: 0.929 Y: 0.064 Z: 0.304 | Orientation: Landscape Right
+2025-10-22 11:31:08.118,Sensor 2 (0x1D) - X: 0.948 Y: 0.166 Z: -0.110 | Orientation: Landscape Right
+2025-10-22 11:31:08.653,Sensor 1 (0x1C) - X: 0.928 Y: 0.037 Z: 0.312 | Orientation: Landscape Right
+2025-10-22 11:31:08.717,Sensor 2 (0x1D) - X: 0.957 Y: 0.161 Z: -0.109 | Orientation: Landscape Right
+2025-10-22 11:31:09.254,Sensor 1 (0x1C) - X: 0.921 Y: 0.018 Z: 0.293 | Orientation: Landscape Right
+2025-10-22 11:31:09.317,Sensor 2 (0x1D) - X: 0.946 Y: 0.149 Z: -0.114 | Orientation: Landscape Right
+2025-10-22 11:31:09.854,Sensor 1 (0x1C) - X: 0.944 Y: 0.050 Z: 0.317 | Orientation: Landscape Right
+2025-10-22 11:31:09.917,Sensor 2 (0x1D) - X: 0.955 Y: 0.131 Z: -0.116 | Orientation: Landscape Right
+2025-10-22 11:31:10.454,Sensor 1 (0x1C) - X: 0.920 Y: 0.048 Z: 0.303 | Orientation: Landscape Right
+2025-10-22 11:31:10.517,Sensor 2 (0x1D) - X: 0.947 Y: 0.156 Z: -0.116 | Orientation: Landscape Right
+2025-10-22 11:31:11.054,Sensor 1 (0x1C) - X: 0.920 Y: 0.052 Z: 0.301 | Orientation: Landscape Right
+2025-10-22 11:31:11.118,Sensor 2 (0x1D) - X: 0.949 Y: 0.159 Z: -0.116 | Orientation: Landscape Right
+2025-10-22 11:31:11.655,Sensor 1 (0x1C) - X: 0.920 Y: 0.060 Z: 0.317 | Orientation: Landscape Right
+2025-10-22 11:31:11.718,Sensor 2 (0x1D) - X: 0.948 Y: 0.161 Z: -0.103 | Orientation: Landscape Right
+2025-10-22 11:31:12.255,Sensor 1 (0x1C) - X: 0.925 Y: 0.013 Z: 0.309 | Orientation: Landscape Right
+2025-10-22 11:31:12.318,Sensor 2 (0x1D) - X: 0.958 Y: 0.146 Z: -0.100 | Orientation: Landscape Right
+2025-10-22 11:31:12.854,Sensor 1 (0x1C) - X: 0.945 Y: 0.066 Z: 0.305 | Orientation: Landscape Right
+2025-10-22 11:31:12.918,Sensor 2 (0x1D) - X: 0.955 Y: 0.183 Z: -0.123 | Orientation: Landscape Right
+2025-10-22 11:31:13.455,Sensor 1 (0x1C) - X: 0.927 Y: 0.079 Z: 0.299 | Orientation: Landscape Right
+2025-10-22 11:31:13.518,Sensor 2 (0x1D) - X: 0.944 Y: 0.174 Z: -0.104 | Orientation: Landscape Right
+2025-10-22 11:31:14.055,Sensor 1 (0x1C) - X: 0.904 Y: 0.054 Z: 0.321 | Orientation: Landscape Right
+2025-10-22 11:31:14.118,Sensor 2 (0x1D) - X: 0.948 Y: 0.167 Z: -0.096 | Orientation: Landscape Right
+2025-10-22 11:31:14.654,Sensor 1 (0x1C) - X: 0.948 Y: 0.034 Z: 0.340 | Orientation: Landscape Right
+2025-10-22 11:31:14.718,Sensor 2 (0x1D) - X: 0.981 Y: 0.126 Z: -0.074 | Orientation: Landscape Right
+2025-10-22 11:31:15.255,Sensor 1 (0x1C) - X: 0.891 Y: 0.137 Z: 0.378 | Orientation: Landscape Right
+2025-10-22 11:31:15.317,Sensor 2 (0x1D) - X: 0.963 Y: 0.140 Z: 0.096 | Orientation: Landscape Right
+2025-10-22 11:31:15.854,Sensor 1 (0x1C) - X: 0.929 Y: 0.156 Z: 0.312 | Orientation: Landscape Right
+2025-10-22 11:31:15.916,Sensor 2 (0x1D) - X: 0.501 Y: 0.216 Z: 0.660 | Orientation: Landscape Right
+2025-10-22 11:31:16.453,Sensor 1 (0x1C) - X: 0.907 Y: 0.148 Z: 0.303 | Orientation: Landscape Right
+2025-10-22 11:31:16.504,Sensor 2 (0x1D) - X: -0.104 Y: 0.146 Z: 1.007 | Orientation: Flat
+2025-10-22 11:31:17.042,Sensor 1 (0x1C) - X: 0.907 Y: 0.137 Z: 0.292 | Orientation: Landscape Right
+2025-10-22 11:31:17.093,Sensor 2 (0x1D) - X: -0.190 Y: 0.090 Z: 0.982 | Orientation: Flat
+2025-10-22 11:31:17.631,Sensor 1 (0x1C) - X: 0.927 Y: 0.138 Z: 0.298 | Orientation: Landscape Right
+2025-10-22 11:31:17.682,Sensor 2 (0x1D) - X: -0.170 Y: 0.089 Z: 0.982 | Orientation: Flat
+2025-10-22 11:31:18.219,Sensor 1 (0x1C) - X: 0.926 Y: 0.133 Z: 0.293 | Orientation: Landscape Right
+2025-10-22 11:31:18.270,Sensor 2 (0x1D) - X: -0.186 Y: 0.089 Z: 0.955 | Orientation: Flat
+2025-10-22 11:31:18.807,Sensor 1 (0x1C) - X: 0.923 Y: 0.129 Z: 0.304 | Orientation: Landscape Right
+2025-10-22 11:31:18.859,Sensor 2 (0x1D) - X: -0.243 Y: 0.068 Z: 0.964 | Orientation: Flat
+2025-10-22 11:31:19.396,Sensor 1 (0x1C) - X: 0.744 Y: 0.149 Z: 0.423 | Orientation: Landscape Right
+2025-10-22 11:31:19.448,Sensor 2 (0x1D) - X: -0.183 Y: 0.052 Z: 0.954 | Orientation: Flat
+2025-10-22 11:31:19.984,Sensor 1 (0x1C) - X: -0.063 Y: 0.063 Z: 1.046 | Orientation: Flat
+2025-10-22 11:31:20.025,Sensor 2 (0x1D) - X: -0.285 Y: 0.025 Z: 0.994 | Orientation: Flat
+2025-10-22 11:31:20.562,Sensor 1 (0x1C) - X: -0.058 Y: 0.028 Z: 1.030 | Orientation: Flat
+2025-10-22 11:31:20.603,Sensor 2 (0x1D) - X: -0.123 Y: 0.008 Z: 0.993 | Orientation: Flat
+2025-10-22 11:31:21.140,Sensor 1 (0x1C) - X: -0.062 Y: 0.020 Z: 1.003 | Orientation: Flat
+2025-10-22 11:31:21.181,Sensor 2 (0x1D) - X: -0.124 Y: 0.033 Z: 0.988 | Orientation: Flat
+2025-10-22 11:31:21.719,Sensor 1 (0x1C) - X: -0.062 Y: 0.014 Z: 1.012 | Orientation: Flat
+2025-10-22 11:31:21.760,Sensor 2 (0x1D) - X: -0.104 Y: 0.044 Z: 0.990 | Orientation: Flat
+2025-10-22 11:31:22.297,Sensor 1 (0x1C) - X: -0.072 Y: 0.015 Z: 1.008 | Orientation: Flat
+2025-10-22 11:31:22.339,Sensor 2 (0x1D) - X: -0.153 Y: -0.021 Z: 0.997 | Orientation: Flat
+2025-10-22 11:31:22.876,Sensor 1 (0x1C) - X: -0.061 Y: 0.049 Z: 1.037 | Orientation: Flat
+2025-10-22 11:31:22.918,Sensor 2 (0x1D) - X: -0.148 Y: -0.054 Z: 1.014 | Orientation: Flat
+2025-10-22 11:31:23.455,Sensor 1 (0x1C) - X: 0.080 Y: 0.032 Z: 1.095 | Orientation: Flat
+2025-10-22 11:31:23.496,Sensor 2 (0x1D) - X: -0.038 Y: -0.113 Z: 1.081 | Orientation: Flat
+2025-10-22 11:31:24.033,Sensor 1 (0x1C) - X: 0.645 Y: 0.384 Z: 0.683 | Orientation: Landscape Right
+2025-10-22 11:31:24.084,Sensor 2 (0x1D) - X: 0.268 Y: 0.149 Z: 0.968 | Orientation: Flat
+2025-10-22 11:31:24.621,Sensor 1 (0x1C) - X: 0.769 Y: 0.300 Z: 0.243 | Orientation: Landscape Right
+2025-10-22 11:31:24.672,Sensor 2 (0x1D) - X: 0.100 Y: 0.489 Z: 0.912 | Orientation: Flat
+2025-10-22 11:31:25.208,Sensor 1 (0x1C) - X: 0.901 Y: 0.223 Z: 0.040 | Orientation: Landscape Right
+2025-10-22 11:31:25.259,Sensor 2 (0x1D) - X: 0.096 Y: 0.380 Z: 0.877 | Orientation: Flat
+2025-10-22 11:31:25.796,Sensor 1 (0x1C) - X: 0.881 Y: 0.356 Z: 0.174 | Orientation: Landscape Right
+2025-10-22 11:31:25.857,Sensor 2 (0x1D) - X: -0.184 Y: 0.585 Z: 0.795 | Orientation: Portrait Down
+2025-10-22 11:31:26.394,Sensor 1 (0x1C) - X: 0.902 Y: 0.177 Z: 0.428 | Orientation: Landscape Right
+2025-10-22 11:31:26.455,Sensor 2 (0x1D) - X: -0.138 Y: 0.379 Z: 0.891 | Orientation: Portrait Down
+2025-10-22 11:31:26.992,Sensor 1 (0x1C) - X: 0.846 Y: 0.314 Z: 0.361 | Orientation: Landscape Right
+2025-10-22 11:31:27.053,Sensor 2 (0x1D) - X: -0.310 Y: 0.422 Z: 0.832 | Orientation: Portrait Down
+2025-10-22 11:31:27.590,Sensor 1 (0x1C) - X: 0.907 Y: 0.293 Z: 0.229 | Orientation: Landscape Right
+2025-10-22 11:31:27.640,Sensor 2 (0x1D) - X: 0.181 Y: 0.371 Z: 0.913 | Orientation: Flat
+2025-10-22 11:31:28.177,Sensor 1 (0x1C) - X: 0.972 Y: 0.192 Z: 0.371 | Orientation: Landscape Right
+2025-10-22 11:31:28.228,Sensor 2 (0x1D) - X: 0.041 Y: 0.369 Z: 1.046 | Orientation: Flat
+2025-10-22 11:31:28.765,Sensor 1 (0x1C) - X: 0.946 Y: 0.231 Z: 0.124 | Orientation: Landscape Right
+2025-10-22 11:31:28.817,Sensor 2 (0x1D) - X: -0.121 Y: 0.339 Z: 0.911 | Orientation: Flat
+2025-10-22 11:31:29.354,Sensor 1 (0x1C) - X: 0.923 Y: 0.304 Z: -0.093 | Orientation: Landscape Right
+2025-10-22 11:31:29.416,Sensor 2 (0x1D) - X: -0.509 Y: 0.399 Z: 0.758 | Orientation: Portrait Down
+2025-10-22 11:31:29.952,Sensor 1 (0x1C) - X: 0.932 Y: 0.287 Z: -0.042 | Orientation: Landscape Right
+2025-10-22 11:31:30.016,Sensor 2 (0x1D) - X: -0.858 Y: 0.314 Z: 0.336 | Orientation: Landscape Left
+2025-10-22 11:31:30.552,Sensor 1 (0x1C) - X: 0.858 Y: 0.269 Z: -0.015 | Orientation: Landscape Right
+2025-10-22 11:31:30.616,Sensor 2 (0x1D) - X: -0.861 Y: 0.160 Z: 0.292 | Orientation: Landscape Left
+2025-10-22 11:31:31.153,Sensor 1 (0x1C) - X: 0.883 Y: 0.221 Z: 0.117 | Orientation: Landscape Right
+2025-10-22 11:31:31.216,Sensor 2 (0x1D) - X: -0.875 Y: 0.236 Z: 0.255 | Orientation: Landscape Left
+2025-10-22 11:31:31.751,Sensor 1 (0x1C) - X: 0.940 Y: 0.220 Z: 0.164 | Orientation: Landscape Right
+2025-10-22 11:31:31.814,Sensor 2 (0x1D) - X: -0.938 Y: 0.238 Z: 0.380 | Orientation: Landscape Left
+2025-10-22 11:31:32.351,Sensor 1 (0x1C) - X: 0.944 Y: 0.240 Z: 0.203 | Orientation: Landscape Right
+2025-10-22 11:31:32.401,Sensor 2 (0x1D) - X: 0.191 Y: 0.252 Z: 0.818 | Orientation: Flat
+2025-10-22 11:31:32.938,Sensor 1 (0x1C) - X: 0.754 Y: 0.299 Z: 0.187 | Orientation: Landscape Right
+2025-10-22 11:31:32.989,Sensor 2 (0x1D) - X: 0.221 Y: 0.482 Z: 0.718 | Orientation: Flat
+2025-10-22 11:31:33.526,Sensor 1 (0x1C) - X: 0.475 Y: 0.313 Z: 0.840 | Orientation: Landscape Right
+2025-10-22 11:31:33.588,Sensor 2 (0x1D) - X: 0.342 Y: 0.552 Z: 0.784 | Orientation: Landscape Right
+2025-10-22 11:31:34.125,Sensor 1 (0x1C) - X: 0.433 Y: 0.472 Z: 0.701 | Orientation: Landscape Right
+2025-10-22 11:31:34.187,Sensor 2 (0x1D) - X: 0.191 Y: 0.497 Z: 0.973 | Orientation: Landscape Right
+2025-10-22 11:31:34.724,Sensor 1 (0x1C) - X: 0.246 Y: 0.661 Z: 0.824 | Orientation: Landscape Right
+2025-10-22 11:31:34.787,Sensor 2 (0x1D) - X: 0.065 Y: 0.643 Z: 1.092 | Orientation: Landscape Right
+2025-10-22 11:31:35.323,Sensor 1 (0x1C) - X: 0.611 Y: -0.482 Z: 0.600 | Orientation: Landscape Right
+2025-10-22 11:31:35.375,Sensor 2 (0x1D) - X: 0.333 Y: -0.188 Z: 0.973 | Orientation: Flat
+2025-10-22 11:31:35.913,Sensor 1 (0x1C) - X: 0.603 Y: -0.039 Z: 0.656 | Orientation: Landscape Right
+2025-10-22 11:31:35.966,Sensor 2 (0x1D) - X: 0.235 Y: -0.003 Z: 0.870 | Orientation: Flat
+2025-10-22 11:31:36.502,Sensor 1 (0x1C) - X: -0.128 Y: -0.154 Z: 0.962 | Orientation: Flat
+2025-10-22 11:31:36.555,Sensor 2 (0x1D) - X: -0.550 Y: 0.065 Z: 0.813 | Orientation: Landscape Left
+2025-10-22 11:31:37.092,Sensor 1 (0x1C) - X: -0.034 Y: 0.603 Z: 0.835 | Orientation: Portrait Down
+2025-10-22 11:31:37.153,Sensor 2 (0x1D) - X: -0.226 Y: 0.744 Z: 0.626 | Orientation: Portrait Down

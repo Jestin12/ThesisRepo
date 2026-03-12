@@ -1,0 +1,73 @@
+%% 1) Get folder where this script is located
+scriptDir = fileparts(mfilename('fullpath'));
+
+%% 2) Define Excel file name (your file)
+excelFileName = 'Raw_ADC.csv.xlsx';
+
+%% 3) Build full path to the Excel file
+excelFilePath = fullfile(scriptDir, excelFileName);
+
+%% 4) Read the Excel file into a table
+T = readtable(excelFilePath);
+
+%% 5) Extract time and ADC data (with conversion)
+if iscell(T.pc_timestamp)
+    t = datetime(T.pc_timestamp, 'InputFormat','yyyy-MM-dd''T''HH:mm:ss.SSS');
+elseif isstring(T.pc_timestamp) || ischar(T.pc_timestamp)
+    t = datetime(T.pc_timestamp, 'InputFormat','yyyy-MM-dd''T''HH:mm:ss.SSS');
+else
+    t = T.pc_timestamp;
+end
+
+t_sec = seconds(t - t(1));
+x = T.raw_line;
+
+dt = median(diff(t_sec));
+Fs = 1 / dt;
+fprintf('Estimated Fs = %.2f Hz\n', Fs);
+
+%% 6) FFT prep (optional, if you still want the spectrum)
+x_detrend = x - mean(x);
+L = length(x_detrend);
+Y  = fft(x_detrend);
+P2 = abs(Y / L);
+P1 = P2(1:floor(L/2)+1);
+P1(2:end-1) = 2*P1(2:end-1);
+f = Fs * (0:floor(L/2)) / L;
+P1_dB = 20*log10(P1 + eps);
+
+%% 7) 3rd-order Butterworth low-pass filter
+order = 2;                % 3rd order [web:70]
+Fc    = 5;              % cutoff frequency in Hz (EDIT THIS)
+Wn    = Fc / (Fs/2);      % normalize by Nyquist [web:70]
+
+[b,a] = butter(order, Wn, 'low');   % low-pass Butterworth [web:70]
+
+% Zero-phase filtering
+x_filt = filtfilt(b, a, x);         % [web:76][web:79]
+
+%% 8) Single figure: time-domain original vs filtered
+figure;
+
+subplot(3,1,1);
+plot(t_sec, x);
+xlabel('Time (s)');
+ylabel('ADC counts');
+title('Raw ADC vs Time');
+grid on;
+
+subplot(3,1,2);
+plot(t_sec, x_filt, 'r');
+xlabel('Time (s)');
+ylabel('ADC counts');
+title('Filtered ADC (3rd-order Butterworth)');
+grid on;
+
+subplot(3,1,3);
+plot(t_sec, x, 'Color',[0.5 0.5 0.5]); hold on;
+plot(t_sec, x_filt, 'r');
+xlabel('Time (s)');
+ylabel('ADC counts');
+title('Overlay: Raw (gray) and Filtered (red)');
+grid on;
+legend('Raw','Filtered');
