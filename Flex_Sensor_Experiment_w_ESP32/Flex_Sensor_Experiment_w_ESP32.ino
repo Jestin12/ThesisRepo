@@ -1,4 +1,4 @@
-const int adcPin = 13;  // change to your ADC pin
+const int adcPin = 2;  // change to your ADC pin
 
 void setup() {
   Serial.begin(115200);

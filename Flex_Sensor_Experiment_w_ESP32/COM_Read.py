@@ -14,7 +14,7 @@ def get_csv_path():
     if len(sys.argv) > 1:
         name = sys.argv[1]
     else:
-        name = "data.csv"
+        name = "data_w_2RC.csv"
 
     # If they only gave a bare name (no path), save next to this script
     if not os.path.isabs(name):

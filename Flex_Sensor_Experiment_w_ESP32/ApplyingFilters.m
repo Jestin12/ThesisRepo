@@ -2,7 +2,7 @@
 scriptDir = fileparts(mfilename('fullpath'));
 
 %% 2) Define Excel file name (your file)
-excelFileName = 'Raw_ADC.csv.xlsx';
+excelFileName = 'data_w_2RC.csv';
 
 %% 3) Build full path to the Excel file
 excelFilePath = fullfile(scriptDir, excelFileName);
