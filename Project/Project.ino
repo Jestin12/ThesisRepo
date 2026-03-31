@@ -66,7 +66,7 @@ Quaternion   q2;
 VectorFloat  gravity2;
 float        ypr2[3];
 
-
+DynamicJsonDocument DataPacket(1024);
 // StaticJsonDocument<1024> DataPacket;
 
 // void tcaSelectChannel(uint8_t ch) {
@@ -77,7 +77,7 @@ float        ypr2[3];
 void setup() {
   Serial.begin(115200);
 
-  DynamicJsonDocument DataPacket(1024);
+  
   JsonObject fingerData = DataPacket.createNestedObject("Data");
 
   buildFingerData(fingerData);
@@ -206,6 +206,8 @@ void loop() {
     int MCP_flex = analogRead((HandChannels[i].label == "Palm") ? NULL : HandChannels[i].adc_channel[1]);
     int PIP_flex = analogRead((HandChannels[i].label == "Palm") ? NULL : HandChannels[i].adc_channel[2]);
 
+    DataPacket["Data"][HandChannels[i].label]["flex_mcp"];
+    DataPacket["Data"][HandChannels[i].label]["flex_pip"];
 
     Serial.print(HandChannels[i].label+"\n");
     Serial.print("ypr1[");

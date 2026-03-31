@@ -1,4 +1,5 @@
 #include "CreateJson.h"
+#include "Globals.h"
 
 void addFinger(JsonObject parent, const char *name) {
   JsonObject f = parent.createNestedObject(name);
@@ -13,9 +14,14 @@ void addFinger(JsonObject parent, const char *name) {
 }
 
 void buildFingerData(JsonObject fingerData) {
-  addFinger(fingerData, "Palm");
-  addFinger(fingerData, "Index");
-  addFinger(fingerData, "Middle");
-  addFinger(fingerData, "Ring");
-  addFinger(fingerData, "Pinky");
+
+  for (int i = 0; i < int(sizeof(HandChannels)/sizeof(HandChannels[0])); i++)
+  {
+    addFinger(fingerData, HandChannels[i].label.c_str());
+  }
+  // addFinger(fingerData, "Palm");
+  // addFinger(fingerData, "Index");
+  // addFinger(fingerData, "Middle");
+  // addFinger(fingerData, "Ring");
+  // addFinger(fingerData, "Pinky");
 }
