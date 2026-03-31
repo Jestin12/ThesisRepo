@@ -2,6 +2,7 @@
 #include <TCA9548A.h>
 #include "MPU6050_6Axis_MotionApps612.h"
 #include <ArduinoJson.h>
+#include "Globals.h"
 
 #include "CreateJson.h"
 
@@ -26,11 +27,11 @@ TCA9548A TCA(TCA_ADDR);
 MPU6050 IMU_MID(0x68);     // AD0=GND → address 0x68 ( proximal phalange )
 MPU6050 IMU_PROX(0x69);     // AD0=VCC -> address 0x69 ( Mid phalange)
 
-struct FingerChannel {
-  const int tca_channel;
-  String label;
-  const int adc_channel[2];
-};
+// struct FingerChannel {
+//   const int tca_channel;
+//   String label;
+//   const int adc_channel[2];
+// };
 
 FingerChannel HandChannels[6] = {
   {TCA_CH_PALM, "Palm", {}},
@@ -93,67 +94,69 @@ void setup() {
   Serial.println();
   // Route I2C through channel 7 to the MPU6050s
 
-  for (int i = 0; i < int(sizeof(HandChannels)/sizeof(HandChannels[0])); i++)
-  {
-    tcaSelectChannel(HandChannels[i].tca_channel);
+  initFingerChannel(&HandChannels);
 
-    Serial.println("Initialising " + HandChannels[i].label);
+  // for (int i = 0; i < int(sizeof(HandChannels)/sizeof(HandChannels[0])); i++)
+  // {
+  //   tcaSelectChannel(HandChannels[i].tca_channel);
+
+  //   Serial.println("Initialising " + HandChannels[i].label);
 
 
-    IMU_MID.initialize();
-    IMU_PROX.initialize();
+  //   IMU_MID.initialize();
+  //   IMU_PROX.initialize();
 
-    Serial.println(IMU_PROX.testConnection() ? "MPU6050 " + HandChannels[i].label + " Proximal OK" : "MPU6050 " + HandChannels[i].label + " Proximal FAIL");
-    Serial.println(IMU_MID.testConnection() ? "MPU6050 " + HandChannels[i].label + " Mid OK" : "MPU6050 " + HandChannels[i].label + " Mid FAIL");
+  //   Serial.println(IMU_PROX.testConnection() ? "MPU6050 " + HandChannels[i].label + " Proximal OK" : "MPU6050 " + HandChannels[i].label + " Proximal FAIL");
+  //   Serial.println(IMU_MID.testConnection() ? "MPU6050 " + HandChannels[i].label + " Mid OK" : "MPU6050 " + HandChannels[i].label + " Mid FAIL");
 
-    Serial.print("WHOAMI1: 0x");
-    Serial.println(IMU_MID.getDeviceID(), HEX);
-    Serial.print("WHOAMI2: 0x");
-    Serial.println(IMU_PROX.getDeviceID(), HEX);
+  //   Serial.print("WHOAMI1: 0x");
+  //   Serial.println(IMU_MID.getDeviceID(), HEX);
+  //   Serial.print("WHOAMI2: 0x");
+  //   Serial.println(IMU_PROX.getDeviceID(), HEX);
 
-    Serial.println(F("Initializing DMP..."));
-    devStatus1 = IMU_MID.dmpInitialize();
-    devStatus2 = IMU_PROX.dmpInitialize();  // <-- FIXED: use IMU_PROX here
+  //   Serial.println(F("Initializing DMP..."));
+  //   devStatus1 = IMU_MID.dmpInitialize();
+  //   devStatus2 = IMU_PROX.dmpInitialize();  // <-- FIXED: use IMU_PROX here
 
-    Serial.print("devStatus1 = ");
-    Serial.println(devStatus1);
-    Serial.print("devStatus2 = ");
-    Serial.println(devStatus2);
+  //   Serial.print("devStatus1 = ");
+  //   Serial.println(devStatus1);
+  //   Serial.print("devStatus2 = ");
+  //   Serial.println(devStatus2);
 
-    if (devStatus1 == 0) {
-      IMU_MID.CalibrateAccel(6);
-      IMU_MID.CalibrateGyro(6);
-      IMU_MID.PrintActiveOffsets();
+  //   if (devStatus1 == 0) {
+  //     IMU_MID.CalibrateAccel(6);
+  //     IMU_MID.CalibrateGyro(6);
+  //     IMU_MID.PrintActiveOffsets();
 
-      Serial.println(F("Enabling DMP for proximal phalangeal..."));
-      IMU_MID.setDMPEnabled(true);
+  //     Serial.println(F("Enabling DMP for proximal phalangeal..."));
+  //     IMU_MID.setDMPEnabled(true);
 
-      packetSize1 = IMU_MID.dmpGetFIFOPacketSize();
-      // dmpReady1   = true;
-    } else {
-      Serial.print(F("proximal phalangeal DMP init failed (code "));
-      Serial.print(devStatus1);
-      Serial.println(F(")"));
-      dmpReady2   = false;
-    }
+  //     packetSize1 = IMU_MID.dmpGetFIFOPacketSize();
+  //     // dmpReady1   = true;
+  //   } else {
+  //     Serial.print(F("proximal phalangeal DMP init failed (code "));
+  //     Serial.print(devStatus1);
+  //     Serial.println(F(")"));
+  //     dmpReady2   = false;
+  //   }
 
-    if (devStatus2 == 0) {
-      IMU_PROX.CalibrateAccel(6);
-      IMU_PROX.CalibrateGyro(6);
-      IMU_PROX.PrintActiveOffsets();
+  //   if (devStatus2 == 0) {
+  //     IMU_PROX.CalibrateAccel(6);
+  //     IMU_PROX.CalibrateGyro(6);
+  //     IMU_PROX.PrintActiveOffsets();
 
-      Serial.println(F("Enabling DMP for mid phalangeal..."));
-      IMU_PROX.setDMPEnabled(true);
+  //     Serial.println(F("Enabling DMP for mid phalangeal..."));
+  //     IMU_PROX.setDMPEnabled(true);
 
-      packetSize2 = IMU_PROX.dmpGetFIFOPacketSize();
-      // dmpReady2   = true;
-    } else {
-      Serial.print(F("mid phalangeal DMP init failed (code "));
-      Serial.print(devStatus2);
-      Serial.println(F(")"));
-      dmpReady2   = false;
-    }
-  }
+  //     packetSize2 = IMU_PROX.dmpGetFIFOPacketSize();
+  //     // dmpReady2   = true;
+  //   } else {
+  //     Serial.print(F("mid phalangeal DMP init failed (code "));
+  //     Serial.print(devStatus2);
+  //     Serial.println(F(")"));
+  //     dmpReady2   = false;
+  //   }
+  // }
 
 }
 
