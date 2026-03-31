@@ -1,8 +1,10 @@
 #include <Wire.h>
-#include <TCA9548A.h>
+// #include <TCA9548A.h>
 #include "MPU6050_6Axis_MotionApps612.h"
 #include <ArduinoJson.h>
+
 #include "Globals.h"
+#include "IMU_setup.h"
 
 #include "CreateJson.h"
 
@@ -67,16 +69,18 @@ float        ypr2[3];
 
 // StaticJsonDocument<1024> DataPacket;
 
-void tcaSelectChannel(uint8_t ch) {
-  TCA.closeAll();
-  TCA.openChannel(ch);
-}
+// void tcaSelectChannel(uint8_t ch) {
+//   TCA.closeAll();
+//   TCA.openChannel(ch);
+// }
 
 void setup() {
   Serial.begin(115200);
 
   DynamicJsonDocument DataPacket(1024);
   JsonObject fingerData = DataPacket.createNestedObject("Data");
+
+  buildFingerData(fingerData);
 
   Wire.begin(I2C_BUS_SDA, I2C_BUS_SCL);
   Wire.setClock(TCA_FREQ);
@@ -94,7 +98,11 @@ void setup() {
   Serial.println();
   // Route I2C through channel 7 to the MPU6050s
 
-  initFingerChannel(&HandChannels);
+  for (int i = 0; i < int(sizeof(HandChannels)/sizeof(HandChannels[0])); i++)
+  {
+    initFingerChannel(HandChannels[i]);
+  }
+    
 
   // for (int i = 0; i < int(sizeof(HandChannels)/sizeof(HandChannels[0])); i++)
   // {

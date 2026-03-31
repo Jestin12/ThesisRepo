@@ -1,6 +1,11 @@
 #include "IMU_setup.h"
 #include <Arduino.h>
 
+void tcaSelectChannel(uint8_t ch) {
+  TCA.closeAll();
+  TCA.openChannel(ch);
+}
+
 void initFingerChannel(const FingerChannel& fc) {
   tcaSelectChannel(fc.tca_channel);
 
