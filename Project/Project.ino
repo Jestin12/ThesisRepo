@@ -94,6 +94,7 @@ void setup() {
 
 void loop() {
   // Serial.println("working");
+  int start = millis();
 
   for (int i = 0; i < int(sizeof(HandChannels) / sizeof(HandChannels[0])); i++) {
     tcaSelectChannel(HandChannels[i].tca_channel);
@@ -161,12 +162,15 @@ void loop() {
 
   // serializeJsonPretty(DataPacket, Serial);
   // Serial.println();
-  serializeJson(DataPacket, Serial);
-  Serial.println();  // optional newline
+  // serializeJson(DataPacket, Serial);
+  // Serial.println();  // optional newline
 
   if (deviceConnected) {
     sendJsonOverBle();   // push each frame; or remove if you want "GET" pull only
   }
+  int end = millis();
+
+  Serial.println("Delay" + String(end - start));
 
   delay(50);
 }

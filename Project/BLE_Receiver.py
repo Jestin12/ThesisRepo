@@ -41,16 +41,11 @@ def flatten_packet_to_wide(packet: dict, run_ts: str, read_time: str) -> dict:
 
 
 def notify_handler(sender, data: bytearray):
-    """
-    Accumulate chunks in current_buffer, split on newline, and parse
-    each complete JSON line independently.
-    """
     global current_buffer, rows, run_timestamp
 
     chunk = data.decode(errors="ignore")
     current_buffer += chunk
 
-    # Process all complete lines
     while "\n" in current_buffer:
         line, current_buffer = current_buffer.split("\n", 1)
         line = line.strip()
@@ -70,6 +65,7 @@ def notify_handler(sender, data: bytearray):
         row = flatten_packet_to_wide(packet, run_timestamp, read_time)
         rows.append(row)
         print("Packet flattened and stored; total rows:", len(rows))
+
 
 
 async def main():
@@ -124,3 +120,5 @@ if __name__ == "__main__":
 
     # Always attempt to save whatever we collected
     save_csv()
+
+    
