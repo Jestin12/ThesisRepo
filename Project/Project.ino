@@ -63,7 +63,7 @@ VectorInt16 aa2, aaReal2, aaWorld2;
 float ax1, ay1, az1;
 float ax2, ay2, az2;
 
-DynamicJsonDocument DataPacket(1024);
+DynamicJsonDocument DataPacket(4096);
 
 
 // ── Arduino setup/loop ─────────────────────────────────────
@@ -86,8 +86,6 @@ void setup() {
   DataPacket["Hand"] = "Left";
   DataPacket["Time"] = nullptr;
 
-  serializeJsonPretty(DataPacket, Serial);
-  Serial.println();
 
   for (int i = 0; i < int(sizeof(HandChannels) / sizeof(HandChannels[0])); i++) {
     initFingerChannel(HandChannels[i]);
@@ -95,7 +93,7 @@ void setup() {
 }
 
 void loop() {
-  Serial.println("working");
+  // Serial.println("working");
 
   for (int i = 0; i < int(sizeof(HandChannels) / sizeof(HandChannels[0])); i++) {
     tcaSelectChannel(HandChannels[i].tca_channel);
@@ -143,22 +141,22 @@ void loop() {
 
     DataPacket["Time"] = millis();
 
-    DataPacket["Data"][HandChannels[i].label]["flex_mcp"]   = String(MCP_flex);
-    DataPacket["Data"][HandChannels[i].label]["flex_pip"]   = String(PIP_flex);
+    DataPacket["Data"][HandChannels[i].label]["flex_mcp"]   = int(MCP_flex);
+    DataPacket["Data"][HandChannels[i].label]["flex_pip"]   = int(PIP_flex);
 
-    DataPacket["Data"][HandChannels[i].label]["yaw_prox"]   = String(ypr1[0], 2);
-    DataPacket["Data"][HandChannels[i].label]["pitch_prox"] = String(ypr1[1], 2);
-    DataPacket["Data"][HandChannels[i].label]["roll_prox"]  = String(ypr1[2], 2);
-    DataPacket["Data"][HandChannels[i].label]["ax_prox"]    = String(ax1, 2);
-    DataPacket["Data"][HandChannels[i].label]["ay_prox"]    = String(ay1, 2);
-    DataPacket["Data"][HandChannels[i].label]["az_prox"]    = String(az1, 2);
+    DataPacket["Data"][HandChannels[i].label]["yaw_prox"]   = roundf(ypr1[0] * 100.0f) / 100.0f;
+    DataPacket["Data"][HandChannels[i].label]["pitch_prox"] = roundf(ypr1[1] * 100.0f) / 100.0f;
+    DataPacket["Data"][HandChannels[i].label]["roll_prox"]  = roundf(ypr1[2] * 100.0f) / 100.0f;
+    DataPacket["Data"][HandChannels[i].label]["ax_prox"]    = roundf(ax1 * 100.0f) / 100.0f;
+    DataPacket["Data"][HandChannels[i].label]["ay_prox"]    = roundf(ay1 * 100.0f) / 100.0f;
+    DataPacket["Data"][HandChannels[i].label]["az_prox"]    = roundf(az1 * 100.0f) / 100.0f;
 
-    DataPacket["Data"][HandChannels[i].label]["yaw_mid"]    = String(ypr2[0], 2);
-    DataPacket["Data"][HandChannels[i].label]["pitch_mid"]  = String(ypr2[1], 2);
-    DataPacket["Data"][HandChannels[i].label]["roll_mid"]   = String(ypr2[2], 2);
-    DataPacket["Data"][HandChannels[i].label]["ax_mid"]     = String(ax2, 2);
-    DataPacket["Data"][HandChannels[i].label]["ay_mid"]     = String(ay2, 2);
-    DataPacket["Data"][HandChannels[i].label]["az_mid"]     = String(az2, 2);
+    DataPacket["Data"][HandChannels[i].label]["yaw_mid"]    = roundf(ypr2[0] * 100.0f) / 100.0f;
+    DataPacket["Data"][HandChannels[i].label]["pitch_mid"]  = roundf(ypr2[1] * 100.0f) / 100.0f;
+    DataPacket["Data"][HandChannels[i].label]["roll_mid"]   = roundf(ypr2[2] * 100.0f) / 100.0f;
+    DataPacket["Data"][HandChannels[i].label]["ax_mid"]     = roundf(ax2 * 100.0f) / 100.0f;
+    DataPacket["Data"][HandChannels[i].label]["ay_mid"]     = roundf(ay2 * 100.0f) / 100.0f;
+    DataPacket["Data"][HandChannels[i].label]["az_mid"]     = roundf(az2 * 100.0f) / 100.0f;
   }
 
   // serializeJsonPretty(DataPacket, Serial);
@@ -170,5 +168,6 @@ void loop() {
     sendJsonOverBle();   // push each frame; or remove if you want "GET" pull only
   }
 
-  delay(20);
+  delay(50);
 }
+

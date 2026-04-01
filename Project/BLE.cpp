@@ -89,18 +89,21 @@ void initBleService() {
 void sendJsonOverBle() {
   if (!deviceConnected) return;
 
-  // Adjust size to comfortably hold your JSON (you had 1024 bytes before)
-  static char jsonBuf[1024];
+  static char jsonBuf[4096];
 
-  // Serialize without pretty-printing to keep it compact
-  size_t len = serializeJson(DataPacket, jsonBuf, sizeof(jsonBuf));
-
-  if (len == 0 || len >= sizeof(jsonBuf)) {
+  // Copy current DataPacket to buffer; leave room for '\n' + '\0'
+  size_t len = serializeJson(DataPacket, jsonBuf, sizeof(jsonBuf) - 2);
+  if (len == 0 || len >= sizeof(jsonBuf) - 2) {
     Serial.println("JSON too large or error serializing");
     return;
   }
 
-  Serial.print("JSON length: ");
+  // Append newline as frame delimiter
+  jsonBuf[len] = '\n';
+  jsonBuf[len + 1] = '\0';
+  len += 1;
+
+  Serial.print("JSON length (with \\n): ");
   Serial.println(len);
 
   size_t offset = 0;
@@ -109,8 +112,6 @@ void sendJsonOverBle() {
     pTxCharacteristic->setValue((uint8_t *)(jsonBuf + offset), chunkSize);
     pTxCharacteristic->notify();
     offset += chunkSize;
-
-    // Small delay can help some phone stacks cope with rapid notifications
     delay(2);
   }
 
