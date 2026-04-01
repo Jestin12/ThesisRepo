@@ -2,7 +2,7 @@
 #pragma once
 #include "MPU6050_6Axis_MotionApps612.h"
 #include <TCA9548A.h>
-
+#include <ArduinoJson.h>
 
 struct FingerChannel {
   const int tca_channel;
@@ -14,6 +14,8 @@ extern MPU6050 IMU_MID;
 extern MPU6050 IMU_PROX;
 extern TCA9548A TCA;
 extern FingerChannel HandChannels[6];
+// extern your JSON document from the other file, or declare it here.
+extern DynamicJsonDocument DataPacket;
 
 extern bool dmpReady1;
 extern bool dmpReady2;

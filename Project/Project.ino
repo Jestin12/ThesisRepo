@@ -1,50 +1,42 @@
 #include <Wire.h>
-// #include <TCA9548A.h>
 #include "MPU6050_6Axis_MotionApps612.h"
 #include <ArduinoJson.h>
 
 #include "Globals.h"
 #include "IMU_setup.h"
-
 #include "CreateJson.h"
+
+// ── BLE includes ───────────────────────────────────────────
+#include "BLE.h"
 
 // ── I2C & TCA config ────────────────────────────────────────
 #define I2C_BUS_SDA 8
 #define I2C_BUS_SCL 9
 #define TCA_FREQ    400000
 
-#define TCA_ADDR    0x71      // A0=1, A1=0, A2=0 → 0x71
+#define TCA_ADDR    0x71
 
-#define TCA_CH_PALM  7         // MPU6050 on channel 7 (PALM)
-#define TCA_CH_THUMB 6        
-#define TCA_CH_INDEX 5         
-#define TCA_CH_MIDDLE 4         
-#define TCA_CH_RING 3         
-#define TCA_CH_PINKY 2        
-
+#define TCA_CH_PALM   7
+#define TCA_CH_THUMB  6
+#define TCA_CH_INDEX  5
+#define TCA_CH_MIDDLE 4
+#define TCA_CH_RING   3
+#define TCA_CH_PINKY  2
 
 TCA9548A TCA(TCA_ADDR);
 
 // ── MPU6050 + DMP ───────────────────────────────────────────
-MPU6050 IMU_MID(0x68);     // AD0=GND → address 0x68 ( proximal phalange )
-MPU6050 IMU_PROX(0x69);     // AD0=VCC -> address 0x69 ( Mid phalange)
-
-// struct FingerChannel {
-//   const int tca_channel;
-//   String label;
-//   const int adc_channel[2];
-// };
+MPU6050 IMU_MID(0x68);
+MPU6050 IMU_PROX(0x69);
 
 FingerChannel HandChannels[6] = {
-  {TCA_CH_PALM, "Palm", {}},
-  {TCA_CH_THUMB, "Thumb", {2,3}},
-  {TCA_CH_INDEX, "Index", {4,5}},
-  {TCA_CH_MIDDLE, "Middle", {6,13}},
-  {TCA_CH_RING, "Ring", {12,11}},
-  {TCA_CH_PINKY, "Pinky", {10,7}}
+  {TCA_CH_PALM,  "Palm",  {}},
+  {TCA_CH_THUMB, "Thumb", {2, 3}},
+  {TCA_CH_INDEX, "Index", {4, 5}},
+  {TCA_CH_MIDDLE,"Middle",{6, 13}},
+  {TCA_CH_RING,  "Ring",  {12, 11}},
+  {TCA_CH_PINKY, "Pinky", {10, 7}}
 };
-
-// unit8_t TCA_Channels[6] = {TCA_CH_PALM, TCA_CH_THUMB, TCA_CH_INDEX, TCA_CH_MIDDLE, TCA_CH_RING, TCA_CH_PINKY};
 
 bool     dmpReady1   = true;
 uint8_t  devStatus1  = 0;
@@ -66,51 +58,46 @@ Quaternion   q2;
 VectorFloat  gravity2;
 float        ypr2[3];
 
+VectorInt16 aa1, aaReal1, aaWorld1;
+VectorInt16 aa2, aaReal2, aaWorld2;
+float ax1, ay1, az1;
+float ax2, ay2, az2;
+
 DynamicJsonDocument DataPacket(1024);
 
+
+// ── Arduino setup/loop ─────────────────────────────────────
 
 void setup() {
   Serial.begin(115200);
 
-  
-  JsonObject fingerData = DataPacket.createNestedObject("Data");
+  // BLE first (optional, but nice to see logs while sensors init)
+  initBleService();
 
+  JsonObject fingerData = DataPacket.createNestedObject("Data");
   buildFingerData(fingerData);
 
   Wire.begin(I2C_BUS_SDA, I2C_BUS_SCL);
   Wire.setClock(TCA_FREQ);
-
   TCA.begin(Wire);
 
   analogReadResolution(12);
 
   DataPacket["Hand"] = "Left";
-  DataPacket["Time"] = NULL;
+  DataPacket["Time"] = nullptr;
 
-  
-  // prints nicely formatted JSON:
   serializeJsonPretty(DataPacket, Serial);
   Serial.println();
-  // Route I2C through channel 7 to the MPU6050s
 
-  for (int i = 0; i < int(sizeof(HandChannels)/sizeof(HandChannels[0])); i++)
-  {
+  for (int i = 0; i < int(sizeof(HandChannels) / sizeof(HandChannels[0])); i++) {
     initFingerChannel(HandChannels[i]);
   }
-    
 }
 
 void loop() {
-
   Serial.println("working");
 
-  // if (!dmpReady1 || !dmpReady2) {
-  //   delay(1000);
-  //   return;
-  // }
-
-  for (int i = 0; i < int(sizeof(HandChannels)/sizeof(HandChannels[0])); i++)
-  {
+  for (int i = 0; i < int(sizeof(HandChannels) / sizeof(HandChannels[0])); i++) {
     tcaSelectChannel(HandChannels[i].tca_channel);
 
     // ---- IMU_MID ----
@@ -122,6 +109,14 @@ void loop() {
       IMU_MID.dmpGetQuaternion(&q1, fifoBuffer1);
       IMU_MID.dmpGetGravity(&gravity1, &q1);
       IMU_MID.dmpGetYawPitchRoll(ypr1, &q1, &gravity1);
+
+      IMU_MID.dmpGetAccel(&aa1, fifoBuffer1);
+      IMU_MID.dmpGetLinearAccel(&aaReal1, &aa1, &gravity1);
+      IMU_MID.dmpGetLinearAccelInWorld(&aaWorld1, &aaReal1, &q1);
+
+      ax1 = aaWorld1.x / 16384.0;
+      ay1 = aaWorld1.y / 16384.0;
+      az1 = aaWorld1.z / 16384.0;
     }
 
     // ---- IMU_PROX ----
@@ -133,25 +128,46 @@ void loop() {
       IMU_PROX.dmpGetQuaternion(&q2, fifoBuffer2);
       IMU_PROX.dmpGetGravity(&gravity2, &q2);
       IMU_PROX.dmpGetYawPitchRoll(ypr2, &q2, &gravity2);
+
+      IMU_PROX.dmpGetAccel(&aa2, fifoBuffer2);
+      IMU_PROX.dmpGetLinearAccel(&aaReal2, &aa2, &gravity2);
+      IMU_PROX.dmpGetLinearAccelInWorld(&aaWorld2, &aaReal2, &q2);
+
+      ax2 = aaWorld2.x / 16384.0;
+      ay2 = aaWorld2.y / 16384.0;
+      az2 = aaWorld2.z / 16384.0;
     }
 
-    int MCP_flex = analogRead((HandChannels[i].label == "Palm") ? NULL : HandChannels[i].adc_channel[1]);
-    int PIP_flex = analogRead((HandChannels[i].label == "Palm") ? NULL : HandChannels[i].adc_channel[2]);
+    int MCP_flex = (HandChannels[i].label == "Palm") ? 0 : analogRead(HandChannels[i].adc_channel[0]);
+    int PIP_flex = (HandChannels[i].label == "Palm") ? 0 : analogRead(HandChannels[i].adc_channel[1]);
 
-    DataPacket["Data"][HandChannels[i].label]["flex_mcp"]     = MCP_flex;
-    DataPacket["Data"][HandChannels[i].label]["flex_pip"]     = PIP_flex;
-    DataPacket["Data"][HandChannels[i].label]["yaw_prox"]     = ypr1[0];
-    DataPacket["Data"][HandChannels[i].label]["pitch_prox"]   = ypr1[1];
-    DataPacket["Data"][HandChannels[i].label]["roll_prox"]    = ypr1[2];
-    DataPacket["Data"][HandChannels[i].label]["ax_prox"]      = NULL;
-    DataPacket["Data"][HandChannels[i].label]["ay_prox"]      = NULL;
-    DataPacket["Data"][HandChannels[i].label]["az_prox"]      = NULL;
-    DataPacket["Data"][HandChannels[i].label]["yaw_mid"]      = ypr2[0];
-    DataPacket["Data"][HandChannels[i].label]["pitch_mid"]    = ypr2[1];
-    DataPacket["Data"][HandChannels[i].label]["roll_mid"]     = ypr2[2];
-    DataPacket["Data"][HandChannels[i].label]["ax_mid"]       = NULL;
-    DataPacket["Data"][HandChannels[i].label]["ay_mid"]       = NULL;
-    DataPacket["Data"][HandChannels[i].label]["az_mid"]       = NULL;
+    DataPacket["Time"] = millis();
+
+    DataPacket["Data"][HandChannels[i].label]["flex_mcp"]   = String(MCP_flex);
+    DataPacket["Data"][HandChannels[i].label]["flex_pip"]   = String(PIP_flex);
+
+    DataPacket["Data"][HandChannels[i].label]["yaw_prox"]   = String(ypr1[0], 2);
+    DataPacket["Data"][HandChannels[i].label]["pitch_prox"] = String(ypr1[1], 2);
+    DataPacket["Data"][HandChannels[i].label]["roll_prox"]  = String(ypr1[2], 2);
+    DataPacket["Data"][HandChannels[i].label]["ax_prox"]    = String(ax1, 2);
+    DataPacket["Data"][HandChannels[i].label]["ay_prox"]    = String(ay1, 2);
+    DataPacket["Data"][HandChannels[i].label]["az_prox"]    = String(az1, 2);
+
+    DataPacket["Data"][HandChannels[i].label]["yaw_mid"]    = String(ypr2[0], 2);
+    DataPacket["Data"][HandChannels[i].label]["pitch_mid"]  = String(ypr2[1], 2);
+    DataPacket["Data"][HandChannels[i].label]["roll_mid"]   = String(ypr2[2], 2);
+    DataPacket["Data"][HandChannels[i].label]["ax_mid"]     = String(ax2, 2);
+    DataPacket["Data"][HandChannels[i].label]["ay_mid"]     = String(ay2, 2);
+    DataPacket["Data"][HandChannels[i].label]["az_mid"]     = String(az2, 2);
+  }
+
+  // serializeJsonPretty(DataPacket, Serial);
+  // Serial.println();
+  serializeJson(DataPacket, Serial);
+  Serial.println();  // optional newline
+
+  if (deviceConnected) {
+    sendJsonOverBle();   // push each frame; or remove if you want "GET" pull only
   }
 
   delay(20);
