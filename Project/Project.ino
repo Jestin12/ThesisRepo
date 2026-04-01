@@ -67,12 +67,7 @@ VectorFloat  gravity2;
 float        ypr2[3];
 
 DynamicJsonDocument DataPacket(1024);
-// StaticJsonDocument<1024> DataPacket;
 
-// void tcaSelectChannel(uint8_t ch) {
-//   TCA.closeAll();
-//   TCA.openChannel(ch);
-// }
 
 void setup() {
   Serial.begin(115200);
@@ -103,69 +98,6 @@ void setup() {
     initFingerChannel(HandChannels[i]);
   }
     
-
-  // for (int i = 0; i < int(sizeof(HandChannels)/sizeof(HandChannels[0])); i++)
-  // {
-  //   tcaSelectChannel(HandChannels[i].tca_channel);
-
-  //   Serial.println("Initialising " + HandChannels[i].label);
-
-
-  //   IMU_MID.initialize();
-  //   IMU_PROX.initialize();
-
-  //   Serial.println(IMU_PROX.testConnection() ? "MPU6050 " + HandChannels[i].label + " Proximal OK" : "MPU6050 " + HandChannels[i].label + " Proximal FAIL");
-  //   Serial.println(IMU_MID.testConnection() ? "MPU6050 " + HandChannels[i].label + " Mid OK" : "MPU6050 " + HandChannels[i].label + " Mid FAIL");
-
-  //   Serial.print("WHOAMI1: 0x");
-  //   Serial.println(IMU_MID.getDeviceID(), HEX);
-  //   Serial.print("WHOAMI2: 0x");
-  //   Serial.println(IMU_PROX.getDeviceID(), HEX);
-
-  //   Serial.println(F("Initializing DMP..."));
-  //   devStatus1 = IMU_MID.dmpInitialize();
-  //   devStatus2 = IMU_PROX.dmpInitialize();  // <-- FIXED: use IMU_PROX here
-
-  //   Serial.print("devStatus1 = ");
-  //   Serial.println(devStatus1);
-  //   Serial.print("devStatus2 = ");
-  //   Serial.println(devStatus2);
-
-  //   if (devStatus1 == 0) {
-  //     IMU_MID.CalibrateAccel(6);
-  //     IMU_MID.CalibrateGyro(6);
-  //     IMU_MID.PrintActiveOffsets();
-
-  //     Serial.println(F("Enabling DMP for proximal phalangeal..."));
-  //     IMU_MID.setDMPEnabled(true);
-
-  //     packetSize1 = IMU_MID.dmpGetFIFOPacketSize();
-  //     // dmpReady1   = true;
-  //   } else {
-  //     Serial.print(F("proximal phalangeal DMP init failed (code "));
-  //     Serial.print(devStatus1);
-  //     Serial.println(F(")"));
-  //     dmpReady2   = false;
-  //   }
-
-  //   if (devStatus2 == 0) {
-  //     IMU_PROX.CalibrateAccel(6);
-  //     IMU_PROX.CalibrateGyro(6);
-  //     IMU_PROX.PrintActiveOffsets();
-
-  //     Serial.println(F("Enabling DMP for mid phalangeal..."));
-  //     IMU_PROX.setDMPEnabled(true);
-
-  //     packetSize2 = IMU_PROX.dmpGetFIFOPacketSize();
-  //     // dmpReady2   = true;
-  //   } else {
-  //     Serial.print(F("mid phalangeal DMP init failed (code "));
-  //     Serial.print(devStatus2);
-  //     Serial.println(F(")"));
-  //     dmpReady2   = false;
-  //   }
-  // }
-
 }
 
 void loop() {
@@ -206,23 +138,21 @@ void loop() {
     int MCP_flex = analogRead((HandChannels[i].label == "Palm") ? NULL : HandChannels[i].adc_channel[1]);
     int PIP_flex = analogRead((HandChannels[i].label == "Palm") ? NULL : HandChannels[i].adc_channel[2]);
 
-    DataPacket["Data"][HandChannels[i].label]["flex_mcp"];
-    DataPacket["Data"][HandChannels[i].label]["flex_pip"];
-
-    Serial.print(HandChannels[i].label+"\n");
-    Serial.print("ypr1[");
-    Serial.print(ypr1[0] * 180.0 / M_PI); Serial.print(", ");
-    Serial.print(ypr1[1] * 180.0 / M_PI); Serial.print(", ");
-    Serial.print(ypr1[2] * 180.0 / M_PI); Serial.println("]");
-
-    Serial.print("ypr2[");
-    Serial.print(ypr2[0] * 180.0 / M_PI); Serial.print(", ");
-    Serial.print(ypr2[1] * 180.0 / M_PI); Serial.print(", ");
-    Serial.print(ypr2[2] * 180.0 / M_PI); Serial.println("]");
-
-    
-
-    delay(20);
+    DataPacket["Data"][HandChannels[i].label]["flex_mcp"]     = MCP_flex;
+    DataPacket["Data"][HandChannels[i].label]["flex_pip"]     = PIP_flex;
+    DataPacket["Data"][HandChannels[i].label]["yaw_prox"]     = ypr1[0];
+    DataPacket["Data"][HandChannels[i].label]["pitch_prox"]   = ypr1[1];
+    DataPacket["Data"][HandChannels[i].label]["roll_prox"]    = ypr1[2];
+    DataPacket["Data"][HandChannels[i].label]["ax_prox"]      = NULL;
+    DataPacket["Data"][HandChannels[i].label]["ay_prox"]      = NULL;
+    DataPacket["Data"][HandChannels[i].label]["az_prox"]      = NULL;
+    DataPacket["Data"][HandChannels[i].label]["yaw_mid"]      = ypr2[0];
+    DataPacket["Data"][HandChannels[i].label]["pitch_mid"]    = ypr2[1];
+    DataPacket["Data"][HandChannels[i].label]["roll_mid"]     = ypr2[2];
+    DataPacket["Data"][HandChannels[i].label]["ax_mid"]       = NULL;
+    DataPacket["Data"][HandChannels[i].label]["ay_mid"]       = NULL;
+    DataPacket["Data"][HandChannels[i].label]["az_mid"]       = NULL;
   }
-    
+
+  delay(20);
 }

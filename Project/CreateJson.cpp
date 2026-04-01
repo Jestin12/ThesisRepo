@@ -3,14 +3,20 @@
 
 void addFinger(JsonObject parent, const char *name) {
   JsonObject f = parent.createNestedObject(name);
-  f["ax"] = nullptr;
-  f["ay"] = nullptr;
-  f["az"] = nullptr;
-  f["yaw"] = nullptr;
-  f["pitch"] = nullptr;
-  f["roll"] = nullptr;
+  f["ax_prox"] = nullptr;
+  f["ay_prox"] = nullptr;
+  f["az_prox"] = nullptr;
+  f["yaw_prox"] = nullptr;
+  f["pitch_prox"] = nullptr;
+  f["roll_prox"] = nullptr;
   f["flex_mcp"] = nullptr;
   f["flex_pip"] = nullptr;
+  f["ax_prox"] = nullptr;
+  f["ay_prox"] = nullptr;
+  f["az_prox"] = nullptr;
+  f["yaw_prox"] = nullptr;
+  f["pitch_prox"] = nullptr;
+  f["roll_prox"] = nullptr;
 }
 
 void buildFingerData(JsonObject fingerData) {
