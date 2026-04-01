@@ -9,6 +9,9 @@
 // ── BLE includes ───────────────────────────────────────────
 #include "BLE.h"
 
+// ── WIFI includes ───────────────────────────────────────────
+#include "Net.h"
+
 // ── I2C & TCA config ────────────────────────────────────────
 #define I2C_BUS_SDA 8
 #define I2C_BUS_SCL 9
@@ -72,7 +75,9 @@ void setup() {
   Serial.begin(115200);
 
   // BLE first (optional, but nice to see logs while sensors init)
-  initBleService();
+  // initBleService();
+
+  initWifi();  
 
   JsonObject fingerData = DataPacket.createNestedObject("Data");
   buildFingerData(fingerData);
@@ -165,9 +170,11 @@ void loop() {
   // serializeJson(DataPacket, Serial);
   // Serial.println();  // optional newline
 
-  if (deviceConnected) {
-    sendJsonOverBle();   // push each frame; or remove if you want "GET" pull only
-  }
+  // if (deviceConnected) {
+  //   sendJsonOverBle();   // push each frame; or remove if you want "GET" pull only
+  // }
+  sendJsonOverTcp(DataPacket);
+
   int end = millis();
 
   Serial.println("Delay" + String(end - start));
