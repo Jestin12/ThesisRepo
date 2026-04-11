@@ -7,6 +7,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 import pandas as pd
+from pynput import keyboard
 
 HOST = "0.0.0.0"
 PORT = 5000
@@ -23,12 +24,33 @@ ready = {hand: False for hand in GLOVES}
 rows_by_request = {}
 request_counter = 0
 request_loop_started = False
+init_sent = False
+waiting_for_release = False
 state_lock = threading.Lock()
 shutdown_event = threading.Event()
+keys_held = set()
+
+
+REQUIRED_KEYS = {"3", "r", "i", "0", "space"}
 
 
 def utc_now_iso_ms() -> str:
     return datetime.now(timezone.utc).isoformat(timespec="milliseconds").replace("+00:00", "Z")
+
+
+def normalize_key(key):
+    try:
+        if key == keyboard.Key.space:
+            return "space"
+        if hasattr(key, "char") and key.char is not None:
+            return key.char.lower()
+    except AttributeError:
+        pass
+    return None
+
+
+def chord_is_down() -> bool:
+    return REQUIRED_KEYS.issubset(keys_held)
 
 
 def flatten_hand_data(packet: dict, prefix: str) -> dict:
@@ -158,9 +180,44 @@ def save_combined_csv():
     print(f"Saved combined CSV to: {csv_path}")
 
 
-def handle_packet(packet: dict, conn: socket.socket, addr):
+def start_request_loop_once():
     global request_loop_started
+    with state_lock:
+        if request_loop_started:
+            return
+        request_loop_started = True
+    print("Starting periodic request loop.")
+    threading.Thread(target=request_loop, daemon=True).start()
 
+
+def on_press(key):
+    global init_sent
+    name = normalize_key(key)
+    if name is None:
+        return
+
+    keys_held.add(name)
+
+    if not init_sent and chord_is_down():
+        print("Key chord detected. Sending INIT.")
+        init_sent = True
+        send_init_to_all()
+
+
+def on_release(key):
+    global waiting_for_release
+    name = normalize_key(key)
+    if name is not None and name in keys_held:
+        keys_held.discard(name)
+
+    if waiting_for_release and not chord_is_down():
+        waiting_for_release = False
+        print("Key chord released after both READY messages.")
+        start_request_loop_once()
+
+
+def handle_packet(packet: dict, conn: socket.socket, addr):
+    global waiting_for_release
     msg_type = packet.get("type")
 
     if msg_type == "READY":
@@ -172,15 +229,16 @@ def handle_packet(packet: dict, conn: socket.socket, addr):
         with state_lock:
             clients[hand] = conn
             ready[hand] = True
-            should_start = all_ready() and not request_loop_started
-            if should_start:
-                request_loop_started = True
+            everyone_ready = all_ready()
 
         print(f"[{hand}] READY from {addr}")
 
-        if should_start:
-            print("Both gloves are READY. Starting periodic request loop.")
-            threading.Thread(target=request_loop, daemon=True).start()
+        if everyone_ready:
+            if chord_is_down():
+                waiting_for_release = True
+                print("Both gloves are READY. Release 3 + R + I + 0 + Space to begin data requests...")
+            else:
+                start_request_loop_once()
         return
 
     hand = packet.get("Hand")
@@ -259,31 +317,31 @@ def request_loop():
     while not shutdown_event.is_set():
         with state_lock:
             ready_now = all_ready()
-
         if not ready_now:
             time.sleep(0.1)
             continue
-
         send_request_to_all()
         time.sleep(REQUEST_INTERVAL_S)
 
 
 def main():
     print(f"Starting TCP server on {HOST}:{PORT}")
+    listener = keyboard.Listener(on_press=on_press, on_release=on_release)
+    listener.start()
+
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as server_socket:
         server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         server_socket.bind((HOST, PORT))
         server_socket.listen(5)
         print("Waiting for glove connections...")
+        print("Hold 3 + R + I + 0 + Space to send INIT...")
 
         threading.Thread(target=accept_loop, args=(server_socket,), daemon=True).start()
 
-        print("Press Enter once both gloves are connected to send INIT...")
-        input()
-        send_init_to_all()
-
         while not shutdown_event.is_set():
             time.sleep(0.25)
+
+    listener.stop()
 
 
 if __name__ == "__main__":
