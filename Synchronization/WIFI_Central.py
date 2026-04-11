@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 import json
+import os
+import signal
 import socket
 import threading
 import time
@@ -25,10 +27,12 @@ rows_by_request = {}
 request_counter = 0
 request_loop_started = False
 init_sent = False
-waiting_for_release = False
+waiting_for_release_after_ready = False
+stop_armed = False
 state_lock = threading.Lock()
 shutdown_event = threading.Event()
 keys_held = set()
+listener_ref = None
 
 REQUIRED_KEYS = {"3", "r", "i", "0", "space"}
 
@@ -203,17 +207,24 @@ def save_combined_csv():
 
 
 def start_request_loop_once():
-    global request_loop_started
+    global request_loop_started, stop_armed
     with state_lock:
         if request_loop_started:
             return
         request_loop_started = True
+        stop_armed = True
     print("Starting periodic request loop.")
+    print("Hold 3 + R + I + 0 + Space again to stop the program.")
     threading.Thread(target=request_loop, daemon=True).start()
 
 
+def trigger_ctrl_c_behavior(reason: str):
+    print(reason)
+    os.kill(os.getpid(), signal.SIGINT)
+
+
 def on_press(key):
-    global init_sent
+    global init_sent, stop_armed
     name = normalize_key(key)
     if name is None:
         return
@@ -224,22 +235,27 @@ def on_press(key):
         print("Key chord detected. Sending INIT.")
         init_sent = True
         send_init_to_all()
+        return
+
+    if init_sent and stop_armed and chord_is_down() and not waiting_for_release_after_ready:
+        stop_armed = False
+        trigger_ctrl_c_behavior("Stop chord detected. Triggering Ctrl+C behavior...")
 
 
 def on_release(key):
-    global waiting_for_release
+    global waiting_for_release_after_ready
     name = normalize_key(key)
     if name is not None and name in keys_held:
         keys_held.discard(name)
 
-    if waiting_for_release and not chord_is_down():
-        waiting_for_release = False
+    if waiting_for_release_after_ready and not chord_is_down():
+        waiting_for_release_after_ready = False
         print("Key chord released after both READY messages.")
         start_request_loop_once()
 
 
 def handle_packet(packet: dict, conn: socket.socket, addr):
-    global waiting_for_release
+    global waiting_for_release_after_ready
     msg_type = packet.get("type")
 
     if msg_type == "READY":
@@ -257,7 +273,7 @@ def handle_packet(packet: dict, conn: socket.socket, addr):
 
         if everyone_ready:
             if chord_is_down():
-                waiting_for_release = True
+                waiting_for_release_after_ready = True
                 print("Both gloves are READY. Release 3 + R + I + 0 + Space to begin data requests...")
             else:
                 start_request_loop_once()
@@ -347,9 +363,10 @@ def request_loop():
 
 
 def main():
+    global listener_ref
     print(f"Starting TCP server on {HOST}:{PORT}")
-    listener = keyboard.Listener(on_press=on_press, on_release=on_release)
-    listener.start()
+    listener_ref = keyboard.Listener(on_press=on_press, on_release=on_release)
+    listener_ref.start()
 
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as server_socket:
         server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -363,7 +380,9 @@ def main():
         while not shutdown_event.is_set():
             shutdown_event.wait(0.25)
 
-    listener.stop()
+    if listener_ref is not None:
+        listener_ref.stop()
+
 
 if __name__ == "__main__":
     try:
