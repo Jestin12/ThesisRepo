@@ -11,12 +11,12 @@ void addFinger(JsonObject parent, const char *name) {
   f["roll_prox"] = nullptr;
   f["flex_mcp"] = nullptr;
   f["flex_pip"] = nullptr;
-  f["ax_prox"] = nullptr;
-  f["ay_prox"] = nullptr;
-  f["az_prox"] = nullptr;
-  f["yaw_prox"] = nullptr;
-  f["pitch_prox"] = nullptr;
-  f["roll_prox"] = nullptr;
+  f["ax_mic"] = nullptr;
+  f["ay_mid"] = nullptr;
+  f["az_mid"] = nullptr;
+  f["yaw_mid"] = nullptr;
+  f["pitch_mid"] = nullptr;
+  f["roll_mid"] = nullptr;
 }
 
 void buildFingerData(JsonObject fingerData) {

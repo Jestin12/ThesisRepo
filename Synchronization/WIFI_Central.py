@@ -1,87 +1,296 @@
 #!/usr/bin/env python3
-import socket
 import json
-import pandas as pd
-from datetime import datetime
+import socket
+import threading
+import time
+from datetime import datetime, timezone
 from pathlib import Path
 
-HOST = "0.0.0.0"   # listen on all interfaces
-PORT = 5000        # must match TCP_PORT on ESP32
+import pandas as pd
 
-rows = []
+HOST = "0.0.0.0"
+PORT = 5000
+SOCKET_TIMEOUT_S = 0.5
+REQUEST_INTERVAL_S = 0.05
+GLOVES = ("LeftGlove", "RightGlove")
+
 run_timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+script_dir = Path(__file__).resolve().parent
 
-def flatten_packet_to_wide(packet: dict, run_ts: str, read_time: str) -> dict:
+pending_conns = {}
+clients = {}
+ready = {hand: False for hand in GLOVES}
+rows_by_request = {}
+request_counter = 0
+request_loop_started = False
+state_lock = threading.Lock()
+shutdown_event = threading.Event()
+
+
+def utc_now_iso_ms() -> str:
+    return datetime.now(timezone.utc).isoformat(timespec="milliseconds").replace("+00:00", "Z")
+
+
+def flatten_hand_data(packet: dict, prefix: str) -> dict:
     row = {
-        "run_timestamp": run_ts,
-        "read_time": read_time,
-        "hand": packet.get("Hand"),
-        "esp_time_ms": packet.get("Time"),
+        f"{prefix}_glove_time_ms": packet.get("glove_time_ms", packet.get("Time")),
+        f"{prefix}_read_time": datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")[:-3],
     }
     data = packet.get("Data", {})
-    for finger_name, finger_data in data.items():
-        prefix = finger_name.lower()
-        for metric_key, value in finger_data.items():
-            col_name = f"{prefix}_{metric_key}"
-            row[col_name] = value
+    if isinstance(data, dict):
+        for finger_name, finger_data in data.items():
+            finger_prefix = f"{prefix}_{str(finger_name).lower()}"
+            if isinstance(finger_data, dict):
+                for metric_key, value in finger_data.items():
+                    row[f"{finger_prefix}_{metric_key}"] = value
+            else:
+                row[finger_prefix] = finger_data
     return row
 
-def save_csv():
-    if not rows:
+
+def ensure_request_row(request_id: int, request_ts: str):
+    if request_id not in rows_by_request:
+        rows_by_request[request_id] = {
+            "run_timestamp": run_timestamp,
+            "request_id": request_id,
+            "request_ts": request_ts,
+            "left_received": False,
+            "right_received": False,
+        }
+    return rows_by_request[request_id]
+
+
+def send_json(conn: socket.socket, obj: dict) -> bool:
+    try:
+        conn.sendall((json.dumps(obj) + "\n").encode("utf-8"))
+        return True
+    except OSError:
+        return False
+
+
+def unregister_socket(conn: socket.socket):
+    global request_loop_started
+    hand_to_remove = None
+    addr = None
+
+    with state_lock:
+        for stored_addr, stored_conn in list(pending_conns.items()):
+            if stored_conn is conn:
+                addr = stored_addr
+                pending_conns.pop(stored_addr, None)
+                break
+
+        for hand, stored_conn in list(clients.items()):
+            if stored_conn is conn:
+                hand_to_remove = hand
+                clients.pop(hand, None)
+                ready[hand] = False
+                request_loop_started = False
+                break
+
+    try:
+        conn.close()
+    except OSError:
+        pass
+
+    if hand_to_remove:
+        print(f"[{hand_to_remove}] disconnected")
+    elif addr:
+        print(f"Pending client disconnected: {addr}")
+
+
+def all_ready() -> bool:
+    return all(ready.values())
+
+
+def send_init_to_all():
+    dead = []
+    with state_lock:
+        items = list(pending_conns.items())
+
+    print(f"Sending INIT to {len(items)} connected sockets")
+    for addr, conn in items:
+        print(f"INIT target socket: {addr}")
+        if not send_json(conn, {"type": "INIT"}):
+            dead.append(conn)
+
+    for conn in dead:
+        unregister_socket(conn)
+
+    print("INIT sent to all connected gloves")
+
+
+def send_request_to_all():
+    global request_counter
+    with state_lock:
+        request_counter += 1
+        request_id = request_counter
+        request_ts = utc_now_iso_ms()
+        ensure_request_row(request_id, request_ts)
+        items = list(clients.items())
+
+    msg = {
+        "type": "REQUEST_DATA",
+        "request_id": request_id,
+        "request_ts": request_ts,
+    }
+
+    dead = []
+    for hand, conn in items:
+        if not send_json(conn, msg):
+            dead.append(conn)
+        else:
+            print(f"REQUEST_DATA sent to {hand}, request_id={request_id}")
+
+    for conn in dead:
+        unregister_socket(conn)
+
+
+def save_combined_csv():
+    if not rows_by_request:
         print("No packets received; nothing to save.")
         return
-    df = pd.DataFrame(rows)
-    script_dir = Path(__file__).resolve().parent
-    ts_for_filename = datetime.now().strftime("%Y%m%d_%H%M%S")
-    csv_path = script_dir / f"glove_data_tcp_{ts_for_filename}.csv"
+
+    ordered_rows = [rows_by_request[k] for k in sorted(rows_by_request.keys())]
+    df = pd.DataFrame(ordered_rows)
+    csv_path = script_dir / f"gloves_combined_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv"
     df.to_csv(csv_path, index=False)
-    print(f"Saved CSV to: {csv_path}")
+    print(f"Saved combined CSV to: {csv_path}")
+
+
+def handle_packet(packet: dict, conn: socket.socket, addr):
+    global request_loop_started
+
+    msg_type = packet.get("type")
+
+    if msg_type == "READY":
+        hand = packet.get("hand")
+        if hand not in GLOVES:
+            print(f"Ignoring READY from unknown hand: {packet}")
+            return
+
+        with state_lock:
+            clients[hand] = conn
+            ready[hand] = True
+            should_start = all_ready() and not request_loop_started
+            if should_start:
+                request_loop_started = True
+
+        print(f"[{hand}] READY from {addr}")
+
+        if should_start:
+            print("Both gloves are READY. Starting periodic request loop.")
+            threading.Thread(target=request_loop, daemon=True).start()
+        return
+
+    hand = packet.get("Hand")
+    if hand not in GLOVES:
+        print(f"Ignoring packet with unknown Hand field: {packet}")
+        return
+
+    request_id = packet.get("request_id")
+    request_ts = packet.get("request_ts")
+    if request_id is None or request_ts is None:
+        print(f"Ignoring data packet without request_id/request_ts from {hand}")
+        return
+
+    prefix = "left" if hand == "LeftGlove" else "right"
+    with state_lock:
+        clients[hand] = conn
+        row = ensure_request_row(request_id, request_ts)
+        row.update(flatten_hand_data(packet, prefix))
+        row[f"{prefix}_received"] = True
+
+    print(f"[{hand}] stored response for request_id={request_id}")
+
+
+def client_reader(conn: socket.socket, addr):
+    conn.settimeout(SOCKET_TIMEOUT_S)
+    buffer = ""
+
+    try:
+        while not shutdown_event.is_set():
+            try:
+                data = conn.recv(4096)
+            except socket.timeout:
+                continue
+
+            if not data:
+                break
+
+            buffer += data.decode(errors="ignore")
+            while "\n" in buffer:
+                line, buffer = buffer.split("\n", 1)
+                line = line.strip()
+                if not line:
+                    continue
+                try:
+                    packet = json.loads(line)
+                except json.JSONDecodeError as e:
+                    print(f"JSON decode failed from {addr}: {e}")
+                    continue
+
+                print(f"Packet from {addr}: {packet}")
+                handle_packet(packet, conn, addr)
+    except OSError as e:
+        print(f"Socket error from {addr}: {e}")
+    finally:
+        unregister_socket(conn)
+
+
+def accept_loop(server_socket: socket.socket):
+    server_socket.settimeout(SOCKET_TIMEOUT_S)
+    while not shutdown_event.is_set():
+        try:
+            conn, addr = server_socket.accept()
+        except socket.timeout:
+            continue
+        except OSError:
+            break
+
+        print(f"Incoming TCP connection from {addr}")
+        with state_lock:
+            pending_conns[addr] = conn
+
+        threading.Thread(target=client_reader, args=(conn, addr), daemon=True).start()
+
+
+def request_loop():
+    while not shutdown_event.is_set():
+        with state_lock:
+            ready_now = all_ready()
+
+        if not ready_now:
+            time.sleep(0.1)
+            continue
+
+        send_request_to_all()
+        time.sleep(REQUEST_INTERVAL_S)
+
 
 def main():
-    global rows
-
     print(f"Starting TCP server on {HOST}:{PORT}")
-    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-        s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        s.bind((HOST, PORT))
-        s.listen(1)
-        print("Waiting for ESP32 connection...")
-        conn, addr = s.accept()
-        print(f"Connected by {addr}")
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as server_socket:
+        server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        server_socket.bind((HOST, PORT))
+        server_socket.listen(5)
+        print("Waiting for glove connections...")
 
-        with conn:
-            buffer = ""
-            try:
-                while True:
-                    data = conn.recv(4096)
-                    if not data:
-                        print("Client disconnected.")
-                        break
-                    buffer += data.decode(errors="ignore")
+        threading.Thread(target=accept_loop, args=(server_socket,), daemon=True).start()
 
-                    while "\n" in buffer:
-                        line, buffer = buffer.split("\n", 1)
-                        line = line.strip()
-                        if not line:
-                            continue
+        print("Press Enter once both gloves are connected to send INIT...")
+        input()
+        send_init_to_all()
 
-                        print("Received JSON line:")
-                        print(line)
-                        try:
-                            packet = json.loads(line)
-                        except json.JSONDecodeError as e:
-                            print("JSON decode failed for line, skipping:", e)
-                            continue
+        while not shutdown_event.is_set():
+            time.sleep(0.25)
 
-                        read_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-                        row = flatten_packet_to_wide(packet, run_timestamp, read_time)
-                        rows.append(row)
-                        print("Packet flattened and stored; total rows:", len(rows))
-            except KeyboardInterrupt:
-                print("\nStopping (Ctrl+C)...")
 
 if __name__ == "__main__":
     try:
         main()
+    except KeyboardInterrupt:
+        print("\nStopping (Ctrl+C)...")
     finally:
-        save_csv()
+        shutdown_event.set()
+        save_combined_csv()

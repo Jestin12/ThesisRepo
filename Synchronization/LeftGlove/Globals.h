@@ -17,7 +17,7 @@ extern MPU6050 IMU_PROX;
 extern TCA9548A TCA;
 extern FingerChannel HandChannels[7];
 // extern your JSON document from the other file, or declare it here.
-extern DynamicJsonDocument DataPacket;
+// extern DynamicJsonDocument DataPacket;
 
 extern bool dmpReady1;
 extern bool dmpReady2;

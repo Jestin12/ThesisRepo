@@ -11,9 +11,7 @@ static const uint16_t TCP_PORT   = 5000;
 
 static WiFiClient tcpClient;
 static unsigned long lastConnectAttempt = 0;
-
 static String rxBuffer;
-
 
 static void ensureTcpConnected() {
   if (tcpClient.connected()) return;
@@ -73,8 +71,6 @@ void sendJsonOverTcp(const DynamicJsonDocument& doc) {
   }
 }
 
-
-
 void sendReadyMessage(const char* handName) {
   DynamicJsonDocument doc(128);
   doc["type"] = "READY";
@@ -82,25 +78,49 @@ void sendReadyMessage(const char* handName) {
   sendJsonOverTcp(doc);
 }
 
-void pollTcpCommands(void (*onInit)(), void (*onRequestData)()) {
+void pollTcpCommands(void (*onInit)(), void (*onRequestData)(uint32_t, const char*)) {
   ensureTcpConnected();
-  if (!tcpClient.connected()) return;
+  if (!tcpClient.connected()) {
+    // Optional: uncomment if you want to see disconnections
+    // Serial.println("pollTcpCommands: not connected");
+    return;
+  }
+
+  // Comment this down once things are stable; it's very spammy
+  // Serial.println("pollTcpCommands running");
 
   while (tcpClient.available()) {
     char c = (char)tcpClient.read();
+    Serial.print("RX char: ");
+    Serial.println((int)c);
+
     if (c == '\n') {
+      Serial.print("Full RX line: ");
+      Serial.println(rxBuffer);
+
       DynamicJsonDocument doc(256);
       DeserializationError err = deserializeJson(doc, rxBuffer);
       rxBuffer = "";
-      if (err) continue;
 
-      const char* type = doc["type"];
-      if (!type) continue;
+      if (err) {
+        Serial.print("JSON parse failed: ");
+        Serial.println(err.c_str());
+        continue;
+      }
+
+      const char* type = doc["type"] | "";
+      Serial.print("Received type: ");
+      Serial.println(type);
 
       if (strcmp(type, "INIT") == 0) {
+        Serial.println("Calling onInit()");
         onInit();
       } else if (strcmp(type, "REQUEST_DATA") == 0) {
-        onRequestData();
+        uint32_t requestId = doc["request_id"] | 0;
+        const char* requestTs = doc["request_ts"] | "";
+        Serial.print("Calling onRequestData(), id=");
+        Serial.println(requestId);
+        onRequestData(requestId, requestTs);
       }
     } else {
       rxBuffer += c;

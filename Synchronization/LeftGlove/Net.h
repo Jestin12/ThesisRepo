@@ -8,3 +8,7 @@ void initWifi();
 
 // Call periodically from loop() to send the current DataPacket frame
 void sendJsonOverTcp(const DynamicJsonDocument& doc);
+
+void sendReadyMessage(const char* handName);
+
+void pollTcpCommands(void (*onInit)(), void (*onRequestData)(uint32_t, const char*));
