@@ -15,7 +15,7 @@
 // ── I2C & TCA config ────────────────────────────────────────
 #define I2C_BUS_SDA 8
 #define I2C_BUS_SCL 9
-#define TCA_FREQ    400000
+#define TCA_FREQ    100000
 
 #define TCA_ADDR    0x71
 
@@ -71,6 +71,17 @@ float ax2, ay2, az2;
 DynamicJsonDocument DataPacket(4096);
 
 
+void scanChannel(uint8_t ch) {
+  tcaSelectChannel(ch);
+  Serial.print("Scan channel "); Serial.println(ch);
+  for (uint8_t addr = 1; addr < 127; addr++) {
+    Wire.beginTransmission(addr);
+    if (Wire.endTransmission() == 0) {
+      Serial.print("  0x"); Serial.println(addr, HEX);
+    }
+  }
+}
+
 // ── Arduino setup/loop ─────────────────────────────────────
 
 void setup() {
@@ -95,8 +106,9 @@ void setup() {
 
   bool status[4] = {false, false, false, false};
 
-  for (int i = 0; i < int(sizeof(HandChannels) / sizeof(HandChannels[0])); i++) {
+  scanChannel(TCA_CH_MIDDLE);
 
+  for (int i = 0; i < int(sizeof(HandChannels) / sizeof(HandChannels[0])); i++) {
     initFingerChannel(HandChannels[i], status);
     Serial.println(HandChannels[i].label);
     Serial.println(String("IMU_MID : ") + (status[0] ? "ON" : "OFF"));
@@ -144,7 +156,6 @@ void loop() {
       ax1 = ay1 = az1 =NAN;
     }
 
-    Serial.println(HandChannels[i].label + " Mid " + String(millis() - start));
 
     // ---- IMU_PROX ----
     if (HandChannels[i].IMU_PROX_EN == true)
@@ -173,12 +184,9 @@ void loop() {
       ax2 = ay2 = az2 = NAN;
     }
 
-    Serial.println(HandChannels[i].label + " Prox " + String(millis() - start));
     
     int MCP_flex = ((HandChannels[i].label == "Palm") || (HandChannels[i].label == "Wrist")) ? -1 : analogRead(HandChannels[i].adc_channel[0]);
     int PIP_flex = ((HandChannels[i].label == "Palm") || (HandChannels[i].label == "Wrist")) ? -1 : analogRead(HandChannels[i].adc_channel[1]);
-
-    Serial.println(HandChannels[i].label + " ADC " + String(millis() - start));
 
     DataPacket["Time"] = millis();
 
@@ -198,8 +206,6 @@ void loop() {
     DataPacket["Data"][HandChannels[i].label]["ax_mid"]     = roundf(ax2 * 100.0f) / 100.0f;
     DataPacket["Data"][HandChannels[i].label]["ay_mid"]     = roundf(ay2 * 100.0f) / 100.0f;
     DataPacket["Data"][HandChannels[i].label]["az_mid"]     = roundf(az2 * 100.0f) / 100.0f;
-
-    Serial.println(HandChannels[i].label + " Data compilation " + String(millis() - start));
   }
 
   // serializeJsonPretty(DataPacket, Serial);
