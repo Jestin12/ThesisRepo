@@ -210,8 +210,8 @@ void loop() {
 
   // serializeJsonPretty(DataPacket, Serial);
   // Serial.println();
-  // serializeJson(DataPacket, Serial);
-  // Serial.println();  // optional newline
+  serializeJson(DataPacket, Serial);
+  Serial.println();  // optional newline
 
   // if (deviceConnected) {
   //   sendJsonOverBle();   // push each frame; or remove if you want "GET" pull only
