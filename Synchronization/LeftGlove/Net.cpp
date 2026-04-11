@@ -122,6 +122,12 @@ void pollTcpCommands(void (*onInit)(), void (*onRequestData)(uint32_t, const cha
         Serial.println(requestId);
         onRequestData(requestId, requestTs);
       }
+      else if (strcmp(type, "RESTART") == 0) {
+        Serial.println("Received RESTART");
+        digitalWrite(1, LOW);  // for LED
+        delay(100);
+        ESP.restart();
+      }
     } else {
       rxBuffer += c;
     }

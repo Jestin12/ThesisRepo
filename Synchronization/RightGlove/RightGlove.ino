@@ -71,12 +71,16 @@ void handleInit() {
   Serial.println("Called handleInit");
   gloveInitialised = true;
   sendReadyMessage(HAND_NAME);
+  digitalWrite(1, HIGH);  // for LED
 }
 
 void setup() 
 {
   // put your setup code here, to run once:
   Serial.begin(115200);
+
+  pinMode(1, OUTPUT);
+  
 
   initWifi();
 
@@ -85,6 +89,7 @@ void setup()
 
   gloveInitialised = false;
   sendReadyMessage(HAND_NAME);
+
 
 }
 

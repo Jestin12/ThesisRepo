@@ -30,7 +30,6 @@ state_lock = threading.Lock()
 shutdown_event = threading.Event()
 keys_held = set()
 
-
 REQUIRED_KEYS = {"3", "r", "i", "0", "space"}
 
 
@@ -88,6 +87,29 @@ def send_json(conn: socket.socket, obj: dict) -> bool:
         return True
     except OSError:
         return False
+
+
+def all_connected_sockets():
+    seen = set()
+    sockets = []
+    with state_lock:
+        for conn in pending_conns.values():
+            if id(conn) not in seen:
+                seen.add(id(conn))
+                sockets.append(conn)
+        for conn in clients.values():
+            if id(conn) not in seen:
+                seen.add(id(conn))
+                sockets.append(conn)
+    return sockets
+
+
+def send_restart_to_all():
+    sockets = all_connected_sockets()
+    print(f"Sending RESTART to {len(sockets)} glove sockets before shutdown...")
+    for conn in sockets:
+        send_json(conn, {"type": "RESTART"})
+    time.sleep(0.2)
 
 
 def unregister_socket(conn: socket.socket):
@@ -339,16 +361,16 @@ def main():
         threading.Thread(target=accept_loop, args=(server_socket,), daemon=True).start()
 
         while not shutdown_event.is_set():
-            time.sleep(0.25)
+            shutdown_event.wait(0.25)
 
     listener.stop()
-
 
 if __name__ == "__main__":
     try:
         main()
     except KeyboardInterrupt:
         print("\nStopping (Ctrl+C)...")
+        send_restart_to_all()
     finally:
         shutdown_event.set()
         save_combined_csv()
