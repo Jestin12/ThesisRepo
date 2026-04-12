@@ -22,7 +22,7 @@
 #define TCA_CH_PALM   7
 #define TCA_CH_THUMB  6
 #define TCA_CH_INDEX  5
-#define TCA_CH_MIDDLE 4
+#define TCA_CH_MIDDLE 0
 #define TCA_CH_RING   3
 #define TCA_CH_PINKY  2
 #define TCA_CH_WRIST  1
@@ -79,7 +79,7 @@ void setup() {
   // BLE first (optional, but nice to see logs while sensors init)
   // initBleService();
 
-  initWifi();  
+  // initWifi();  
 
   JsonObject fingerData = DataPacket.createNestedObject("Data");
   buildFingerData(fingerData);
@@ -94,8 +94,16 @@ void setup() {
   DataPacket["Time"] = nullptr;
 
   bool status[4] = {false, false, false, false};
+<<<<<<< Updated upstream
 
   for (int i = 0; i < int(sizeof(HandChannels) / sizeof(HandChannels[0])); i++) {
+=======
+// To this (temporarily):
+  for (int i = 3; i <= 3; i++)
+  // for (int i = 0; i < int(sizeof(HandChannels) / sizeof(HandChannels[0])); i++) 
+  {
+
+>>>>>>> Stashed changes
     initFingerChannel(HandChannels[i], status);
     Serial.println(HandChannels[i].label);
     Serial.println(String("IMU_MID : ") + (status[0] ? "ON" : "OFF"));
@@ -109,84 +117,99 @@ void setup() {
 
 void loop() {
   // Serial.println("working");
-  int start = millis();
+  // int start = millis();
 
-  for (int i = 0; i < int(sizeof(HandChannels) / sizeof(HandChannels[0])); i++) {
-
-
-    tcaSelectChannel(HandChannels[i].tca_channel);
-
-    // ---- IMU_MID ----
-    if (HandChannels[i].IMU_MID_EN == true)
-    {
-      fifoCount1 = IMU_MID.getFIFOCount();
-      if (fifoCount1 >= 1024) {
-        IMU_MID.resetFIFO();
-      } else if (fifoCount1 >= packetSize1) {
-        IMU_MID.getFIFOBytes(fifoBuffer1, packetSize1);
-        IMU_MID.dmpGetQuaternion(&q1, fifoBuffer1);
-        IMU_MID.dmpGetGravity(&gravity1, &q1);
-        IMU_MID.dmpGetYawPitchRoll(ypr1, &q1, &gravity1);
-
-        IMU_MID.dmpGetAccel(&aa1, fifoBuffer1);
-        IMU_MID.dmpGetLinearAccel(&aaReal1, &aa1, &gravity1);
-        IMU_MID.dmpGetLinearAccelInWorld(&aaWorld1, &aaReal1, &q1);
-
-        ax1 = aaWorld1.x / 16384.0;
-        ay1 = aaWorld1.y / 16384.0;
-        az1 = aaWorld1.z / 16384.0;
-      }
-    }
-    else
-    {
-      ypr1[0] = ypr1[1] = ypr1[2] = NAN;
-      ax1 = ay1 = az1 =NAN;
-    }
+  // for (int i = 0; i < int(sizeof(HandChannels) / sizeof(HandChannels[0])); i++) {
 
 
-    // ---- IMU_PROX ----
-    if (HandChannels[i].IMU_PROX_EN == true)
-    {
-      fifoCount2 = IMU_PROX.getFIFOCount();
-      if (fifoCount2 >= 1024) {
-        IMU_PROX.resetFIFO();
-      } else if (fifoCount2 >= packetSize2) {
-        IMU_PROX.getFIFOBytes(fifoBuffer2, packetSize2);
-        IMU_PROX.dmpGetQuaternion(&q2, fifoBuffer2);
-        IMU_PROX.dmpGetGravity(&gravity2, &q2);
-        IMU_PROX.dmpGetYawPitchRoll(ypr2, &q2, &gravity2);
+  //   tcaSelectChannel(HandChannels[i].tca_channel);
 
-        IMU_PROX.dmpGetAccel(&aa2, fifoBuffer2);
-        IMU_PROX.dmpGetLinearAccel(&aaReal2, &aa2, &gravity2);
-        IMU_PROX.dmpGetLinearAccelInWorld(&aaWorld2, &aaReal2, &q2);
+  //   // ---- IMU_MID ----
+  //   if (HandChannels[i].IMU_MID_EN == true)
+  //   {
+  //     fifoCount1 = IMU_MID.getFIFOCount();
+  //     if (fifoCount1 >= 1024) {
+  //       IMU_MID.resetFIFO();
+  //     } else if (fifoCount1 >= packetSize1) {
+  //       IMU_MID.getFIFOBytes(fifoBuffer1, packetSize1);
+  //       IMU_MID.dmpGetQuaternion(&q1, fifoBuffer1);
+  //       IMU_MID.dmpGetGravity(&gravity1, &q1);
+  //       IMU_MID.dmpGetYawPitchRoll(ypr1, &q1, &gravity1);
 
-        ax2 = aaWorld2.x / 16384.0;
-        ay2 = aaWorld2.y / 16384.0;
-        az2 = aaWorld2.z / 16384.0;
-      }
-    }
-    else
-    {
-      ypr2[0] = ypr2[1] = ypr2[2] = NAN;
-      ax2 = ay2 = az2 = NAN;
-    }
+  //       IMU_MID.dmpGetAccel(&aa1, fifoBuffer1);
+  //       IMU_MID.dmpGetLinearAccel(&aaReal1, &aa1, &gravity1);
+  //       IMU_MID.dmpGetLinearAccelInWorld(&aaWorld1, &aaReal1, &q1);
 
+  //       ax1 = aaWorld1.x / 16384.0;
+  //       ay1 = aaWorld1.y / 16384.0;
+  //       az1 = aaWorld1.z / 16384.0;
+  //     }
+  //   }
+  //   else
+  //   {
+  //     ypr1[0] = ypr1[1] = ypr1[2] = NAN;
+  //     ax1 = ay1 = az1 =NAN;
+  //   }
+
+<<<<<<< Updated upstream
+=======
+  //   Serial.println(HandChannels[i].label + " Mid " + String(millis() - start));
+>>>>>>> Stashed changes
+
+  //   // ---- IMU_PROX ----
+  //   if (HandChannels[i].IMU_PROX_EN == true)
+  //   {
+  //     fifoCount2 = IMU_PROX.getFIFOCount();
+  //     if (fifoCount2 >= 1024) {
+  //       IMU_PROX.resetFIFO();
+  //     } else if (fifoCount2 >= packetSize2) {
+  //       IMU_PROX.getFIFOBytes(fifoBuffer2, packetSize2);
+  //       IMU_PROX.dmpGetQuaternion(&q2, fifoBuffer2);
+  //       IMU_PROX.dmpGetGravity(&gravity2, &q2);
+  //       IMU_PROX.dmpGetYawPitchRoll(ypr2, &q2, &gravity2);
+
+  //       IMU_PROX.dmpGetAccel(&aa2, fifoBuffer2);
+  //       IMU_PROX.dmpGetLinearAccel(&aaReal2, &aa2, &gravity2);
+  //       IMU_PROX.dmpGetLinearAccelInWorld(&aaWorld2, &aaReal2, &q2);
+
+  //       ax2 = aaWorld2.x / 16384.0;
+  //       ay2 = aaWorld2.y / 16384.0;
+  //       az2 = aaWorld2.z / 16384.0;
+  //     }
+  //   }
+  //   else
+  //   {
+  //     ypr2[0] = ypr2[1] = ypr2[2] = NAN;
+  //     ax2 = ay2 = az2 = NAN;
+  //   }
+
+<<<<<<< Updated upstream
+=======
+  //   Serial.println(HandChannels[i].label + " Prox " + String(millis() - start));
+>>>>>>> Stashed changes
     
-    int MCP_flex = ((HandChannels[i].label == "Palm") || (HandChannels[i].label == "Wrist")) ? -1 : analogRead(HandChannels[i].adc_channel[0]);
-    int PIP_flex = ((HandChannels[i].label == "Palm") || (HandChannels[i].label == "Wrist")) ? -1 : analogRead(HandChannels[i].adc_channel[1]);
+  //   int MCP_flex = ((HandChannels[i].label == "Palm") || (HandChannels[i].label == "Wrist")) ? -1 : analogRead(HandChannels[i].adc_channel[0]);
+  //   int PIP_flex = ((HandChannels[i].label == "Palm") || (HandChannels[i].label == "Wrist")) ? -1 : analogRead(HandChannels[i].adc_channel[1]);
 
+<<<<<<< Updated upstream
     DataPacket["Time"] = millis();
+=======
+  //   Serial.println(HandChannels[i].label + " ADC " + String(millis() - start));
 
-    DataPacket["Data"][HandChannels[i].label]["flex_mcp"]   = int(MCP_flex);
-    DataPacket["Data"][HandChannels[i].label]["flex_pip"]   = int(PIP_flex);
+  //   DataPacket["Time"] = millis();
+>>>>>>> Stashed changes
 
-    DataPacket["Data"][HandChannels[i].label]["yaw_prox"]   = roundf(ypr1[0] * 100.0f) / 100.0f;
-    DataPacket["Data"][HandChannels[i].label]["pitch_prox"] = roundf(ypr1[1] * 100.0f) / 100.0f;
-    DataPacket["Data"][HandChannels[i].label]["roll_prox"]  = roundf(ypr1[2] * 100.0f) / 100.0f;
-    DataPacket["Data"][HandChannels[i].label]["ax_prox"]    = roundf(ax1 * 100.0f) / 100.0f;
-    DataPacket["Data"][HandChannels[i].label]["ay_prox"]    = roundf(ay1 * 100.0f) / 100.0f;
-    DataPacket["Data"][HandChannels[i].label]["az_prox"]    = roundf(az1 * 100.0f) / 100.0f;
+  //   DataPacket["Data"][HandChannels[i].label]["flex_mcp"]   = int(MCP_flex);
+  //   DataPacket["Data"][HandChannels[i].label]["flex_pip"]   = int(PIP_flex);
 
+  //   DataPacket["Data"][HandChannels[i].label]["yaw_prox"]   = roundf(ypr1[0] * 100.0f) / 100.0f;
+  //   DataPacket["Data"][HandChannels[i].label]["pitch_prox"] = roundf(ypr1[1] * 100.0f) / 100.0f;
+  //   DataPacket["Data"][HandChannels[i].label]["roll_prox"]  = roundf(ypr1[2] * 100.0f) / 100.0f;
+  //   DataPacket["Data"][HandChannels[i].label]["ax_prox"]    = roundf(ax1 * 100.0f) / 100.0f;
+  //   DataPacket["Data"][HandChannels[i].label]["ay_prox"]    = roundf(ay1 * 100.0f) / 100.0f;
+  //   DataPacket["Data"][HandChannels[i].label]["az_prox"]    = roundf(az1 * 100.0f) / 100.0f;
+
+<<<<<<< Updated upstream
     DataPacket["Data"][HandChannels[i].label]["yaw_mid"]    = roundf(ypr2[0] * 100.0f) / 100.0f;
     DataPacket["Data"][HandChannels[i].label]["pitch_mid"]  = roundf(ypr2[1] * 100.0f) / 100.0f;
     DataPacket["Data"][HandChannels[i].label]["roll_mid"]   = roundf(ypr2[2] * 100.0f) / 100.0f;
@@ -202,12 +225,31 @@ void loop() {
 
   // if (deviceConnected) {
   //   sendJsonOverBle();   // push each frame; or remove if you want "GET" pull only
+=======
+  //   DataPacket["Data"][HandChannels[i].label]["yaw_mid"]    = roundf(ypr2[0] * 100.0f) / 100.0f;
+  //   DataPacket["Data"][HandChannels[i].label]["pitch_mid"]  = roundf(ypr2[1] * 100.0f) / 100.0f;
+  //   DataPacket["Data"][HandChannels[i].label]["roll_mid"]   = roundf(ypr2[2] * 100.0f) / 100.0f;
+  //   DataPacket["Data"][HandChannels[i].label]["ax_mid"]     = roundf(ax2 * 100.0f) / 100.0f;
+  //   DataPacket["Data"][HandChannels[i].label]["ay_mid"]     = roundf(ay2 * 100.0f) / 100.0f;
+  //   DataPacket["Data"][HandChannels[i].label]["az_mid"]     = roundf(az2 * 100.0f) / 100.0f;
+
+  //   Serial.println(HandChannels[i].label + " Data compilation " + String(millis() - start));
+>>>>>>> Stashed changes
   // }
-  sendJsonOverTcp(DataPacket);
 
-  int end = millis();
+  // // serializeJsonPretty(DataPacket, Serial);
+  // // Serial.println();
+  // // serializeJson(DataPacket, Serial);
+  // // Serial.println();  // optional newline
 
-  Serial.println("Delay" + String(end - start));
+  // // if (deviceConnected) {
+  // //   sendJsonOverBle();   // push each frame; or remove if you want "GET" pull only
+  // // }
+  // sendJsonOverTcp(DataPacket);
+
+  // int end = millis();
+
+  // Serial.println("Delay" + String(end - start));
 
   delay(50);
 }
