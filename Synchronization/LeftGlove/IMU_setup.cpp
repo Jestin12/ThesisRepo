@@ -6,6 +6,25 @@ void tcaSelectChannel(uint8_t ch) {
   TCA.openChannel(ch);
 }
 
+
+// No DMP Version
+void initFingerChannel(FingerChannel& fc) {
+  tcaSelectChannel(fc.tca_channel);
+
+  Serial.println("Initialising " + fc.label);
+
+  IMU_MID.initialize();
+  IMU_PROX.initialize();
+
+  fc.IMU_MID_EN  = IMU_MID.testConnection();
+  fc.IMU_PROX_EN = IMU_PROX.testConnection();
+
+  Serial.println(fc.IMU_PROX_EN ? "MPU6050 " + fc.label + " Proximal OK" : "MPU6050 " + fc.label + " Proximal FAIL");
+  Serial.println(fc.IMU_MID_EN  ? "MPU6050 " + fc.label + " Mid OK"      : "MPU6050 " + fc.label + " Mid FAIL");
+}
+
+
+// DMP Version
 void initFingerChannel(FingerChannel& fc, bool (&status)[4]) {
   tcaSelectChannel(fc.tca_channel);
 
@@ -45,10 +64,7 @@ void initFingerChannel(FingerChannel& fc, bool (&status)[4]) {
     Serial.println(F("Initialising PROX DMP"));
     devStatus2 = IMU_PROX.dmpInitialize();
   }
-
   
-  
-
   // Serial.print("devStatus1 = ");
   // Serial.println(devStatus1);
   // Serial.print("devStatus2 = ");

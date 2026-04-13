@@ -2,6 +2,7 @@
 #include "Globals.h"
 #include "CreateJson.h"
 #include "Net.h"
+#include "IMU_setup.h"
 
 
 
@@ -21,8 +22,19 @@
 #define TCA_CH_WRIST  7
 
 
+// ── Global object definitions ────────────────────────────────
+MPU6050   IMU_MID(0x68);   // AD0 LOW
+MPU6050   IMU_PROX(0x69);  // AD0 HIGH
+TCA9548A  TCA(TCA_ADDR);
 
-// DynamicJsonDocument DataPacket(4096);
+// DynamicJsonDocument doc(4096);
+
+bool dmpReady1;
+bool dmpReady2;
+uint8_t  devStatus1;
+uint8_t  devStatus2;
+uint16_t packetSize1;
+uint16_t packetSize2;
 
 FingerChannel HandChannels[7] = {
   {TCA_CH_PALM,  "Palm",  {-1, -1}, false, false},      // Use PROX IMU
@@ -55,11 +67,37 @@ void handleRequestData(uint32_t requestId, const char* requestTs)
   // then:
   for (int i = 0; i < int(sizeof(HandChannels) / sizeof(HandChannels[0])); i++) 
   {
+    // Getting Flex Sensor Readings
     int MCP_flex = (HandChannels[i].adc_channel[0] != -1) ? analogRead(HandChannels[i].adc_channel[0]) : -1;
     int PIP_flex = (HandChannels[i].adc_channel[1] != -1) ? analogRead(HandChannels[i].adc_channel[1]) : -1;
 
     doc["Data"][HandChannels[i].label]["flex_mcp"]   = int(MCP_flex);
     doc["Data"][HandChannels[i].label]["flex_pip"]   = int(PIP_flex);
+
+    //Getting IMU Readings
+    int16_t ax1, ay1, az1, gx1, gy1, gz1;
+    int16_t ax2, ay2, az2, gx2, gy2, gz2;
+
+    if (HandChannels[i].IMU_MID_EN) {
+      IMU_MID.getMotion6(&ax1, &ay1, &az1, &gx1, &gy1, &gz1);
+    }
+    // doc["Data"][HandChannels[i].label]["yaw_prox"]   = roundf(ypr1[0] * 100.0f) / 100.0f;
+    // doc["Data"][HandChannels[i].label]["pitch_prox"] = roundf(ypr1[1] * 100.0f) / 100.0f;
+    // doc["Data"][HandChannels[i].label]["roll_prox"]  = roundf(ypr1[2] * 100.0f) / 100.0f;
+    doc["Data"][HandChannels[i].label]["ax_prox"]    = roundf(ax1 * 100.0f) / 100.0f;
+    doc["Data"][HandChannels[i].label]["ay_prox"]    = roundf(ay1 * 100.0f) / 100.0f;
+    doc["Data"][HandChannels[i].label]["az_prox"]    = roundf(az1 * 100.0f) / 100.0f;
+
+
+    if (HandChannels[i].IMU_PROX_EN) {
+      IMU_PROX.getMotion6(&ax2, &ay2, &az2, &gx2, &gy2, &gz2);
+    }
+    // doc["Data"][HandChannels[i].label]["yaw_mid"]    = roundf(ypr2[0] * 100.0f) / 100.0f;
+    // doc["Data"][HandChannels[i].label]["pitch_mid"]  = roundf(ypr2[1] * 100.0f) / 100.0f;
+    // doc["Data"][HandChannels[i].label]["roll_mid"]   = roundf(ypr2[2] * 100.0f) / 100.0f;
+    doc["Data"][HandChannels[i].label]["ax_mid"]     = roundf(ax2 * 100.0f) / 100.0f;
+    doc["Data"][HandChannels[i].label]["ay_mid"]     = roundf(ay2 * 100.0f) / 100.0f;
+    doc["Data"][HandChannels[i].label]["az_mid"]     = roundf(az2 * 100.0f) / 100.0f;
   }
 
   sendJsonOverTcp(doc);
@@ -69,6 +107,20 @@ void handleInit() {
   // run your IMU setup here
   // e.g. initFingerChannel(...) for all channels you need
   Serial.println("Called handleInit");
+
+  Wire.begin(I2C_BUS_SDA, I2C_BUS_SCL);
+  Wire.setClock(TCA_FREQ);
+
+  // Initialise the TCA9548A multiplexer
+  TCA.begin(Wire);
+
+  bool status[4] = {false, false, false, false};
+
+  for (int i = 0; i < int(sizeof(HandChannels) / sizeof(HandChannels[0])); i++)
+  {
+    initFingerChannel(HandChannels[i], status);
+  } 
+
   gloveInitialised = true;
   sendReadyMessage(HAND_NAME);
   digitalWrite(1, HIGH);  // for LED
@@ -108,12 +160,12 @@ void loop() {
   // int MCP_flex = ((HandChannels[i].label == "Palm") || (HandChannels[i].label == "Wrist")) ? -1 : analogRead(HandChannels[i].adc_channel[0]);
   // int PIP_flex = ((HandChannels[i].label == "Palm") || (HandChannels[i].label == "Wrist")) ? -1 : analogRead(HandChannels[i].adc_channel[1]);
 
-  // DataPacket["Time"] = millis();
+  // doc["Time"] = millis();
 
-  // DataPacket["Data"][HandChannels[i].label]["flex_mcp"]   = int(MCP_flex);
-  // DataPacket["Data"][HandChannels[i].label]["flex_pip"]   = int(PIP_flex);
+  // doc["Data"][HandChannels[i].label]["flex_mcp"]   = int(MCP_flex);
+  // doc["Data"][HandChannels[i].label]["flex_pip"]   = int(PIP_flex);
 
-  // sendJsonOverTcp(DataPacket);
+  // sendJsonOverTcp(doc);
 
   // int end = millis();
 
