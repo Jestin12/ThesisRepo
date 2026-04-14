@@ -14,10 +14,10 @@
 #define TCA_FREQ     400000
 #define TCA_ADDR     0x71
 
-#define TCA_CH_PALM   7
+#define TCA_CH_PALM   0
 #define TCA_CH_THUMB  6
 #define TCA_CH_INDEX  5
-#define TCA_CH_MIDDLE 4
+#define TCA_CH_MIDDLE 7
 #define TCA_CH_RING   3
 #define TCA_CH_PINKY  2
 
@@ -133,6 +133,7 @@ void setup() {
 
   Wire.begin(I2C_BUS_SDA, I2C_BUS_SCL);
   Wire.setClock(TCA_FREQ);
+  Wire.setTimeOut(10); // 10ms max per transaction — fail fast
   TCA.begin(Wire);
   analogReadResolution(12);
 
@@ -156,6 +157,7 @@ void setup() {
   //   status[0] = status[1] = status[2] = status[3] = false;
   // }
 
+  pinMode(1, OUTPUT);
   initWifi();
 
   gloveInitialised = false;

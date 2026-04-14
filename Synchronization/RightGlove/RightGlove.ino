@@ -132,6 +132,7 @@ void setup() {
 
   Wire.begin(I2C_BUS_SDA, I2C_BUS_SCL);
   Wire.setClock(TCA_FREQ);
+  Wire.setTimeOut(10); // 10ms max per transaction — fail fast
   TCA.begin(Wire);
   analogReadResolution(12);
 
@@ -155,6 +156,7 @@ void setup() {
   //   status[0] = status[1] = status[2] = status[3] = false;
   // }
 
+  pinMode(1, OUTPUT);
   initWifi();
 
   gloveInitialised = false;

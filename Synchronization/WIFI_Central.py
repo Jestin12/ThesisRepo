@@ -14,7 +14,7 @@ from pynput import keyboard
 HOST = "0.0.0.0"
 PORT = 5000
 SOCKET_TIMEOUT_S = 0.5
-REQUEST_INTERVAL_S = 0.05
+REQUEST_INTERVAL_S = 0.1
 GLOVES = ("LeftGlove", "RightGlove")
 
 run_timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
