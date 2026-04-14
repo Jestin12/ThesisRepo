@@ -158,7 +158,7 @@ void setup() {
   initWifi();
 
   gloveInitialised = false;
-  sendReadyMessage(HAND_NAME);
+  // sendReadyMessage(HAND_NAME);
 }
 
 

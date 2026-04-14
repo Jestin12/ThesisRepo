@@ -5,7 +5,7 @@
 #include "Globals.h"
 #include "IMU_setup.h"
 #include "CreateJson.h"
-#include "BLE.h"
+
 #include "Net.h"
 
 // ── I2C & TCA config ────────────────────────────────────────
@@ -159,7 +159,7 @@ void setup() {
   initWifi();
 
   gloveInitialised = false;
-  sendReadyMessage(HAND_NAME);
+  // sendReadyMessage(HAND_NAME);
 }
 
 
