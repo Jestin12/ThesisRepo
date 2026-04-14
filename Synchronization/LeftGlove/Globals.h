@@ -1,4 +1,3 @@
-// Globals.h
 #pragma once
 #include "MPU6050_6Axis_MotionApps612.h"
 #include <TCA9548A.h>
@@ -11,20 +10,16 @@ struct FingerChannel {
   bool IMU_MID_EN;
   bool IMU_PROX_EN;
 };
-// shared globals
-extern MPU6050 IMU_MID;
-extern MPU6050 IMU_PROX;
-extern TCA9548A TCA;
-extern FingerChannel HandChannels[7];
-// extern your JSON document from the other file, or declare it here.
-// extern DynamicJsonDocument DataPacket;
 
-extern bool dmpReady1;
-extern bool dmpReady2;
+extern MPU6050   IMU_MID;
+extern MPU6050   IMU_PROX;
+extern TCA9548A  TCA;
+extern FingerChannel HandChannels[7];
+
+
+extern bool     dmpReady1;
+extern bool     dmpReady2;
 extern uint8_t  devStatus1;
 extern uint8_t  devStatus2;
 extern uint16_t packetSize1;
 extern uint16_t packetSize2;
-
-
-// any other globals you want shared
