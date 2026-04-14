@@ -3,31 +3,24 @@
 
 void addFinger(JsonObject parent, const char *name) {
   JsonObject f = parent.createNestedObject(name);
-  f["ax_prox"] = nullptr;
-  f["ay_prox"] = nullptr;
-  f["az_prox"] = nullptr;
-  f["yaw_prox"] = nullptr;
-  f["pitch_prox"] = nullptr;
-  f["roll_prox"] = nullptr;
-  f["flex_mcp"] = nullptr;
-  f["flex_pip"] = nullptr;
-  f["ax_mic"] = nullptr;
-  f["ay_mid"] = nullptr;
-  f["az_mid"] = nullptr;
-  f["yaw_mid"] = nullptr;
-  f["pitch_mid"] = nullptr;
-  f["roll_mid"] = nullptr;
+  f["flex_mcp"]   = 0;
+  f["flex_pip"]   = 0;
+  f["yaw_mid"]    = 0.0f;
+  f["pitch_mid"]  = 0.0f;
+  f["roll_mid"]   = 0.0f;
+  f["ax_mid"]     = 0.0f;
+  f["ay_mid"]     = 0.0f;
+  f["az_mid"]     = 0.0f;
+  f["yaw_prox"]   = 0.0f;
+  f["pitch_prox"] = 0.0f;
+  f["roll_prox"]  = 0.0f;
+  f["ax_prox"]    = 0.0f;
+  f["ay_prox"]    = 0.0f;
+  f["az_prox"]    = 0.0f;
 }
 
 void buildFingerData(JsonObject fingerData) {
-
-  for (int i = 0; i < int(sizeof(HandChannels)/sizeof(HandChannels[0])); i++)
-  {
+  for (int i = 0; i < int(sizeof(HandChannels) / sizeof(HandChannels[0])); i++) {
     addFinger(fingerData, HandChannels[i].label.c_str());
   }
-  // addFinger(fingerData, "Palm");
-  // addFinger(fingerData, "Index");
-  // addFinger(fingerData, "Middle");
-  // addFinger(fingerData, "Ring");
-  // addFinger(fingerData, "Pinky");
 }

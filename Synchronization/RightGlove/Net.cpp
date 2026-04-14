@@ -8,6 +8,7 @@
 // static const char* TCP_HOST      = "192.168.1.57";  // your computer IP
 // static const uint16_t TCP_PORT   = 5000;
 
+
 // static const char* WIFI_SSID     = "jestin-OMEN-Gaming-Laptop-16-am0";
 // static const char* WIFI_PASSWORD = "87654321";
 
@@ -22,8 +23,6 @@ static const char* WIFI_PASSWORD = "12345678";
 static const char* TCP_HOST      = "10.83.21.94";  // your computer IP
 static const uint16_t TCP_PORT   = 5000;
 // ==========================
-
-
 
 static WiFiClient tcpClient;
 static unsigned long lastConnectAttempt = 0;
@@ -107,8 +106,8 @@ void pollTcpCommands(void (*onInit)(), void (*onRequestData)(uint32_t, const cha
 
   while (tcpClient.available()) {
     char c = (char)tcpClient.read();
-    Serial.print("RX char: ");
-    Serial.println((int)c);
+    // Serial.print("RX char: ");
+    // Serial.println((int)c);
 
     if (c == '\n') {
       Serial.print("Full RX line: ");
@@ -149,3 +148,18 @@ void pollTcpCommands(void (*onInit)(), void (*onRequestData)(uint32_t, const cha
     }
   }
 }
+
+
+
+// void handleRequestData(uint32_t requestId, const char* requestTs) {
+//   if (!gloveInitialised) return;
+
+//   DataPacket["Hand"] = HAND_NAME;
+//   DataPacket["request_id"] = requestId;
+//   DataPacket["request_ts"] = requestTs;
+//   DataPacket["glove_time_ms"] = millis();
+
+//   sendJsonOverTcp(DataPacket);
+// }
+
+

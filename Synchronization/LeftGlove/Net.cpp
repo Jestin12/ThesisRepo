@@ -148,3 +148,18 @@ void pollTcpCommands(void (*onInit)(), void (*onRequestData)(uint32_t, const cha
     }
   }
 }
+
+
+
+// void handleRequestData(uint32_t requestId, const char* requestTs) {
+//   if (!gloveInitialised) return;
+
+//   DataPacket["Hand"] = HAND_NAME;
+//   DataPacket["request_id"] = requestId;
+//   DataPacket["request_ts"] = requestTs;
+//   DataPacket["glove_time_ms"] = millis();
+
+//   sendJsonOverTcp(DataPacket);
+// }
+
+

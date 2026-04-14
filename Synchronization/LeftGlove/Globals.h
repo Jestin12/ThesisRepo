@@ -14,8 +14,8 @@ struct FingerChannel {
 extern MPU6050   IMU_MID;
 extern MPU6050   IMU_PROX;
 extern TCA9548A  TCA;
-extern FingerChannel HandChannels[7];
-
+extern FingerChannel HandChannels[6];
+extern DynamicJsonDocument DataPacket;
 
 extern bool     dmpReady1;
 extern bool     dmpReady2;
