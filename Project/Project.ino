@@ -6,6 +6,7 @@
 #include "IMU_setup.h"
 #include "CreateJson.h"
 #include "BLE.h"
+#include "Net.h"
 
 // ── I2C & TCA config ────────────────────────────────────────
 #define I2C_BUS_SDA  8
@@ -55,6 +56,9 @@ float ax2 = 0, ay2 = 0, az2 = 0;
 
 DynamicJsonDocument DataPacket(4096);
 
+volatile bool gloveInitialised = false;
+const char* HAND_NAME = "LeftGlove";   // or "LeftGlove"
+
 // ── FIFO helpers ─────────────────────────────────────────────
 
 static bool readDmpMid() {
@@ -99,27 +103,8 @@ static bool readDmpProx() {
   return true;
 }
 
-// ── setup ────────────────────────────────────────────────────
 
-void setup() {
-  Serial.begin(115200);
-  delay(1200);
-  Serial.println("\nBooting...");
-
-  initBleService();
-
-  Wire.begin(I2C_BUS_SDA, I2C_BUS_SCL);
-  Wire.setClock(TCA_FREQ);
-  TCA.begin(Wire);
-  analogReadResolution(12);
-
-  JsonObject fingerData = DataPacket.createNestedObject("Data");
-  buildFingerData(fingerData);
-  DataPacket["Hand"] = "Left";
-  DataPacket["Time"] = 0;
-
-  serializeJsonPretty(DataPacket, Serial);
-  Serial.println();
+void handleInit() {
 
   bool status[4] = {false, false, false, false};
   for (int i = 0; i < int(sizeof(HandChannels) / sizeof(HandChannels[0])); i++) {
@@ -132,11 +117,63 @@ void setup() {
     Serial.println(String("IMU_PROX_DMP : ") + (status[3] ? "OK" : "FAIL"));
     status[0] = status[1] = status[2] = status[3] = false;
   }
+
+  gloveInitialised = true;
+  sendReadyMessage(HAND_NAME);
+  digitalWrite(1, HIGH);  // for LEDsendReadyMessage(HAND_NAME);
 }
 
-// ── loop ─────────────────────────────────────────────────────
+// ── setup ────────────────────────────────────────────────────
 
-void loop() {
+void setup() {
+  Serial.begin(115200);
+  delay(1200);
+  Serial.println("\nBooting...");
+
+
+  Wire.begin(I2C_BUS_SDA, I2C_BUS_SCL);
+  Wire.setClock(TCA_FREQ);
+  TCA.begin(Wire);
+  analogReadResolution(12);
+
+  // JsonObject fingerData = DataPacket.createNestedObject("Data");
+  // buildFingerData(fingerData);
+  // DataPacket["Hand"] = "Left";
+  // DataPacket["Time"] = 0;
+
+  // serializeJsonPretty(DataPacket, Serial);
+  // Serial.println();
+
+  // bool status[4] = {false, false, false, false};
+  // for (int i = 0; i < int(sizeof(HandChannels) / sizeof(HandChannels[0])); i++) {
+  //   initFingerChannel(HandChannels[i], status);
+  //   Serial.println("---");
+  //   Serial.println(HandChannels[i].label);
+  //   Serial.println(String("IMU_MID      : ") + (status[0] ? "OK" : "FAIL"));
+  //   Serial.println(String("IMU_MID_DMP  : ") + (status[1] ? "OK" : "FAIL"));
+  //   Serial.println(String("IMU_PROX     : ") + (status[2] ? "OK" : "FAIL"));
+  //   Serial.println(String("IMU_PROX_DMP : ") + (status[3] ? "OK" : "FAIL"));
+  //   status[0] = status[1] = status[2] = status[3] = false;
+  // }
+
+  gloveInitialised = false;
+  sendReadyMessage(HAND_NAME);
+}
+
+
+void handleRequestData(uint32_t requestId, const char* requestTs)
+{
+  if (!gloveInitialised) return;
+
+  DynamicJsonDocument doc(4096);
+  doc["Hand"] = HAND_NAME;
+  doc["request_id"] = requestId;
+  doc["request_ts"] = requestTs;
+  doc["glove_time_ms"] = millis();
+
+  JsonObject fingerData = doc.createNestedObject("Data");
+
+
   for (int i = 0; i < int(sizeof(HandChannels) / sizeof(HandChannels[0])); i++) {
     FingerChannel &fc = HandChannels[i];
     tcaSelectChannel(fc.tca_channel);
@@ -147,8 +184,8 @@ void loop() {
     int MCP_flex = (fc.adc_channel[0] != -1) ? analogRead(fc.adc_channel[0]) : -1;
     int PIP_flex = (fc.adc_channel[1] != -1) ? analogRead(fc.adc_channel[1]) : -1;
 
-    DataPacket["Time"] = millis();
-    JsonObject finger = DataPacket["Data"][fc.label];
+    doc["Time"] = millis();
+    JsonObject finger = doc["Data"][fc.label];
 
     finger["flex_mcp"] = MCP_flex;
     finger["flex_pip"] = PIP_flex;
@@ -167,13 +204,49 @@ void loop() {
     finger["ay_prox"]    = gotProx ? roundf(ay2 * 100.0f) / 100.0f     : 0.0f;
     finger["az_prox"]    = gotProx ? roundf(az2 * 100.0f) / 100.0f     : 0.0f;
   }
-
-  serializeJson(DataPacket, Serial);
+  serializeJson(doc, Serial);
   Serial.println();
 
-  if (deviceConnected) {
-    sendJsonOverBle();
-  }
+  sendJsonOverTcp(doc);
+}
+// ── loop ─────────────────────────────────────────────────────
+
+void loop() {
+  // for (int i = 0; i < int(sizeof(HandChannels) / sizeof(HandChannels[0])); i++) {
+  //   FingerChannel &fc = HandChannels[i];
+  //   tcaSelectChannel(fc.tca_channel);
+
+  //   bool gotMid  = fc.IMU_MID_EN  ? readDmpMid()  : false;
+  //   bool gotProx = fc.IMU_PROX_EN ? readDmpProx() : false;
+
+  //   int MCP_flex = (fc.adc_channel[0] != -1) ? analogRead(fc.adc_channel[0]) : -1;
+  //   int PIP_flex = (fc.adc_channel[1] != -1) ? analogRead(fc.adc_channel[1]) : -1;
+
+  //   DataPacket["Time"] = millis();
+  //   JsonObject finger = DataPacket["Data"][fc.label];
+
+  //   finger["flex_mcp"] = MCP_flex;
+  //   finger["flex_pip"] = PIP_flex;
+
+  //   finger["yaw_mid"]   = gotMid ? roundf(ypr1[0] * 100.0f) / 100.0f : 0.0f;
+  //   finger["pitch_mid"] = gotMid ? roundf(ypr1[1] * 100.0f) / 100.0f : 0.0f;
+  //   finger["roll_mid"]  = gotMid ? roundf(ypr1[2] * 100.0f) / 100.0f : 0.0f;
+  //   finger["ax_mid"]    = gotMid ? roundf(ax1 * 100.0f) / 100.0f     : 0.0f;
+  //   finger["ay_mid"]    = gotMid ? roundf(ay1 * 100.0f) / 100.0f     : 0.0f;
+  //   finger["az_mid"]    = gotMid ? roundf(az1 * 100.0f) / 100.0f     : 0.0f;
+
+  //   finger["yaw_prox"]   = gotProx ? roundf(ypr2[0] * 100.0f) / 100.0f : 0.0f;
+  //   finger["pitch_prox"] = gotProx ? roundf(ypr2[1] * 100.0f) / 100.0f : 0.0f;
+  //   finger["roll_prox"]  = gotProx ? roundf(ypr2[2] * 100.0f) / 100.0f : 0.0f;
+  //   finger["ax_prox"]    = gotProx ? roundf(ax2 * 100.0f) / 100.0f     : 0.0f;
+  //   finger["ay_prox"]    = gotProx ? roundf(ay2 * 100.0f) / 100.0f     : 0.0f;
+  //   finger["az_prox"]    = gotProx ? roundf(az2 * 100.0f) / 100.0f     : 0.0f;
+  // }
+
+  // serializeJson(DataPacket, Serial);
+  // Serial.println();
+
+  pollTcpCommands(handleInit, handleRequestData);
 
   delay(20);
 }
