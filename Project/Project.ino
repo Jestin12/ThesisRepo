@@ -156,6 +156,8 @@ void setup() {
   //   status[0] = status[1] = status[2] = status[3] = false;
   // }
 
+  initWifi();
+
   gloveInitialised = false;
   sendReadyMessage(HAND_NAME);
 }
@@ -166,13 +168,12 @@ void handleRequestData(uint32_t requestId, const char* requestTs)
   if (!gloveInitialised) return;
 
   DynamicJsonDocument doc(4096);
-  doc["Hand"] = HAND_NAME;
-  doc["request_id"] = requestId;
-  doc["request_ts"] = requestTs;
+  doc["Hand"]         = HAND_NAME;
+  doc["request_id"]   = requestId;
+  doc["request_ts"]   = requestTs;
   doc["glove_time_ms"] = millis();
 
   JsonObject fingerData = doc.createNestedObject("Data");
-
 
   for (int i = 0; i < int(sizeof(HandChannels) / sizeof(HandChannels[0])); i++) {
     FingerChannel &fc = HandChannels[i];
@@ -184,8 +185,8 @@ void handleRequestData(uint32_t requestId, const char* requestTs)
     int MCP_flex = (fc.adc_channel[0] != -1) ? analogRead(fc.adc_channel[0]) : -1;
     int PIP_flex = (fc.adc_channel[1] != -1) ? analogRead(fc.adc_channel[1]) : -1;
 
-    doc["Time"] = millis();
-    JsonObject finger = doc["Data"][fc.label];
+    // ↓ createNestedObject on fingerData, not a lookup on doc["Data"]
+    JsonObject finger = fingerData.createNestedObject(fc.label);
 
     finger["flex_mcp"] = MCP_flex;
     finger["flex_pip"] = PIP_flex;
@@ -204,6 +205,9 @@ void handleRequestData(uint32_t requestId, const char* requestTs)
     finger["ay_prox"]    = gotProx ? roundf(ay2 * 100.0f) / 100.0f     : 0.0f;
     finger["az_prox"]    = gotProx ? roundf(az2 * 100.0f) / 100.0f     : 0.0f;
   }
+
+  doc["Time"] = millis();   // moved outside the loop — only needs to be set once
+
   serializeJson(doc, Serial);
   Serial.println();
 
