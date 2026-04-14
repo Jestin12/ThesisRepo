@@ -9,7 +9,7 @@
 // ── I2C & TCA config ────────────────────────────────────────
 #define I2C_BUS_SDA 8
 #define I2C_BUS_SCL 9
-#define TCA_FREQ    100000
+#define TCA_FREQ    400000
 
 #define TCA_ADDR    0x71
 

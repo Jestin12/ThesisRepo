@@ -2,6 +2,6 @@
 
 #include "Globals.h"
 
-void initFingerChannel(FingerChannel& fc, bool (&status)[4]);
+void initFingerChannel(const FingerChannel& fc);
 
 void tcaSelectChannel(uint8_t ch);

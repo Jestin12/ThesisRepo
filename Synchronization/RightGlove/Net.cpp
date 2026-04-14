@@ -1,12 +1,12 @@
 #include "Net.h"
 
 // ===== USER SETTINGS =====
-static const char* WIFI_SSID     = "Belong96E660";
-static const char* WIFI_PASSWORD = "u7255uutshe3gzaq";
+// static const char* WIFI_SSID     = "Belong96E660";
+// static const char* WIFI_PASSWORD = "u7255uutshe3gzaq";
 
-// PC server config (change to your PC's LAN IP)
-static const char* TCP_HOST      = "192.168.1.57";  // your computer IP
-static const uint16_t TCP_PORT   = 5000;
+// // PC server config (change to your PC's LAN IP)
+// static const char* TCP_HOST      = "192.168.1.57";  // your computer IP
+// static const uint16_t TCP_PORT   = 5000;
 
 // static const char* WIFI_SSID     = "jestin-OMEN-Gaming-Laptop-16-am0";
 // static const char* WIFI_PASSWORD = "87654321";
@@ -14,6 +14,13 @@ static const uint16_t TCP_PORT   = 5000;
 // // PC server config (change to your PC's LAN IP)
 // static const char* TCP_HOST      = "10.42.0.1";  // your computer IP
 // static const uint16_t TCP_PORT   = 5000;
+
+static const char* WIFI_SSID     = "Jestin's S22 Ultra";
+static const char* WIFI_PASSWORD = "12345678";
+
+// PC server config (change to your PC's LAN IP)
+static const char* TCP_HOST      = "10.83.21.94";  // your computer IP
+static const uint16_t TCP_PORT   = 5000;
 // ==========================
 
 
