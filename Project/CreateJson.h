@@ -1,3 +1,5 @@
+#pragma once
+
 #include <ArduinoJson.h>
 #include "Globals.h"
 
