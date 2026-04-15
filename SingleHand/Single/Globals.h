@@ -2,6 +2,9 @@
 #include "MPU6050_6Axis_MotionApps612.h"
 #include <TCA9548A.h>
 #include <ArduinoJson.h>
+#include <Adafruit_Sensor.h>
+#include <Adafruit_BNO055.h>
+#include <utility/imumaths.h>
 
 struct FingerChannel {
   const int tca_channel;
@@ -13,8 +16,9 @@ struct FingerChannel {
 
 extern MPU6050   IMU_MID;
 extern MPU6050   IMU_PROX;
+extern Adafruit_BNO055 BNO;
 extern TCA9548A  TCA;
-extern FingerChannel HandChannels[6];
+extern FingerChannel HandChannels[7];
 extern DynamicJsonDocument DataPacket;
 
 extern bool     dmpReady1;

@@ -1,6 +1,9 @@
 #include <Wire.h>
 #include "MPU6050_6Axis_MotionApps612.h"
 #include <ArduinoJson.h>
+#include <Adafruit_Sensor.h>
+#include <Adafruit_BNO055.h>
+#include <utility/imumaths.h>
 
 #include "Globals.h"
 #include "IMU_setup.h"
@@ -13,25 +16,28 @@
 #define TCA_FREQ     400000
 #define TCA_ADDR     0x71
 
-#define TCA_CH_PALM   7
+#define TCA_CH_PALM   1
 #define TCA_CH_THUMB  6
 #define TCA_CH_INDEX  5
 #define TCA_CH_MIDDLE 4
 #define TCA_CH_RING   3
 #define TCA_CH_PINKY  2
+#define TCA_CH_WRIST  7
 
 // ── Definitions of globals declared in Globals.h ────────────
 TCA9548A  TCA(TCA_ADDR);
 MPU6050   IMU_MID(0x68);
 MPU6050   IMU_PROX(0x69);
+Adafruit_BNO055 BNO = Adafruit_BNO055(55, 0x29, &Wire);
 
-FingerChannel HandChannels[6] = {
+FingerChannel HandChannels[7] = {
   {TCA_CH_PALM,   "Palm",   {-1, -1}, false, false},
   {TCA_CH_THUMB,  "Thumb",  {2,  3},  false, false},
   {TCA_CH_INDEX,  "Index",  {4,  5},  false, false},
   {TCA_CH_MIDDLE, "Middle", {6,  13}, false, false},
   {TCA_CH_RING,   "Ring",   {12, 11}, false, false},
-  {TCA_CH_PINKY,  "Pinky",  {10, 7},  false, false}
+  {TCA_CH_PINKY,  "Pinky",  {10, 7},  false, false},
+  {TCA_CH_WRIST,  "Wrist",  {-1, -1}, false, false}
 };
 
 bool     dmpReady1   = false;
@@ -107,6 +113,12 @@ void handleInit() {
 
   bool status[4] = {false, false, false, false};
   for (int i = 0; i < int(sizeof(HandChannels) / sizeof(HandChannels[0])); i++) {
+
+    if (HandChannels[i].label == "Wrist")
+    {
+      continue;
+    }
+
     initFingerChannel(HandChannels[i], status);
     Serial.println("---");
     Serial.println(HandChannels[i].label);
@@ -116,6 +128,15 @@ void handleInit() {
     Serial.println(String("IMU_PROX_DMP : ") + (status[3] ? "OK" : "FAIL"));
     status[0] = status[1] = status[2] = status[3] = false;
   }
+
+  if (!BNO.begin()) {
+    Serial.println("BNO055 not detected! Check wiring or TCA channel.");
+    while (1);
+  }
+
+  delay(1000);
+  BNO.setExtCrystalUse(true);
+  Serial.println("BNO055 ready on TCA Channel 7.");
 
   gloveInitialised = true;
   sendReadyMessage(HAND_NAME);
@@ -179,6 +200,44 @@ void handleRequestData(uint32_t requestId, const char* requestTs)
   for (int i = 0; i < int(sizeof(HandChannels) / sizeof(HandChannels[0])); i++) {
     FingerChannel &fc = HandChannels[i];
     tcaSelectChannel(fc.tca_channel);
+
+    if (fc.label == "Palm")
+    {
+      bool gotMid  = fc.IMU_MID_EN  ? readDmpMid()  : false;
+
+      JsonObject finger = fingerData.createNestedObject(fc.label);
+
+      finger["yaw"]   = gotMid ? roundf(ypr1[0] * 100.0f) / 100.0f : 0.0f;
+      finger["pitch"] = gotMid ? roundf(ypr1[1] * 100.0f) / 100.0f : 0.0f;
+      finger["roll"]  = gotMid ? roundf(ypr1[2] * 100.0f) / 100.0f : 0.0f;
+      finger["ax"]    = gotMid ? roundf(ax1 * 100.0f) / 100.0f     : 0.0f;
+      finger["ay"]    = gotMid ? roundf(ay1 * 100.0f) / 100.0f     : 0.0f;
+      finger["az"]    = gotMid ? roundf(az1 * 100.0f) / 100.0f     : 0.0f;
+    }
+
+    if (fc.label == "Wrist")
+    {
+      JsonObject finger = fingerData.createNestedObject(fc.label);
+
+      sensors_event_t event;
+      BNO.getEvent(&event);  // default: Euler orientation
+      finger["yaw"] = roundf(event.orientation.x * 100.0f) / 100.0f;
+      finger["pitch"] = roundf(event.orientation.y * 100.0f) / 100.0f;
+      finger["roll"] = roundf(event.orientation.z * 100.0f) / 100.0f;
+
+      sensors_event_t linearAccel;
+      BNO.getEvent(&linearAccel, Adafruit_BNO055::VECTOR_LINEARACCEL);
+      finger["ax"] = roundf(linearAccel.acceleration.x * 100.0f) / 100.0f;
+      finger["ay"] = roundf(linearAccel.acceleration.y * 100.0f) / 100.0f;
+      finger["az"] = roundf(linearAccel.acceleration.z * 100.0f) / 100.0f;
+
+      sensors_event_t angVel;
+      BNO.getEvent(&angVel, Adafruit_BNO055::VECTOR_GYROSCOPE); 
+      finger["gx"] = roundf(angVel.gyro.x * 100.0f) / 100.0f;
+      finger["gy"] = roundf(angVel.gyro.y * 100.0f) / 100.0f;
+      finger["gz"] = roundf(angVel.gyro.z * 100.0f) / 100.0f; 
+
+    }
 
     bool gotMid  = fc.IMU_MID_EN  ? readDmpMid()  : false;
     bool gotProx = fc.IMU_PROX_EN ? readDmpProx() : false;

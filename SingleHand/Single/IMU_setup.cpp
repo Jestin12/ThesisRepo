@@ -79,6 +79,7 @@ void initFingerChannel(FingerChannel& fc, bool (&status)[4]) {
 
   Serial.println("==== Initialising " + fc.label + " ====");
 
+
   // --- IMU connection init ---
   unsigned long t = millis();
   IMU_MID.initialize();

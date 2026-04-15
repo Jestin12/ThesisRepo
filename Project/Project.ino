@@ -11,7 +11,7 @@
 // ── I2C & TCA config ────────────────────────────────────────
 #define I2C_BUS_SDA  8
 #define I2C_BUS_SCL  9
-#define TCA_FREQ     400000
+#define TCA_FREQ     100000
 #define TCA_ADDR     0x71
 
 #define TCA_CH_PALM   7
@@ -25,6 +25,8 @@
 TCA9548A  TCA(TCA_ADDR);
 MPU6050   IMU_MID(0x68);
 MPU6050   IMU_PROX(0x69);
+Adafruit_BNO055 BNO = Adafruit_BNO055(55, 0x29, &Wire);
+
 
 FingerChannel HandChannels[6] = {
   {TCA_CH_PALM,   "Palm",   {-1, -1}, false, false},
@@ -252,5 +254,5 @@ void loop() {
 
   pollTcpCommands(handleInit, handleRequestData);
 
-  delay(20);
+  delay(1);
 }
