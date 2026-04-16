@@ -14,6 +14,8 @@ void setup() {
     while (1);
   }
 
+  Serial.println("initialised");
+
   bno.setExtCrystalUse(true);
 }
 
