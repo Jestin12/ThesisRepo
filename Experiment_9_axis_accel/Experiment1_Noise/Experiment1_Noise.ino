@@ -3,7 +3,7 @@
 #include <Adafruit_BNO055.h>
 #include <utility/imumaths.h>
 
-Adafruit_BNO055 bno = Adafruit_BNO055(55);
+Adafruit_BNO055 bno = Adafruit_BNO055(55, 0x29);
 
 void setup() {
   Serial.begin(115200);
@@ -13,6 +13,8 @@ void setup() {
     Serial.println("Failed to initialize BNO055! Check wiring or I2C address.");
     while (1);
   }
+
+  Serial.println("initialised");
 
   bno.setExtCrystalUse(true);
 }
