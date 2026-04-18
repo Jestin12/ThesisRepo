@@ -8,9 +8,9 @@ import pandas as pd
 
 
 HOST = "0.0.0.0"
-PORT = 5000
-LISTEN_SECONDS = 10
-FILE_PREFIX = "glove_data_right_rock"
+PORT = 5001
+LISTEN_SECONDS = 5
+FILE_PREFIX = "glove_data_rock"
 
 
 def get_next_run_index():
