@@ -5,14 +5,16 @@ import re
 import threading
 from datetime import datetime
 from pathlib import Path
+import os
 import pandas as pd
 
 HOST = "0.0.0.0"
 LEFT_PORT = 5000
 RIGHT_PORT = 5001
-REQUEST_INTERVAL_TIMEOUT = 2.0
-RUN_SECONDS = 10
+RUN_SECONDS = 20
+REQUEST_PIPELINE_INTERVAL = 0.005   # 5 ms between sends — tune down if gloves keep up
 FILE_PREFIX = "glove_data_rock"
+OUTPUT_DIR  = r"/home/jestin/ThesisData/"  # ← set your path here
 
 def get_next_run_index():
     pattern = re.compile(
@@ -27,16 +29,17 @@ def get_next_run_index():
 
 RUN_INDEX = get_next_run_index()
 timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-OUTPUT_CSV = f"{FILE_PREFIX}_{RUN_INDEX}_{timestamp}.csv"
+os.makedirs(OUTPUT_DIR, exist_ok=True)
+OUTPUT_CSV = os.path.join(OUTPUT_DIR, f"{FILE_PREFIX}_{RUN_INDEX}_{timestamp}.csv")
 
 def flatten_glove_json(msg, base_time_ms, hand_label):
     current_time_ms = msg.get("Time")
-
     row = {
         "run_index": RUN_INDEX,
         "request_id": msg.get("request_id"),
         "request_ts": msg.get("request_ts"),
         f"{hand_label}_hand": msg.get("Hand"),
+        f"{hand_label}_recv_time_ms": msg.get("_recv_time_ms"),
         f"{hand_label}_glove_time_ms": msg.get("glove_time_ms"),
         f"{hand_label}_time": (
             current_time_ms - base_time_ms
@@ -44,7 +47,6 @@ def flatten_glove_json(msg, base_time_ms, hand_label):
             else None
         ),
     }
-
     data = msg.get("Data", {})
     for sensor_name, sensor_values in data.items():
         sensor = sensor_name.lower()
@@ -58,8 +60,8 @@ def flatten_glove_json(msg, base_time_ms, hand_label):
             else:
                 col = f"{hand_label}_{sensor}_{key}"
             row[col] = value
-
     return row
+
 
 class GloveConnection:
     def __init__(self, label, port):
@@ -70,8 +72,7 @@ class GloveConnection:
         self.addr = None
         self.buffer = ""
         self.base_time_ms = None
-        self.last_packet = None
-        self.last_request_id_received = None
+        self.connected = False
 
     def setup_server(self):
         self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -81,12 +82,13 @@ class GloveConnection:
         self.server.settimeout(0.5)
 
     def accept(self):
-        while self.conn is None:
+        while not self.connected:
             try:
                 conn, addr = self.server.accept()
-                conn.settimeout(0.2)
+                conn.settimeout(0.1)
                 self.conn = conn
                 self.addr = addr
+                self.connected = True
                 print(f"[{self.label}] Connected by {addr}")
             except socket.timeout:
                 continue
@@ -95,88 +97,91 @@ class GloveConnection:
         if not self.conn:
             return
         payload = json.dumps(obj) + "\n"
-        self.conn.sendall(payload.encode("utf-8"))
+        try:
+            self.conn.sendall(payload.encode("utf-8"))
+        except (BrokenPipeError, ConnectionResetError):
+            print(f"[{self.label}] Send failed — connection lost")
+            self.connected = False
 
-    def recv_lines(self):
+    def drain(self, combined_rows):
+        """
+        Non-blocking drain of the receive buffer.
+        Appends any complete JSON lines into combined_rows keyed by request_id.
+        """
         if not self.conn:
-            return []
-
-        lines = []
+            return
         try:
             data = self.conn.recv(4096)
             if not data:
-                raise ConnectionError("client disconnected")
+                print(f"[{self.label}] Disconnected during drain")
+                self.connected = False
+                return
             self.buffer += data.decode("utf-8")
-            while "\n" in self.buffer:
-                line, self.buffer = self.buffer.split("\n", 1)
-                line = line.strip()
-                if line:
-                    lines.append(line)
         except socket.timeout:
             pass
-        return lines
+        except ConnectionResetError:
+            self.connected = False
+            return
 
-    def process_incoming(self, combined_rows):
-        for line in self.recv_lines():
+        while "\n" in self.buffer:
+            line, self.buffer = self.buffer.split("\n", 1)
+            line = line.strip()
+            if not line:
+                continue
             try:
                 obj = json.loads(line)
             except json.JSONDecodeError:
                 print(f"[{self.label}] Invalid JSON skipped")
                 continue
 
-            msg_type = obj.get("type")
-            if msg_type is not None:
-                print(f"[{self.label}] Control message received: {msg_type}")
+            # Ignore control messages echoed back
+            if obj.get("type") is not None:
                 continue
+
+            obj["_recv_time_ms"] = time.time() * 1000
 
             if self.base_time_ms is None:
                 self.base_time_ms = obj.get("Time")
 
-            self.last_packet = obj
-            self.last_request_id_received = obj.get("request_id")
-
             req_id = obj.get("request_id")
             if req_id not in combined_rows:
                 combined_rows[req_id] = {}
-
             flattened = flatten_glove_json(obj, self.base_time_ms, self.label)
             combined_rows[req_id].update(flattened)
-
-            print(f"[{self.label}] Data received for request_id={self.last_request_id_received}")
+            print(f"[{self.label}] reply for request_id={req_id}")
 
     def close(self):
-        if self.conn:
-            try:
-                self.conn.close()
-            except Exception:
-                pass
-        if self.server:
-            try:
-                self.server.close()
-            except Exception:
-                pass
+        for s in (self.conn, self.server):
+            if s:
+                try:
+                    s.close()
+                except Exception:
+                    pass
+
 
 def accept_worker(glove):
     glove.setup_server()
     print(f"[{glove.label}] Listening on {HOST}:{glove.port}")
     glove.accept()
 
+
 def main():
-    left = GloveConnection("left", LEFT_PORT)
+    left  = GloveConnection("left",  LEFT_PORT)
     right = GloveConnection("right", RIGHT_PORT)
     combined_rows = {}
 
-    t1 = threading.Thread(target=accept_worker, args=(left,), daemon=True)
-    t2 = threading.Thread(target=accept_worker, args=(right,), daemon=True)
-    t1.start()
-    t2.start()
-    t1.join()
-    t2.join()
+    # Accept both connections in parallel
+    t_left  = threading.Thread(target=accept_worker, args=(left,),  daemon=True)
+    t_right = threading.Thread(target=accept_worker, args=(right,), daemon=True)
+    t_left.start()
+    t_right.start()
+    t_left.join()
+    t_right.join()
 
     print("Both gloves connected.")
     input("Press Enter to begin requesting data...")
 
-    start = time.time()
+    start      = time.time()
     request_id = 0
 
     while time.time() - start < RUN_SECONDS:
@@ -186,37 +191,52 @@ def main():
         cmd = {
             "type": "REQUEST_DATA",
             "request_id": request_id,
-            "request_ts": request_ts
+            "request_ts": request_ts,
         }
 
-        left.last_request_id_received = None
-        right.last_request_id_received = None
-
+        # Fire-and-forget: send to both, do NOT wait for replies
         left.send_json(cmd)
         right.send_json(cmd)
+        print(f"[SERVER] Sent REQUEST_DATA {request_id}")
 
-        print(f"[SERVER] Sent REQUEST_DATA {request_id} to both gloves")
+        # Drain whatever has come back so far (non-blocking)
+        left.drain(combined_rows)
+        right.drain(combined_rows)
 
-        deadline = time.time() + REQUEST_INTERVAL_TIMEOUT
-        while time.time() < deadline:
-            left.process_incoming(combined_rows)
-            right.process_incoming(combined_rows)
+        time.sleep(REQUEST_PIPELINE_INTERVAL)
 
-            if left.last_request_id_received == request_id and right.last_request_id_received == request_id:
-                print(f"[SERVER] Both gloves replied for request_id={request_id}")
-                break
+    # After the timed loop ends, keep draining for up to 2s to catch
+    # any in-flight replies for the last few request IDs
+    drain_deadline = time.time() + 2.0
+    while time.time() < drain_deadline:
+        left.drain(combined_rows)
+        right.drain(combined_rows)
+        time.sleep(0.005)
 
-            time.sleep(0.005)
-        else:
-            print(f"[SERVER] Timeout waiting for both gloves on request_id={request_id}")
+    # Build output — only keep rows where BOTH gloves replied
+    complete = {
+        rid: row for rid, row in combined_rows.items()
+        if f"left_hand" in str(row) and f"right_hand" in str(row)
+    }
+    incomplete = len(combined_rows) - len(complete)
+    print(f"Total requests: {request_id} | Complete pairs: {len(complete)} | Incomplete: {incomplete}")
 
-    if combined_rows:
-        ordered_rows = [combined_rows[k] for k in sorted(combined_rows.keys())]
-        df = pd.DataFrame(ordered_rows)
+    if complete:
+        ordered = [complete[k] for k in sorted(complete.keys())]
+        df = pd.DataFrame(ordered)
+
+        # ── Time columns first, then everything else ─────────────────────
+        time_cols = [c for c in df.columns if any(t in c for t in (
+            "time", "glove_time", "recv_time", "request_ts"
+        ))]
+        other_cols = [c for c in df.columns if c not in time_cols
+                      and c not in ("run_index", "request_id")]
+        df = df[["run_index", "request_id"] + time_cols + other_cols]
+
         df.to_csv(OUTPUT_CSV, index=False)
-        print(f"Saved {len(df)} combined row(s) to {OUTPUT_CSV}")
+        print(f"Saved {len(df)} paired row(s) to {OUTPUT_CSV}")
     else:
-        print("No valid JSON data received. No CSV file created.")
+        print("No complete paired rows. No CSV created.")
 
     left.close()
     right.close()
