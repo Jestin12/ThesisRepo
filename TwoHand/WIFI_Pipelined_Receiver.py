@@ -8,29 +8,33 @@ from pathlib import Path
 import os
 import pandas as pd
 
+
 HOST = "0.0.0.0"
 LEFT_PORT = 5000
 RIGHT_PORT = 5001
-RUN_SECONDS = 20
+RUN_SECONDS = 5
 REQUEST_PIPELINE_INTERVAL = 0.005   # 5 ms between sends — tune down if gloves keep up
-FILE_PREFIX = "glove_data_rock"
-OUTPUT_DIR  = r"/home/jestin/ThesisData/"  # ← set your path here
+FILE_PREFIX = f"glove_data_L_Fist_R_Fist_{RUN_SECONDS}s"
+OUTPUT_DIR = r"/home/jestin/ThesisData/TwoHand_L_Fist_R_Fist"
+
 
 def get_next_run_index():
     pattern = re.compile(
         rf"^{FILE_PREFIX}_(\d+)_\d{{4}}-\d{{2}}-\d{{2}}_\d{{2}}-\d{{2}}-\d{{2}}\.csv$"
     )
     max_index = 0
-    for path in Path(".").glob(f"{FILE_PREFIX}_*.csv"):
+    os.makedirs(OUTPUT_DIR, exist_ok=True)
+    for path in Path(OUTPUT_DIR).glob(f"{FILE_PREFIX}_*.csv"):
         match = pattern.match(path.name)
         if match:
             max_index = max(max_index, int(match.group(1)))
     return max_index + 1
 
+
 RUN_INDEX = get_next_run_index()
 timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-os.makedirs(OUTPUT_DIR, exist_ok=True)
 OUTPUT_CSV = os.path.join(OUTPUT_DIR, f"{FILE_PREFIX}_{RUN_INDEX}_{timestamp}.csv")
+
 
 def flatten_glove_json(msg, base_time_ms, hand_label):
     current_time_ms = msg.get("Time")
@@ -47,20 +51,154 @@ def flatten_glove_json(msg, base_time_ms, hand_label):
             else None
         ),
     }
+
     data = msg.get("Data", {})
     for sensor_name, sensor_values in data.items():
         sensor = sensor_name.lower()
+
         for key, value in sensor_values.items():
             if key.startswith("flex_"):
-                joint = key.split("_", 1)[1]
+                joint = key[len("flex_"):]
                 col = f"{hand_label}_{sensor}_{joint}_flex"
-            elif "_" in key:
-                metric, joint = key.split("_", 1)
-                col = f"{hand_label}_{sensor}_{joint}_{metric}"
+
+            elif key.startswith("quat_"):
+                parts = key.split("_")
+                if len(parts) == 3:
+                    _, component, segment = parts
+                    col = f"{hand_label}_{sensor}_{segment}_quat_{component}"
+                elif sensor == "wrist" and len(parts) == 2:
+                    _, component = parts
+                    col = f"{hand_label}_{sensor}_quat_{component}"
+                else:
+                    col = f"{hand_label}_{sensor}_{key}"
+
             else:
-                col = f"{hand_label}_{sensor}_{key}"
+                parts = key.split("_")
+                if len(parts) == 2:
+                    metric, segment = parts
+                    col = f"{hand_label}_{sensor}_{segment}_{metric}"
+                else:
+                    col = f"{hand_label}_{sensor}_{key}"
+
             row[col] = value
+
     return row
+
+
+def reorder_columns(df):
+    base_cols = ["run_index", "request_id"]
+
+    time_cols = [
+        c for c in df.columns
+        if c not in base_cols and any(t in c for t in (
+            "request_ts", "recv_time", "glove_time", "_time"
+        ))
+    ]
+
+    hand_cols = [c for c in ("left_hand", "right_hand") if c in df.columns]
+
+    hand_order = {"left": 0, "right": 1}
+    sensor_order = {
+        "palm": 0,
+        "thumb": 1,
+        "index": 2,
+        "middle": 3,
+        "ring": 4,
+        "pinky": 5,
+        "wrist": 6,
+    }
+    segment_order = {
+        "mid": 0,
+        "prox": 1,
+        "mcp": 2,
+        "pip": 3,
+    }
+    metric_order = {
+        "yaw": 0,
+        "pitch": 1,
+        "roll": 2,
+        "quat_w": 3,
+        "quat_x": 4,
+        "quat_y": 5,
+        "quat_z": 6,
+        "ax": 7,
+        "ay": 8,
+        "az": 9,
+        "flex": 10,
+    }
+
+    wrist_metric_order = {
+        "heading": 0,
+        "pitch": 1,
+        "roll": 2,
+        "quat_w": 3,
+        "quat_x": 4,
+        "quat_y": 5,
+        "quat_z": 6,
+        "ax": 7,
+        "ay": 8,
+        "az": 9,
+    }
+
+    def sensor_sort_key(col):
+        parts = col.split("_")
+
+        hand = parts[0] if len(parts) > 0 else ""
+        sensor = parts[1] if len(parts) > 1 else ""
+
+        if sensor == "wrist":
+            metric = "_".join(parts[2:]) if len(parts) > 2 else ""
+            return (
+                hand_order.get(hand, 99),
+                sensor_order.get(sensor, 99),
+                99,
+                wrist_metric_order.get(metric, 99),
+                col,
+            )
+
+        if len(parts) == 4 and parts[3] == "flex":
+            segment = parts[2]
+            metric = "flex"
+            return (
+                hand_order.get(hand, 99),
+                sensor_order.get(sensor, 99),
+                segment_order.get(segment, 99),
+                metric_order.get(metric, 99),
+                col,
+            )
+
+        if len(parts) == 5 and parts[3] == "quat":
+            segment = parts[2]
+            metric = f"{parts[3]}_{parts[4]}"
+            return (
+                hand_order.get(hand, 99),
+                sensor_order.get(sensor, 99),
+                segment_order.get(segment, 99),
+                metric_order.get(metric, 99),
+                col,
+            )
+
+        if len(parts) == 4:
+            segment = parts[2]
+            metric = parts[3]
+            return (
+                hand_order.get(hand, 99),
+                sensor_order.get(sensor, 99),
+                segment_order.get(segment, 99),
+                metric_order.get(metric, 99),
+                col,
+            )
+
+        return (99, 99, 99, 99, col)
+
+    signal_cols = [
+        c for c in df.columns
+        if c not in base_cols and c not in time_cols and c not in hand_cols
+    ]
+    signal_cols = sorted(signal_cols, key=sensor_sort_key)
+
+    ordered_cols = base_cols + time_cols + hand_cols + signal_cols
+    return df[ordered_cols]
 
 
 class GloveConnection:
@@ -104,10 +242,6 @@ class GloveConnection:
             self.connected = False
 
     def drain(self, combined_rows):
-        """
-        Non-blocking drain of the receive buffer.
-        Appends any complete JSON lines into combined_rows keyed by request_id.
-        """
         if not self.conn:
             return
         try:
@@ -134,7 +268,6 @@ class GloveConnection:
                 print(f"[{self.label}] Invalid JSON skipped")
                 continue
 
-            # Ignore control messages echoed back
             if obj.get("type") is not None:
                 continue
 
@@ -146,6 +279,7 @@ class GloveConnection:
             req_id = obj.get("request_id")
             if req_id not in combined_rows:
                 combined_rows[req_id] = {}
+
             flattened = flatten_glove_json(obj, self.base_time_ms, self.label)
             combined_rows[req_id].update(flattened)
             print(f"[{self.label}] reply for request_id={req_id}")
@@ -166,12 +300,11 @@ def accept_worker(glove):
 
 
 def main():
-    left  = GloveConnection("left",  LEFT_PORT)
+    left = GloveConnection("left", LEFT_PORT)
     right = GloveConnection("right", RIGHT_PORT)
     combined_rows = {}
 
-    # Accept both connections in parallel
-    t_left  = threading.Thread(target=accept_worker, args=(left,),  daemon=True)
+    t_left = threading.Thread(target=accept_worker, args=(left,), daemon=True)
     t_right = threading.Thread(target=accept_worker, args=(right,), daemon=True)
     t_left.start()
     t_right.start()
@@ -181,7 +314,7 @@ def main():
     print("Both gloves connected.")
     input("Press Enter to begin requesting data...")
 
-    start      = time.time()
+    start = time.time()
     request_id = 0
 
     while time.time() - start < RUN_SECONDS:
@@ -194,29 +327,24 @@ def main():
             "request_ts": request_ts,
         }
 
-        # Fire-and-forget: send to both, do NOT wait for replies
         left.send_json(cmd)
         right.send_json(cmd)
         print(f"[SERVER] Sent REQUEST_DATA {request_id}")
 
-        # Drain whatever has come back so far (non-blocking)
         left.drain(combined_rows)
         right.drain(combined_rows)
 
         time.sleep(REQUEST_PIPELINE_INTERVAL)
 
-    # After the timed loop ends, keep draining for up to 2s to catch
-    # any in-flight replies for the last few request IDs
     drain_deadline = time.time() + 2.0
     while time.time() < drain_deadline:
         left.drain(combined_rows)
         right.drain(combined_rows)
         time.sleep(0.005)
 
-    # Build output — only keep rows where BOTH gloves replied
     complete = {
         rid: row for rid, row in combined_rows.items()
-        if f"left_hand" in str(row) and f"right_hand" in str(row)
+        if "left_hand" in row and "right_hand" in row
     }
     incomplete = len(combined_rows) - len(complete)
     print(f"Total requests: {request_id} | Complete pairs: {len(complete)} | Incomplete: {incomplete}")
@@ -224,14 +352,7 @@ def main():
     if complete:
         ordered = [complete[k] for k in sorted(complete.keys())]
         df = pd.DataFrame(ordered)
-
-        # ── Time columns first, then everything else ─────────────────────
-        time_cols = [c for c in df.columns if any(t in c for t in (
-            "time", "glove_time", "recv_time", "request_ts"
-        ))]
-        other_cols = [c for c in df.columns if c not in time_cols
-                      and c not in ("run_index", "request_id")]
-        df = df[["run_index", "request_id"] + time_cols + other_cols]
+        df = reorder_columns(df)
 
         df.to_csv(OUTPUT_CSV, index=False)
         print(f"Saved {len(df)} paired row(s) to {OUTPUT_CSV}")
@@ -240,6 +361,7 @@ def main():
 
     left.close()
     right.close()
+
 
 if __name__ == "__main__":
     main()

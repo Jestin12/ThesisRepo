@@ -21,7 +21,8 @@ def get_next_run_index():
         rf"^{FILE_PREFIX}_(\d+)_\d{{4}}-\d{{2}}-\d{{2}}_\d{{2}}-\d{{2}}-\d{{2}}\.csv$"
     )
     max_index = 0
-    for path in Path(".").glob(f"{FILE_PREFIX}_*.csv"):
+    os.makedirs(OUTPUT_DIR, exist_ok=True)
+    for path in Path(OUTPUT_DIR).glob(f"{FILE_PREFIX}_*.csv"):
         match = pattern.match(path.name)
         if match:
             max_index = max(max_index, int(match.group(1)))
@@ -29,7 +30,6 @@ def get_next_run_index():
 
 RUN_INDEX = get_next_run_index()
 timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-os.makedirs(OUTPUT_DIR, exist_ok=True)
 OUTPUT_CSV = os.path.join(OUTPUT_DIR, f"{FILE_PREFIX}_{RUN_INDEX}_{timestamp}.csv")
 
 def flatten_glove_json(msg, hand_label):

@@ -107,7 +107,6 @@ const char* HAND_NAME = "RightGlove";   // or "LeftGlove"
 //   az2 = aaWorld2.z / 16384.0f;
 //   return true;
 // }
-
 static bool readDmpMid() {
   if (!dmpReady1 || packetSize1 == 0) {
     return false;
@@ -124,10 +123,8 @@ static bool readDmpMid() {
     return false;
   }
 
-  // Read exactly one packet (the oldest complete packet currently queued)
   IMU_MID.getFIFOBytes(fifoBuffer1, packetSize1);
 
-  // Decode DMP data from this packet
   IMU_MID.dmpGetQuaternion(&q1, fifoBuffer1);
   IMU_MID.dmpGetGravity(&gravity1, &q1);
   IMU_MID.dmpGetYawPitchRoll(ypr1, &q1, &gravity1);
@@ -135,12 +132,17 @@ static bool readDmpMid() {
   IMU_MID.dmpGetLinearAccel(&aaReal1, &aa1, &gravity1);
   IMU_MID.dmpGetLinearAccelInWorld(&aaWorld1, &aaReal1, &q1);
 
-  constexpr float accelScale = 1.0f / 16384.0f;
-  ax1 = aaWorld1.x * accelScale;
-  ay1 = aaWorld1.y * accelScale;
-  az1 = aaWorld1.z * accelScale;
+  constexpr float RAD_TO_DEG_F = 180.0f / PI;
+  ypr1[0] *= RAD_TO_DEG_F;
+  ypr1[1] *= RAD_TO_DEG_F;
+  ypr1[2] *= RAD_TO_DEG_F;
 
-  // Flush any remaining backlog so next loop stays fast
+  constexpr float accelScale_g = 1.0f / 16384.0f;
+  constexpr float g_to_ms2 = 9.80665f;
+  ax1 = aaWorld1.x * accelScale_g * g_to_ms2;
+  ay1 = aaWorld1.y * accelScale_g * g_to_ms2;
+  az1 = aaWorld1.z * accelScale_g * g_to_ms2;
+
   if (fc > packetSize1) {
     IMU_MID.resetFIFO();
   }
@@ -164,10 +166,8 @@ static bool readDmpProx() {
     return false;
   }
 
-  // Read exactly one packet (the oldest complete packet currently queued)
   IMU_PROX.getFIFOBytes(fifoBuffer2, packetSize2);
 
-  // Decode DMP data from this packet
   IMU_PROX.dmpGetQuaternion(&q2, fifoBuffer2);
   IMU_PROX.dmpGetGravity(&gravity2, &q2);
   IMU_PROX.dmpGetYawPitchRoll(ypr2, &q2, &gravity2);
@@ -175,12 +175,17 @@ static bool readDmpProx() {
   IMU_PROX.dmpGetLinearAccel(&aaReal2, &aa2, &gravity2);
   IMU_PROX.dmpGetLinearAccelInWorld(&aaWorld2, &aaReal2, &q2);
 
-  constexpr float accelScale = 1.0f / 16384.0f;
-  ax2 = aaWorld2.x * accelScale;
-  ay2 = aaWorld2.y * accelScale;
-  az2 = aaWorld2.z * accelScale;
+  constexpr float RAD_TO_DEG_F = 180.0f / PI;
+  ypr2[0] *= RAD_TO_DEG_F;
+  ypr2[1] *= RAD_TO_DEG_F;
+  ypr2[2] *= RAD_TO_DEG_F;
 
-  // Flush any remaining backlog so next loop stays fast
+  constexpr float accelScale_g = 1.0f / 16384.0f;
+  constexpr float g_to_ms2 = 9.80665f;
+  ax2 = aaWorld2.x * accelScale_g * g_to_ms2;
+  ay2 = aaWorld2.y * accelScale_g * g_to_ms2;
+  az2 = aaWorld2.z * accelScale_g * g_to_ms2;
+
   if (fc > packetSize2) {
     IMU_PROX.resetFIFO();
   }
@@ -315,22 +320,113 @@ void loop() {
 }
 
 
+// void handleRequestData(uint32_t requestId, const char* requestTs)
+// {
+//     if (!gloveInitialised) return;
+
+//     int start = millis();
+
+//     DynamicJsonDocument doc(4096);
+//     doc["Hand"] = HAND_NAME;
+//     doc["request_id"] = requestId;
+//     doc["request_ts"] = requestTs;
+//     doc["glove_time_ms"] = millis();
+
+//     JsonObject fingerData = doc.createNestedObject("Data");
+
+//     int start_json = millis() - start;
+//     Serial.println("To create json: " + String(start_json));
+
+//     for (int i = 0; i < int(sizeof(HandChannels) / sizeof(HandChannels[0])); i++) {
+//         FingerChannel &fc = HandChannels[i];
+//         tcaSelectChannel(fc.tca_channel);
+
+//         bool gotMid = fc.IMU_MID_EN ? readDmpMid() : false;
+//         bool gotProx = fc.IMU_PROX_EN ? readDmpProx() : false;
+
+//         int MCP_flex = (fc.adc_channel[0] != -1) ? analogRead(fc.adc_channel[0]) : -1;
+//         int PIP_flex = (fc.adc_channel[1] != -1) ? analogRead(fc.adc_channel[1]) : -1;
+
+//         JsonObject finger = fingerData.createNestedObject(fc.label);
+
+//         finger["flex_mcp"] = MCP_flex;
+//         finger["flex_pip"] = PIP_flex;
+
+//         finger["yaw_mid"] = gotMid ? roundf(ypr1[0] * 100.0f) / 100.0f : 0.0f;
+//         finger["pitch_mid"] = gotMid ? roundf(ypr1[1] * 100.0f) / 100.0f : 0.0f;
+//         finger["roll_mid"] = gotMid ? roundf(ypr1[2] * 100.0f) / 100.0f : 0.0f;
+//         finger["ax_mid"] = gotMid ? roundf(ax1 * 100.0f) / 100.0f : 0.0f;
+//         finger["ay_mid"] = gotMid ? roundf(ay1 * 100.0f) / 100.0f : 0.0f;
+//         finger["az_mid"] = gotMid ? roundf(az1 * 100.0f) / 100.0f : 0.0f;
+
+//         finger["yaw_prox"] = gotProx ? roundf(ypr2[0] * 100.0f) / 100.0f : 0.0f;
+//         finger["pitch_prox"] = gotProx ? roundf(ypr2[1] * 100.0f) / 100.0f : 0.0f;
+//         finger["roll_prox"] = gotProx ? roundf(ypr2[2] * 100.0f) / 100.0f : 0.0f;
+//         finger["ax_prox"] = gotProx ? roundf(ax2 * 100.0f) / 100.0f : 0.0f;
+//         finger["ay_prox"] = gotProx ? roundf(ay2 * 100.0f) / 100.0f : 0.0f;
+//         finger["az_prox"] = gotProx ? roundf(az2 * 100.0f) / 100.0f : 0.0f;
+
+//         finger["yaw_mid"] = gotMid ? roundf(ypr1[0] * 100.0f) / 100.0f : 0.0f;
+//         finger["pitch_mid"] = gotMid ? roundf(ypr1[1] * 100.0f) / 100.0f : 0.0f;
+//         finger["roll_mid"] = gotMid ? roundf(ypr1[2] * 100.0f) / 100.0f : 0.0f;
+//         finger["ax_mid"] = gotMid ? roundf(ax1 * 100.0f) / 100.0f : 0.0f;
+//         finger["ay_mid"] = gotMid ? roundf(ay1 * 100.0f) / 100.0f : 0.0f;
+//         finger["az_mid"] = gotMid ? roundf(az1 * 100.0f) / 100.0f : 0.0f;
+
+//         finger["yaw_prox"] = gotProx ? roundf(ypr2[0] * 100.0f) / 100.0f : 0.0f;
+//         finger["pitch_prox"] = gotProx ? roundf(ypr2[1] * 100.0f) / 100.0f : 0.0f;
+//         finger["roll_prox"] = gotProx ? roundf(ypr2[2] * 100.0f) / 100.0f : 0.0f;
+//         finger["ax_prox"] = gotProx ? roundf(ax2 * 100.0f) / 100.0f : 0.0f;
+//         finger["ay_prox"] = gotProx ? roundf(ay2 * 100.0f) / 100.0f : 0.0f;
+//         finger["az_prox"] = gotProx ? roundf(az2 * 100.0f) / 100.0f : 0.0f;
+//     }
+
+//     int sample_mpu = millis() - start_json;
+
+//     Serial.println("To sample mpu6050: " + String(sample_mpu));
+
+//     tcaSelectChannel(TCA_CH_WRIST);
+
+//     JsonObject wrist = fingerData.createNestedObject("Wrist");
+
+//     sensors_event_t orientEvent;
+//     bno.getEvent(&orientEvent);
+
+//     sensors_event_t accelEvent;
+//     bno.getEvent(&accelEvent, Adafruit_BNO055::VECTOR_ACCELEROMETER);
+
+//     wrist["ax"] = roundf(accelEvent.acceleration.x * 100.0f) / 100.0f;
+//     wrist["ay"] = roundf(accelEvent.acceleration.y * 100.0f) / 100.0f;
+//     wrist["az"] = roundf(accelEvent.acceleration.z * 100.0f) / 100.0f;
+
+//     wrist["heading"] = roundf(orientEvent.orientation.x * 100.0f) / 100.0f;
+//     wrist["pitch"] = roundf(orientEvent.orientation.y * 100.0f) / 100.0f;
+//     wrist["roll"] = roundf(orientEvent.orientation.z * 100.0f) / 100.0f;
+
+//     int sample_bno = millis() - sample_mpu;
+
+//     Serial.println("to sample bno: " + String(sample_bno));
+
+//     doc["Time"] = millis();
+
+//     serializeJson(doc, Serial);
+//     Serial.println();
+
+//     sendJsonOverTcp(doc);
+// }
+
+
 void handleRequestData(uint32_t requestId, const char* requestTs)
 {
     if (!gloveInitialised) return;
 
-    int start = millis();
-
-    DynamicJsonDocument doc(4096);
+    DynamicJsonDocument doc(6144);
     doc["Hand"] = HAND_NAME;
     doc["request_id"] = requestId;
     doc["request_ts"] = requestTs;
     doc["glove_time_ms"] = millis();
 
     JsonObject fingerData = doc.createNestedObject("Data");
-
-    int start_json = millis() - start;
-    Serial.println("To create json: " + String(start_json));
 
     for (int i = 0; i < int(sizeof(HandChannels) / sizeof(HandChannels[0])); i++) {
         FingerChannel &fc = HandChannels[i];
@@ -347,19 +443,10 @@ void handleRequestData(uint32_t requestId, const char* requestTs)
         finger["flex_mcp"] = MCP_flex;
         finger["flex_pip"] = PIP_flex;
 
-        finger["yaw_mid"] = gotMid ? roundf(ypr1[0] * 100.0f) / 100.0f : 0.0f;
-        finger["pitch_mid"] = gotMid ? roundf(ypr1[1] * 100.0f) / 100.0f : 0.0f;
-        finger["roll_mid"] = gotMid ? roundf(ypr1[2] * 100.0f) / 100.0f : 0.0f;
-        finger["ax_mid"] = gotMid ? roundf(ax1 * 100.0f) / 100.0f : 0.0f;
-        finger["ay_mid"] = gotMid ? roundf(ay1 * 100.0f) / 100.0f : 0.0f;
-        finger["az_mid"] = gotMid ? roundf(az1 * 100.0f) / 100.0f : 0.0f;
-
-        finger["yaw_prox"] = gotProx ? roundf(ypr2[0] * 100.0f) / 100.0f : 0.0f;
-        finger["pitch_prox"] = gotProx ? roundf(ypr2[1] * 100.0f) / 100.0f : 0.0f;
-        finger["roll_prox"] = gotProx ? roundf(ypr2[2] * 100.0f) / 100.0f : 0.0f;
-        finger["ax_prox"] = gotProx ? roundf(ax2 * 100.0f) / 100.0f : 0.0f;
-        finger["ay_prox"] = gotProx ? roundf(ay2 * 100.0f) / 100.0f : 0.0f;
-        finger["az_prox"] = gotProx ? roundf(az2 * 100.0f) / 100.0f : 0.0f;
+        finger["quat_w_mid"] = gotMid ? roundf(q1.w * 10000.0f) / 10000.0f : 0.0f;
+        finger["quat_x_mid"] = gotMid ? roundf(q1.x * 10000.0f) / 10000.0f : 0.0f;
+        finger["quat_y_mid"] = gotMid ? roundf(q1.y * 10000.0f) / 10000.0f : 0.0f;
+        finger["quat_z_mid"] = gotMid ? roundf(q1.z * 10000.0f) / 10000.0f : 0.0f;
 
         finger["yaw_mid"] = gotMid ? roundf(ypr1[0] * 100.0f) / 100.0f : 0.0f;
         finger["pitch_mid"] = gotMid ? roundf(ypr1[1] * 100.0f) / 100.0f : 0.0f;
@@ -367,6 +454,11 @@ void handleRequestData(uint32_t requestId, const char* requestTs)
         finger["ax_mid"] = gotMid ? roundf(ax1 * 100.0f) / 100.0f : 0.0f;
         finger["ay_mid"] = gotMid ? roundf(ay1 * 100.0f) / 100.0f : 0.0f;
         finger["az_mid"] = gotMid ? roundf(az1 * 100.0f) / 100.0f : 0.0f;
+
+        finger["quat_w_prox"] = gotProx ? roundf(q2.w * 10000.0f) / 10000.0f : 0.0f;
+        finger["quat_x_prox"] = gotProx ? roundf(q2.x * 10000.0f) / 10000.0f : 0.0f;
+        finger["quat_y_prox"] = gotProx ? roundf(q2.y * 10000.0f) / 10000.0f : 0.0f;
+        finger["quat_z_prox"] = gotProx ? roundf(q2.z * 10000.0f) / 10000.0f : 0.0f;
 
         finger["yaw_prox"] = gotProx ? roundf(ypr2[0] * 100.0f) / 100.0f : 0.0f;
         finger["pitch_prox"] = gotProx ? roundf(ypr2[1] * 100.0f) / 100.0f : 0.0f;
@@ -375,10 +467,6 @@ void handleRequestData(uint32_t requestId, const char* requestTs)
         finger["ay_prox"] = gotProx ? roundf(ay2 * 100.0f) / 100.0f : 0.0f;
         finger["az_prox"] = gotProx ? roundf(az2 * 100.0f) / 100.0f : 0.0f;
     }
-
-    int sample_mpu = millis() - start_json;
-
-    Serial.println("To sample mpu6050: " + String(sample_mpu));
 
     tcaSelectChannel(TCA_CH_WRIST);
 
@@ -390,6 +478,8 @@ void handleRequestData(uint32_t requestId, const char* requestTs)
     sensors_event_t accelEvent;
     bno.getEvent(&accelEvent, Adafruit_BNO055::VECTOR_ACCELEROMETER);
 
+    imu::Quaternion wristQuat = bno.getQuat();
+
     wrist["ax"] = roundf(accelEvent.acceleration.x * 100.0f) / 100.0f;
     wrist["ay"] = roundf(accelEvent.acceleration.y * 100.0f) / 100.0f;
     wrist["az"] = roundf(accelEvent.acceleration.z * 100.0f) / 100.0f;
@@ -398,9 +488,10 @@ void handleRequestData(uint32_t requestId, const char* requestTs)
     wrist["pitch"] = roundf(orientEvent.orientation.y * 100.0f) / 100.0f;
     wrist["roll"] = roundf(orientEvent.orientation.z * 100.0f) / 100.0f;
 
-    int sample_bno = millis() - sample_mpu;
-
-    Serial.println("to sample bno: " + String(sample_bno));
+    wrist["quat_w"] = roundf(wristQuat.w() * 10000.0f) / 10000.0f;
+    wrist["quat_x"] = roundf(wristQuat.x() * 10000.0f) / 10000.0f;
+    wrist["quat_y"] = roundf(wristQuat.y() * 10000.0f) / 10000.0f;
+    wrist["quat_z"] = roundf(wristQuat.z() * 10000.0f) / 10000.0f;
 
     doc["Time"] = millis();
 
@@ -409,6 +500,7 @@ void handleRequestData(uint32_t requestId, const char* requestTs)
 
     sendJsonOverTcp(doc);
 }
+
 void handleInit() {
 
   // bool status[4] = {false, false, false, false};
