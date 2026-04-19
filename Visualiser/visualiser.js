@@ -4,24 +4,28 @@
  * Reads glove_data_*.csv from ThesisA.Data
  * Renders a 3D hand skeleton driven by quaternions (per-segment absolute orientation)
  *
- * IMU physical mounting (all segments — fingers and palm):
+ * IMU physical mounting (all segments — fingers, palm, wrist):
  *   Y-axis: along bone, pointing PROXIMALLY (towards wrist)
  *   Z-axis: dorsal surface (back of hand / finger)
- *   X-axis: lateral (right when viewed from dorsal)
  *
- * Skeleton convention (Three.js local groups):
- *   Bones extend along -Z (tip at position.z = -length)
- *   So "bone distal direction" = -Z in local space
+ * World frame conventions:
+ *   MPU6050 DMP (fingers + palm): NED — Z-down, gravity = +Z at rest
+ *   BNO055 NDOF  (wrist only):    ENU — Z-up,   gravity = -Z at rest
  *
- * Mounting correction derivation:
- *   We need IMU -Y → skeleton -Z  (both point distally)
- *   Equivalently: IMU +Y → skeleton +Z
- *   That is achieved by Rx(+90°): [w=√2/2, x=√2/2, y=0, z=0]
- *   - IMU X → skel X  (unchanged, lateral)
- *   - IMU Y → skel +Z (was proximal, becomes the +Z axis)
- *   - IMU Z → skel -Y (was dorsal, goes into -Y)
- *   This means at rest (hand flat, DMP ≈ identity), the skeleton
- *   shows fingers extending in -Z (away from camera) which is correct.
+ * Full pipeline:
+ *
+ *   MPU6050 fingers/palm:
+ *     1. q_enu  = Q_NED_TO_ENU · q_sensor · Q_NED_TO_ENU*
+ *        Q_NED_TO_ENU = [w=0, x=√2/2, y=√2/2, z=0]  (180° about axis [1,1,0]/√2)
+ *     2. q_skel = q_enu · mountCorr
+ *
+ *   BNO055 wrist:
+ *     1. (already in ENU — skip frame conversion)
+ *     2. q_skel = q_sensor · mountCorr
+ *
+ *   mountCorr = Rx(+90°) = [w=√2/2, x=√2/2, y=0, z=0]
+ *     Maps: IMU +Y (proximal) → skeleton +Z
+ *           IMU -Y (distal)   → skeleton -Z  ← bone direction
  */
 
 import * as THREE from 'three';
@@ -437,38 +441,60 @@ function extractQuats(row, side) {
    * We post-multiply by mountCorr to convert from IMU body frame
    * (Y-proximal, Z-dorsal) into the skeleton frame (-Z = bone distal).
    *
-   * Mounting correction: Rx(+90°)
-   *   w = cos(π/4) = √2/2 ≈ 0.7071
-   *   x = sin(π/4) = √2/2 ≈ 0.7071
-   *   y = 0, z = 0
+   * Two distinct pipelines depending on sensor type:
    *
-   * This maps: IMU Y (proximal) → skeleton +Z,
-   *            IMU -Y (distal)  → skeleton -Z  (bone direction)
-   * Same correction applied to ALL segments (fingers, palm, wrist) since
-   * they all share the same physical mounting convention.
+   *   MPU6050 (fingers + palm) — world frame is NED (Z-down):
+   *     q_enu  = Q_NED_TO_ENU · q_mpu · Q_NED_TO_ENU*   (change of reference frame)
+   *     q_skel = q_enu · mountCorr
+   *
+   *   BNO055 (wrist only) — world frame is ENU (Z-up) — no frame conversion:
+   *     q_skel = q_bno · mountCorr
+   *
+   *   mountCorr = Rx(+90°): THREE.Quaternion(x=√2/2, y=0, z=0, w=√2/2)
+   *   Q_NED_TO_ENU           THREE.Quaternion(x=√2/2, y=√2/2, z=0, w=0)
    */
 
-  const SQ2_2 = Math.SQRT2 / 2;   // ≈ 0.7071
-  const mountCorr = new THREE.Quaternion(SQ2_2, 0, 0, SQ2_2); // THREE.Quaternion(x,y,z,w)
+  const SQ2 = Math.SQRT2 / 2;  // ≈ 0.7071
 
-  const getQ = (prefix) => {
+  // Mounting correction — same for all segments (Rx +90°)
+  // THREE.Quaternion constructor is (x, y, z, w)
+  const mountCorr = new THREE.Quaternion(SQ2, 0, 0, SQ2);
+
+  // NED → ENU frame-change quaternion [w=0, x=√2/2, y=√2/2, z=0]
+  const Q_ned_to_enu = new THREE.Quaternion(SQ2, SQ2, 0, 0);
+  const Q_ned_to_enu_conj = Q_ned_to_enu.clone().conjugate();
+
+  const getQClean = (prefix, isMPU = true) => {
     const w = parseFloat(row[`${prefix}_quat_w`]);
     const x = parseFloat(row[`${prefix}_quat_x`]);
     const y = parseFloat(row[`${prefix}_quat_y`]);
     const z = parseFloat(row[`${prefix}_quat_z`]);
     if (isNaN(w) || isNaN(x) || isNaN(y) || isNaN(z)) return null;
-    const q = new THREE.Quaternion(x, y, z, w);
-    q.normalize();
+
+    let q = new THREE.Quaternion(x, y, z, w).normalize();
+
+    if (isMPU) {
+      // Change world frame: NED → ENU
+      // q_enu = Q_ned_to_enu · q_ned · Q_ned_to_enu*
+      const qENU = Q_ned_to_enu.clone()
+        .multiply(q)
+        .multiply(Q_ned_to_enu_conj);
+      q = qENU;
+    }
+    // BNO055 is already in ENU — no frame conversion needed.
+
+    // Apply body-frame mounting correction
     q.multiply(mountCorr);
     return q;
   };
 
   const quats = {};
-  quats['wrist']       = getQ(`${side}_wrist`);
-  quats['palm']        = getQ(`${side}_palm_mid`);  // back-of-hand IMU
+  // Wrist = BNO055 (ENU), all others = MPU6050 (NED)
+  quats['wrist'] = getQClean(`${side}_wrist`, false);       // BNO055
+  quats['palm']  = getQClean(`${side}_palm_mid`, true);     // MPU6050
   FINGER_NAMES.forEach(f => {
-    quats[`${f}_prox`] = getQ(`${side}_${f}_prox`);
-    quats[`${f}_mid`]  = getQ(`${side}_${f}_mid`);
+    quats[`${f}_prox`] = getQClean(`${side}_${f}_prox`, true);  // MPU6050
+    quats[`${f}_mid`]  = getQClean(`${side}_${f}_mid`,  true);  // MPU6050
   });
   return quats;
 }
