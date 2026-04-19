@@ -3,7 +3,25 @@
  * -------------------
  * Reads glove_data_*.csv from ThesisA.Data
  * Renders a 3D hand skeleton driven by quaternions (per-segment absolute orientation)
- * IMU mounting assumption: Y along bone long-axis, Z up
+ *
+ * IMU physical mounting (all segments — fingers and palm):
+ *   Y-axis: along bone, pointing PROXIMALLY (towards wrist)
+ *   Z-axis: dorsal surface (back of hand / finger)
+ *   X-axis: lateral (right when viewed from dorsal)
+ *
+ * Skeleton convention (Three.js local groups):
+ *   Bones extend along -Z (tip at position.z = -length)
+ *   So "bone distal direction" = -Z in local space
+ *
+ * Mounting correction derivation:
+ *   We need IMU -Y → skeleton -Z  (both point distally)
+ *   Equivalently: IMU +Y → skeleton +Z
+ *   That is achieved by Rx(+90°): [w=√2/2, x=√2/2, y=0, z=0]
+ *   - IMU X → skel X  (unchanged, lateral)
+ *   - IMU Y → skel +Z (was proximal, becomes the +Z axis)
+ *   - IMU Z → skel -Y (was dorsal, goes into -Y)
+ *   This means at rest (hand flat, DMP ≈ identity), the skeleton
+ *   shows fingers extending in -Z (away from camera) which is correct.
  */
 
 import * as THREE from 'three';
@@ -410,22 +428,28 @@ function splitCSVLine(line) {
 
 function extractQuats(row, side) {
   /**
-   * Returns { wrist, palm_mid, palm_prox, thumb_prox, thumb_mid, index_prox,
+   * Returns { wrist, palm, thumb_prox, thumb_mid, index_prox,
    *           index_mid, middle_prox, middle_mid, ring_prox, ring_mid,
    *           pinky_prox, pinky_mid }
-   * Each value is a THREE.Quaternion (w, x, y, z)
+   * Each value is a THREE.Quaternion in skeleton local convention.
    *
-   * IMU mounting: Y along bone, Z up
-   * The MPU6050 DMP quaternion is: world frame orientation of the sensor.
-   * We apply a mounting correction so that the "rest pose" (hand flat)
-   * corresponds to the identity rotation in our visualiser.
+   * The MPU6050 DMP outputs world-frame absolute orientation quaternions.
+   * We post-multiply by mountCorr to convert from IMU body frame
+   * (Y-proximal, Z-dorsal) into the skeleton frame (-Z = bone distal).
    *
-   * Correction quaternion: rotate -90° around X to go from IMU Y-along-bone
-   * convention to Three.js Z-along-bone convention used in the skeleton.
+   * Mounting correction: Rx(+90°)
+   *   w = cos(π/4) = √2/2 ≈ 0.7071
+   *   x = sin(π/4) = √2/2 ≈ 0.7071
+   *   y = 0, z = 0
+   *
+   * This maps: IMU Y (proximal) → skeleton +Z,
+   *            IMU -Y (distal)  → skeleton -Z  (bone direction)
+   * Same correction applied to ALL segments (fingers, palm, wrist) since
+   * they all share the same physical mounting convention.
    */
 
-  const mountCorr = new THREE.Quaternion();
-  mountCorr.setFromAxisAngle(new THREE.Vector3(1, 0, 0), -Math.PI / 2);
+  const SQ2_2 = Math.SQRT2 / 2;   // ≈ 0.7071
+  const mountCorr = new THREE.Quaternion(SQ2_2, 0, 0, SQ2_2); // THREE.Quaternion(x,y,z,w)
 
   const getQ = (prefix) => {
     const w = parseFloat(row[`${prefix}_quat_w`]);
