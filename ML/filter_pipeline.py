@@ -178,7 +178,7 @@ def sensor_columns(df: pd.DataFrame, hand: str) -> list[str]:
 # PIPELINE
 # =============================================================================
 
-def process_file(csv_path: str, input_root: str, tag: str) -> dict:
+def process_file(csv_path: str, input_root: str, output_root: str, tag: str) -> dict:
     """
     Load one CSV, filter its sensor columns, write output.
 
@@ -213,11 +213,11 @@ def process_file(csv_path: str, input_root: str, tag: str) -> dict:
     stem, ext = os.path.splitext(os.path.basename(csv_path))
     out_name   = f'{stem}_{tag}{ext}'
 
-    if OUTPUT_DIR:
-        rel_dir  = os.path.dirname(rel_path)
-        out_dir  = os.path.join(os.path.expanduser(OUTPUT_DIR), rel_dir)
+    if output_root:
+        rel_dir = os.path.dirname(rel_path)
+        out_dir = os.path.join(output_root, rel_dir)
     else:
-        out_dir  = os.path.dirname(csv_path)
+        out_dir = os.path.dirname(csv_path)
 
     os.makedirs(out_dir, exist_ok=True)
     out_path = os.path.join(out_dir, out_name)
@@ -256,8 +256,10 @@ def run():
 
     log.info('=' * 60)
     log.info('Glove Filter Pipeline')
+    output_root = os.path.normpath(os.path.join(script_dir, OUTPUT_DIR)) if OUTPUT_DIR else None
+
     log.info('  Input   : %s', input_root)
-    log.info('  Output  : %s', os.path.normpath(os.path.join(script_dir, OUTPUT_DIR)) if OUTPUT_DIR else 'alongside source files')
+    log.info('  Output  : %s', output_root if output_root else 'alongside source files')
     log.info('  Hand    : %s', HAND)
     log.info('  Filter  : %s  (tag: %s)', FILTER_TYPE, tag)
     log.info('  Files   : %d CSV(s) found', len(csv_files))
@@ -265,7 +267,7 @@ def run():
 
     results = []
     for csv_path in csv_files:
-        results.append(process_file(csv_path, input_root, tag))
+        results.append(process_file(csv_path, input_root, output_root, tag))
 
     # ── Summary ───────────────────────────────────────────────────────────────
     ok      = sum(1 for r in results if r['status'] == 'ok')
@@ -278,7 +280,7 @@ def run():
     if WRITE_SUMMARY:
         summary_df   = pd.DataFrame(results)
         summary_path = os.path.join(
-            os.path.normpath(os.path.join(script_dir, OUTPUT_DIR)) if OUTPUT_DIR else script_dir,
+            output_root if output_root else script_dir,
             f'_pipeline_summary_{tag}.csv'
         )
         os.makedirs(os.path.dirname(summary_path), exist_ok=True)
