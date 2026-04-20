@@ -37,15 +37,15 @@ from scipy import signal as sp_signal
 # =============================================================================
 
 # Folder to scan for CSV files (absolute or relative to this script).
-INPUT_DIR = '../data'
+INPUT_DIR = '../ML/TwoHand_L_Okay_R_Okay'
 
 # Where to write filtered outputs.
 # Set to None to write alongside each source file (adds filter tag to filename).
-OUTPUT_DIR = '../data_filtered'
+OUTPUT_DIR = '../ML/TwoHand_L_Okay_R_Okay_filtered_butterworth_lp'
 
 # Which hand's columns to filter.
 # Options: 'left' | 'right' | 'both'
-HAND = 'right'
+HAND = 'both'
 
 # Approximate sampling rate in Hz — used for Butterworth cutoff normalisation.
 FS_HZ = 22.0
