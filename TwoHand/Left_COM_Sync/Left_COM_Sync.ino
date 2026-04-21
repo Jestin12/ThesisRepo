@@ -25,6 +25,8 @@
 #define TCA_CH_PINKY  2
 #define TCA_CH_WRIST  1
 
+#define LED_PIN 1
+
 // ── Definitions of globals declared in Globals.h ────────────
 TCA9548A  TCA(TCA_ADDR);
 MPU6050   IMU_MID(0x68);
@@ -63,6 +65,12 @@ DynamicJsonDocument DataPacket(4096);
 
 volatile bool gloveInitialised = false;
 const char* HAND_NAME = "LeftGlove";   // or "LeftGlove"
+
+TaskHandle_t ledTaskHandle = nullptr;
+
+void ledBlinkTask(void *parameter);
+void stopLedBlink();
+
 
 // ── FIFO helpers ─────────────────────────────────────────────
 
@@ -204,6 +212,17 @@ void setup() {
   delay(1200);
   Serial.println("\nBooting...");
 
+  xTaskCreatePinnedToCore(
+    ledBlinkTask,      // task function
+    "LED Blink Task",  // name
+    2048,              // stack size in words
+    nullptr,           // parameter
+    1,                 // priority
+    &ledTaskHandle,    // handle
+    1                  // core (0 or 1)
+  );
+
+
 
   Wire.begin(I2C_BUS_SDA, I2C_BUS_SCL);
   Wire.setClock(TCA_FREQ);
@@ -235,6 +254,8 @@ void setup() {
     Serial.println(String("IMU_PROX_DMP : ") + (status[3] ? "OK" : "FAIL"));
     status[0] = status[1] = status[2] = status[3] = false;
   }
+
+  stopLedBlink();
 
   initWifi();
   gloveInitialised = true;
@@ -318,6 +339,24 @@ void loop() {
   pollTcpCommands(handleInit, handleRequestData);
 
   delay(1);
+}
+
+void ledBlinkTask(void *parameter) {
+  pinMode(LED_PIN, OUTPUT);
+
+  while (true) {
+    digitalWrite(LED_PIN, !digitalRead(LED_PIN));
+    vTaskDelay(200 / portTICK_PERIOD_MS);  // blink every 200 ms
+  }
+}
+
+// Call this when you want the LED to stop blinking
+void stopLedBlink() {
+  if (ledTaskHandle != nullptr) {
+    vTaskDelete(ledTaskHandle);
+    ledTaskHandle = nullptr;
+    digitalWrite(LED_PIN, LOW);  // ensure LED off
+  }
 }
 
 

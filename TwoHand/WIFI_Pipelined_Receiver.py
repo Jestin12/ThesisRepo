@@ -14,8 +14,8 @@ LEFT_PORT = 5000
 RIGHT_PORT = 5001
 RUN_SECONDS = 5
 REQUEST_PIPELINE_INTERVAL = 0.005   # 5 ms between sends — tune down if gloves keep up
-FILE_PREFIX = f"glove_data_L_Fist_R_Fist_{RUN_SECONDS}s"
-OUTPUT_DIR = r"/home/jestin/ThesisData/TwoHand_L_Fist_R_Fist"
+FILE_PREFIX = f"glove_data_L_Point_R_Point_{RUN_SECONDS}s"
+OUTPUT_DIR = r"/home/jestin/ThesisRepo/ML/TwoHand_L_Point_R_Point"
 
 
 def get_next_run_index():
