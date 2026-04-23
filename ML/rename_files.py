@@ -15,7 +15,7 @@ import glob
 # =============================================================================
 
 # Folder containing the CSV files to rename.
-DIRECTORY = '/home/jestin/ThesisRepo/ML/TwoHand_L_Flat_R_Flat'
+DIRECTORY = '/home/jestin/ThesisRepo/ML/TwoHand_L_Point_R_'
 
 # The substring to find and replace in each filename.
 FIND    = 'L_fist_R_fist'
