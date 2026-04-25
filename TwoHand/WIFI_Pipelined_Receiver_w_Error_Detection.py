@@ -9,6 +9,7 @@ import os
 import pandas as pd
 
 
+
 HOST = "0.0.0.0"
 LEFT_PORT = 5000
 RIGHT_PORT = 5001
@@ -16,6 +17,23 @@ RUN_SECONDS = 2
 REQUEST_PIPELINE_INTERVAL = 0.005   # 5 ms between sends — tune down if gloves keep up
 FILE_PREFIX = f"glove_data_L_Wiggle_R_Wiggle_{RUN_SECONDS}s"
 OUTPUT_DIR = r"/home/jestin/ThesisRepo/ML/DynamicTrainingData/TwoHandDynamic_L_Wiggle_R_Wiggle"
+
+# ── Zero-channel detection ────────────────────────────────────────────────────
+# How many requests to collect before checking for dead channels.
+ZERO_CHECK_AFTER_N = 20
+# A channel is considered dead if ALL numeric signal values are zero.
+# Non-signal columns (timestamps, hand label, request meta) and known-zero
+# sensors (palm_mid) are excluded from the check.
+_EXCLUDE_PREFIXES = (
+    "run_index", "request_id", "request_ts",
+    "left_recv_time_ms", "left_glove_time_ms", "left_time",
+    "right_recv_time_ms", "right_glove_time_ms", "right_time",
+    "left_hand", "right_hand",
+    "left_palm_mid",    # palm_mid IMU expected to read zero
+    "right_palm_mid",
+)
+# ─────────────────────────────────────────────────────────────────────────────
+
 
 def get_next_run_index():
     pattern = re.compile(
@@ -30,9 +48,11 @@ def get_next_run_index():
     return max_index + 1
 
 
+
 RUN_INDEX = get_next_run_index()
 timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
 OUTPUT_CSV = os.path.join(OUTPUT_DIR, f"{FILE_PREFIX}_{RUN_INDEX}_{timestamp}.csv")
+
 
 
 def flatten_glove_json(msg, base_time_ms, hand_label):
@@ -82,6 +102,56 @@ def flatten_glove_json(msg, base_time_ms, hand_label):
             row[col] = value
 
     return row
+
+
+
+def check_zero_channels(combined_rows):
+    """
+    Inspect all rows collected so far and identify any individual signal
+    column that is ALL zero across every row. Each column is checked
+    independently — a dead flex sensor won't be masked by healthy IMU
+    columns on the same finger.
+
+    Raises SystemExit if any dead columns are found.
+    """
+    if not combined_rows:
+        return
+
+    rows = list(combined_rows.values())
+    all_cols = set()
+    for row in rows:
+        all_cols.update(row.keys())
+
+    # Only check numeric signal columns — exclude meta/time/known-zero cols
+    signal_cols = [
+        c for c in all_cols
+        if not any(c.startswith(p) for p in _EXCLUDE_PREFIXES)
+    ]
+
+    dead_cols = []
+    for col in sorted(signal_cols):
+        all_zero = True
+        for row in rows:
+            val = row.get(col)
+            try:
+                if float(val) != 0.0:
+                    all_zero = False
+                    break
+            except (TypeError, ValueError):
+                pass  # None / non-numeric → skip
+        if all_zero:
+            dead_cols.append(col)
+
+    if dead_cols:
+        print("\n[ERROR] Dead (all-zero) columns detected — aborting collection:")
+        for col in dead_cols:
+            print(f"  ✗  {col}  — all values are zero across {len(rows)} sampled rows")
+        print(
+            "\nLikely cause: IMU/sensor not responding or I2C failure on that finger.\n"
+            "Fix the hardware issue and restart the script.\n"
+        )
+        raise SystemExit(1)
+
 
 
 def reorder_columns(df):
@@ -200,6 +270,7 @@ def reorder_columns(df):
     return df[ordered_cols]
 
 
+
 class GloveConnection:
     def __init__(self, label, port):
         self.label = label
@@ -292,10 +363,12 @@ class GloveConnection:
                     pass
 
 
+
 def accept_worker(glove):
     glove.setup_server()
     print(f"[{glove.label}] Listening on {HOST}:{glove.port}")
     glove.accept()
+
 
 
 def main():
@@ -333,6 +406,11 @@ def main():
         left.drain(combined_rows)
         right.drain(combined_rows)
 
+        # ── Zero-channel check after ZERO_CHECK_AFTER_N paired responses ──────
+        if request_id == ZERO_CHECK_AFTER_N:
+            check_zero_channels(combined_rows)
+        # ──────────────────────────────────────────────────────────────────────
+
         time.sleep(REQUEST_PIPELINE_INTERVAL)
 
     drain_deadline = time.time() + 2.0
@@ -352,7 +430,6 @@ def main():
         ordered = [complete[k] for k in sorted(complete.keys())]
         df = pd.DataFrame(ordered)
         df = reorder_columns(df)
-
         df.to_csv(OUTPUT_CSV, index=False)
         print(f"Saved {len(df)} paired row(s) to {OUTPUT_CSV}")
     else:
@@ -360,6 +437,7 @@ def main():
 
     left.close()
     right.close()
+
 
 
 if __name__ == "__main__":

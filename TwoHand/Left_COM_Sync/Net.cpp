@@ -20,8 +20,45 @@ static const uint16_t TCP_PORT   = 5000;
 // static const char* WIFI_PASSWORD = "12345678";
 
 // // PC server config (change to your PC's LAN IP)
-// static const char* TCP_HOST      = "10.83.21.94";  // your computer IP
+// static const char* TCP_HOST      = "10.91.215.94";  // your computer IP
 // static const uint16_t TCP_PORT   = 5000;
+
+// static const char* WIFI_SSID     = "TelstraCACE44";
+// static const char* WIFI_PASSWORD = "ht9cwmhxzf";
+
+// // PC server config (change to your PC's LAN IP)
+// static const char* TCP_HOST      = "192.168.0.140";  // your computer IP
+// static const uint16_t TCP_PORT   = 5000;
+
+
+// Jason's
+// static const char* WIFI_SSID     = "Telstra39AF91";
+// static const char* WIFI_PASSWORD = "ns25garzcm";
+
+
+// // PC server config (change to your PC's LAN IP)
+// static const char* TCP_HOST      = "192.168.0.58";  // your computer IP
+// static const uint16_t TCP_PORT   = 5000;
+
+
+// Ameline phone
+// static const char* WIFI_SSID     = "A iPhone";
+// static const char* WIFI_PASSWORD = "ilyssa123";
+
+
+// // PC server config (change to your PC's LAN IP)
+// static const char* TCP_HOST      = "172.20.10.9";  // your computer IP
+// static const uint16_t TCP_PORT   = 5000;
+
+
+// static const char* WIFI_SSID     = "Telstra39AF91";
+// static const char* WIFI_PASSWORD = "ns25garzcm";
+
+// // PC server config (change to your PC's LAN IP)
+// static const char* TCP_HOST      = "192.168.0.58";  // your computer IP
+// static const uint16_t TCP_PORT   = 5000;
+
+
 // ==========================
 
 static WiFiClient tcpClient;
