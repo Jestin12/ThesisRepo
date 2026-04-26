@@ -10,13 +10,14 @@ import pandas as pd
 
 
 
+
 HOST = "0.0.0.0"
 LEFT_PORT = 5000
 RIGHT_PORT = 5001
 RUN_SECONDS = 2
 REQUEST_PIPELINE_INTERVAL = 0.005   # 5 ms between sends — tune down if gloves keep up
-FILE_PREFIX = f"glove_data_L_null_R_Fingerwave_{RUN_SECONDS}s"
-OUTPUT_DIR = r"/home/jestin/ThesisRepo/ML/DynamicTrainingData/TwoHandDynamic_L_null_R_Fingerwave"
+FILE_PREFIX = f"glove_data_L_Roll_R_Roll_{RUN_SECONDS}s"
+OUTPUT_DIR = r"/home/jestin/ThesisRepo/ML/TestData/Jestin/TwoHandDynamic_L_Roll_R_Roll"
 
 # ── Zero-channel detection ────────────────────────────────────────────────────
 # How many requests to collect before checking for dead channels.

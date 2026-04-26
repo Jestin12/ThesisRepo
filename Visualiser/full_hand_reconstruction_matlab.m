@@ -10,10 +10,10 @@
 clear; clc; close all;
 
 %% User settings
-csvPath   = '/home/jestin/ThesisRepo/ML/TwoHand_L_Fist_R_Fist_filtered_butterworth_lp/glove_data_L_Fist_R_Fist_5s_3_2026-04-19_19-31-18_bw_lp_5.0hz.csv';
+csvPath   = '/home/jestin/ThesisRepo/ML/3D_Reconstruction/glove_data_flat2fist_2s_2_2026-04-26_21-21-53.csv';
 
 handSide  = 'left';    % 'left' or 'right'
-rowSelect = 1;         % MATLAB uses 1-based indexing
+rowSelect = 10;         % MATLAB uses 1-based indexing
 applyAxisFix = true;
 
 if ~isfile(csvPath)
@@ -29,10 +29,13 @@ if rowSelect < 1 || rowSelect > height(T)
 end
 
 %% Fixed 90 deg clockwise rotation about +Z
-Rz_cw_90 = [0  1  0;
-           -1  0  0;
+Rz_cw_90 = [0  -1  0;
+            1  0  0;
             0  0  1];
-
+% 
+% Rz_cw_90 = [1  0  0;
+%             0  1  0;
+%             0  0  1];
 if applyAxisFix
     R_align = Rz_cw_90;
 else
@@ -180,22 +183,48 @@ for i = 1:numel(fingers)
     [proxQ, proxSrc] = extractQuaternion(T, rowIdx, {side + "_" + finger + "_prox"}, false);
     [midQ,  midSrc ] = extractQuaternion(T, rowIdx, {side + "_" + finger + "_mid"}, false);
 
+    % if isempty(proxQ) && isempty(midQ)
+    %     continue;
+    % end
+    % if isempty(proxQ)
+    %     proxQ = midQ;
+    %     proxSrc = midSrc + " (fallback for prox)";
+    % end
+    % if isempty(midQ)
+    %     midQ = proxQ;
+    %     midSrc = proxSrc + " (fallback for mid)";
+    % end
+    % 
+    % Hand.(fingerCap).Proximal = proxQ;
+    % Hand.(fingerCap).Mid = midQ;
+    % Sources.(fingerCap).Proximal = proxSrc;
+    % Sources.(fingerCap).Mid = midSrc;
     if isempty(proxQ) && isempty(midQ)
         continue;
     end
-    if isempty(proxQ)
-        proxQ = midQ;
-        proxSrc = midSrc + " (fallback for prox)";
-    end
+
+    % --- interpret *mid* as the proximal segment, and *prox* as mid ---
+
+    % Handle missing values first
     if isempty(midQ)
-        midQ = proxQ;
-        midSrc = proxSrc + " (fallback for mid)";
+        % no mid sensor: fall back to prox data for the *proximal* segment
+        midQ  = proxQ;
+        midSrc = proxSrc + " (fallback for mid-as-prox)";
+    end
+    if isempty(proxQ)
+        % no prox sensor: fall back to mid data for the *mid* segment
+        proxQ  = midQ;
+        proxSrc = midSrc + " (fallback for prox-as-mid)";
     end
 
-    Hand.(fingerCap).Proximal = proxQ;
-    Hand.(fingerCap).Mid = midQ;
-    Sources.(fingerCap).Proximal = proxSrc;
-    Sources.(fingerCap).Mid = midSrc;
+    % Now assign with swapped meaning:
+    %   - Proximal field gets what was originally mid
+    %   - Mid field gets what was originally prox
+    Hand.(fingerCap).Proximal = midQ;      % use mid as prox
+    Hand.(fingerCap).Mid       = proxQ;    % use prox as mid
+
+    Sources.(fingerCap).Proximal = midSrc;
+    Sources.(fingerCap).Mid      = proxSrc;
 end
 
 Hand.sources = Sources;

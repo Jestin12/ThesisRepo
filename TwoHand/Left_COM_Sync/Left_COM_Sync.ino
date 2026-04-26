@@ -29,8 +29,8 @@
 
 // ── Definitions of globals declared in Globals.h ────────────
 TCA9548A  TCA(TCA_ADDR);
-MPU6050   IMU_MID(0x68);
-MPU6050   IMU_PROX(0x69);
+MPU6050   IMU_MID(0x69);
+MPU6050   IMU_PROX(0x68);
 Adafruit_BNO055 bno = Adafruit_BNO055(55, 0x29, &Wire);
 
 FingerChannel HandChannels[6] = {
