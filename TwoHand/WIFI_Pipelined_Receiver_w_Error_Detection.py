@@ -9,15 +9,19 @@ import os
 import pandas as pd
 
 
-
-
 HOST = "0.0.0.0"
 LEFT_PORT = 5000
 RIGHT_PORT = 5001
-RUN_SECONDS = 2
+RUN_SECONDS = 3
 REQUEST_PIPELINE_INTERVAL = 0.005   # 5 ms between sends — tune down if gloves keep up
-FILE_PREFIX = f"glove_data_L_Rock_R_Rock_{RUN_SECONDS}s"
-OUTPUT_DIR = r"/home/jestin/ThesisRepo/ML/TestData/Melbin/TwoHand_L_Rock_R_Rock"
+DELAY_AFTER_ENTER = 2.0             # delay after pressing Enter before requests start
+
+
+OUTPUT_DIR = r"/home/jestin/ThesisRepo/ML/NewTrainingData/Finger_MCP_PIP/thumb_curl"
+
+
+FILE_PREFIX = f"glove_data_L_{OUTPUT_DIR.split('/')[-2]}_{OUTPUT_DIR.split('/')[-1]}_{RUN_SECONDS}s"
+
 
 # ── Zero-channel detection ────────────────────────────────────────────────────
 # How many requests to collect before checking for dead channels.
@@ -30,8 +34,8 @@ _EXCLUDE_PREFIXES = (
     "left_recv_time_ms", "left_glove_time_ms", "left_time",
     "right_recv_time_ms", "right_glove_time_ms", "right_time",
     "left_hand", "right_hand",
-    "left_palm_mid",    # palm_mid IMU expected to read zero
-    "right_palm_mid",
+    "left_palm_prox",    # palm_prox IMU not present, no data expected
+    "right_palm_prox",
 )
 # ─────────────────────────────────────────────────────────────────────────────
 
@@ -49,11 +53,9 @@ def get_next_run_index():
     return max_index + 1
 
 
-
 RUN_INDEX = get_next_run_index()
 timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
 OUTPUT_CSV = os.path.join(OUTPUT_DIR, f"{FILE_PREFIX}_{RUN_INDEX}_{timestamp}.csv")
-
 
 
 def flatten_glove_json(msg, base_time_ms, hand_label):
@@ -105,7 +107,6 @@ def flatten_glove_json(msg, base_time_ms, hand_label):
     return row
 
 
-
 def check_zero_channels(combined_rows):
     """
     Inspect all rows collected so far and identify any individual signal
@@ -152,7 +153,6 @@ def check_zero_channels(combined_rows):
             "Fix the hardware issue and restart the script.\n"
         )
         raise SystemExit(1)
-
 
 
 def reorder_columns(df):
@@ -271,7 +271,6 @@ def reorder_columns(df):
     return df[ordered_cols]
 
 
-
 class GloveConnection:
     def __init__(self, label, port):
         self.label = label
@@ -364,12 +363,10 @@ class GloveConnection:
                     pass
 
 
-
 def accept_worker(glove):
     glove.setup_server()
     print(f"[{glove.label}] Listening on {HOST}:{glove.port}")
     glove.accept()
-
 
 
 def main():
@@ -386,6 +383,9 @@ def main():
 
     print("Both gloves connected.")
     input("Press Enter to begin requesting data...")
+
+    print(f"Waiting {DELAY_AFTER_ENTER} second(s) before starting requests...")
+    time.sleep(DELAY_AFTER_ENTER)
 
     start = time.time()
     request_id = 0
@@ -438,7 +438,6 @@ def main():
 
     left.close()
     right.close()
-
 
 
 if __name__ == "__main__":
