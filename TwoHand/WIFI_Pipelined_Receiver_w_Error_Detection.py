@@ -17,7 +17,7 @@ REQUEST_PIPELINE_INTERVAL = 0.005   # 5 ms between sends — tune down if gloves
 DELAY_AFTER_ENTER = 2.0             # delay after pressing Enter before requests start
 
 
-OUTPUT_DIR = r"/home/jestin/ThesisRepo/ML/NewTrainingData/Finger_MCP_PIP/thumb_curl"
+OUTPUT_DIR = r"/home/jestin/ThesisRepo/ML/NewTestData/Marcus/Dynamic/Double_Nothing"
 
 
 FILE_PREFIX = f"glove_data_L_{OUTPUT_DIR.split('/')[-2]}_{OUTPUT_DIR.split('/')[-1]}_{RUN_SECONDS}s"
