@@ -1,0 +1,2429 @@
+{
+  "exp_id": "B_ypr_lstm",
+  "exp_label": "LSTM only \u00b7 YPR only (both hands), no Nothing",
+  "config": {
+    "exp_id": "B_ypr_lstm",
+    "exp_label": "LSTM only \u00b7 YPR only (both hands), no Nothing",
+    "data_root": "/home/jestin/ThesisRepo/ML/NewTestData",
+    "out_dir": "/home/jestin/ThesisRepo/ML/loso_results",
+    "include_nothing": false,
+    "use_flex": false,
+    "use_ypr": true,
+    "use_accel": false,
+    "use_left": true,
+    "use_right": true,
+    "epochs": 8,
+    "cv_folds": 3,
+    "max_subjects": 0,
+    "variants": "CNN_LSTM,CNN_BiLSTM",
+    "fold_start": 0,
+    "fold_end": -1,
+    "resume_from": "",
+    "skip_pdf": false,
+    "state_file": "/home/jestin/ThesisRepo/ML/loso_results/B_ypr_lstm_state.json"
+  },
+  "subjects": [
+    "11_Mansh",
+    "12_Marcus",
+    "14_StephenV2",
+    "15_Tash",
+    "16_Bella",
+    "17_Raquel",
+    "18_Bridgette",
+    "1_Alan",
+    "2_Alex",
+    "3_Anghad",
+    "4_Daniel",
+    "6_Harry"
+  ],
+  "loso_results": [
+    {
+      "held_out": "11_Mansh",
+      "n_train_trials": 331,
+      "n_test_trials": 30,
+      "variants": [
+        {
+          "name": "CNN_LSTM",
+          "n_params": 55846,
+          "cv_mean": 0.7855582855582856,
+          "cv_std": 0.029509372228924625,
+          "cv_accs": [
+            0.7657657657657657,
+            0.8272727272727273,
+            0.7636363636363637
+          ],
+          "test_acc": 0.6666666865348816,
+          "test_loss": 0.6158202290534973,
+          "classification_report": {
+            "Double_Lower": {
+              "precision": 0.3333333333333333,
+              "recall": 1.0,
+              "f1-score": 0.5,
+              "support": 5.0
+            },
+            "Double_Pistol_Recoil": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 5.0
+            },
+            "Double_Raise": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 5.0
+            },
+            "Double_Wiggle": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1-score": 0.0,
+              "support": 5.0
+            },
+            "Double_cmere": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 5.0
+            },
+            "Drum_Roll": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1-score": 0.0,
+              "support": 5.0
+            },
+            "accuracy": 0.6666666666666666,
+            "macro avg": {
+              "precision": 0.5555555555555555,
+              "recall": 0.6666666666666666,
+              "f1-score": 0.5833333333333334,
+              "support": 30.0
+            },
+            "weighted avg": {
+              "precision": 0.5555555555555555,
+              "recall": 0.6666666666666666,
+              "f1-score": 0.5833333333333334,
+              "support": 30.0
+            }
+          },
+          "per_class": {
+            "Double_Lower": {
+              "correct": 5,
+              "total": 5,
+              "accuracy": 1.0
+            },
+            "Double_Pistol_Recoil": {
+              "correct": 5,
+              "total": 5,
+              "accuracy": 1.0
+            },
+            "Double_Raise": {
+              "correct": 5,
+              "total": 5,
+              "accuracy": 1.0
+            },
+            "Double_Wiggle": {
+              "correct": 0,
+              "total": 5,
+              "accuracy": 0.0
+            },
+            "Double_cmere": {
+              "correct": 5,
+              "total": 5,
+              "accuracy": 1.0
+            },
+            "Drum_Roll": {
+              "correct": 0,
+              "total": 5,
+              "accuracy": 0.0
+            }
+          }
+        },
+        {
+          "name": "CNN_BiLSTM",
+          "n_params": 92966,
+          "cv_mean": 0.7492219492219493,
+          "cv_std": 0.015772518417311355,
+          "cv_accs": [
+            0.7567567567567568,
+            0.7636363636363637,
+            0.7272727272727273
+          ],
+          "test_acc": 0.5666666626930237,
+          "test_loss": 0.9882614016532898,
+          "classification_report": {
+            "Double_Lower": {
+              "precision": 0.3333333333333333,
+              "recall": 1.0,
+              "f1-score": 0.5,
+              "support": 5.0
+            },
+            "Double_Pistol_Recoil": {
+              "precision": 1.0,
+              "recall": 0.4,
+              "f1-score": 0.5714285714285714,
+              "support": 5.0
+            },
+            "Double_Raise": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 5.0
+            },
+            "Double_Wiggle": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1-score": 0.0,
+              "support": 5.0
+            },
+            "Double_cmere": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 5.0
+            },
+            "Drum_Roll": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1-score": 0.0,
+              "support": 5.0
+            },
+            "accuracy": 0.5666666666666667,
+            "macro avg": {
+              "precision": 0.5555555555555555,
+              "recall": 0.5666666666666667,
+              "f1-score": 0.5119047619047619,
+              "support": 30.0
+            },
+            "weighted avg": {
+              "precision": 0.5555555555555555,
+              "recall": 0.5666666666666667,
+              "f1-score": 0.511904761904762,
+              "support": 30.0
+            }
+          },
+          "per_class": {
+            "Double_Lower": {
+              "correct": 5,
+              "total": 5,
+              "accuracy": 1.0
+            },
+            "Double_Pistol_Recoil": {
+              "correct": 2,
+              "total": 5,
+              "accuracy": 0.4
+            },
+            "Double_Raise": {
+              "correct": 5,
+              "total": 5,
+              "accuracy": 1.0
+            },
+            "Double_Wiggle": {
+              "correct": 0,
+              "total": 5,
+              "accuracy": 0.0
+            },
+            "Double_cmere": {
+              "correct": 5,
+              "total": 5,
+              "accuracy": 1.0
+            },
+            "Drum_Roll": {
+              "correct": 0,
+              "total": 5,
+              "accuracy": 0.0
+            }
+          }
+        }
+      ]
+    },
+    {
+      "held_out": "12_Marcus",
+      "n_train_trials": 331,
+      "n_test_trials": 30,
+      "variants": [
+        {
+          "name": "CNN_LSTM",
+          "n_params": 55846,
+          "cv_mean": 0.7853944853944853,
+          "cv_std": 0.030608894822060233,
+          "cv_accs": [
+            0.8198198198198198,
+            0.7909090909090909,
+            0.7454545454545455
+          ],
+          "test_acc": 0.6333333253860474,
+          "test_loss": 0.7695097327232361,
+          "classification_report": {
+            "Double_Lower": {
+              "precision": 0.3333333333333333,
+              "recall": 1.0,
+              "f1-score": 0.5,
+              "support": 5.0
+            },
+            "Double_Pistol_Recoil": {
+              "precision": 1.0,
+              "recall": 0.8,
+              "f1-score": 0.8888888888888888,
+              "support": 5.0
+            },
+            "Double_Raise": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 5.0
+            },
+            "Double_Wiggle": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1-score": 0.0,
+              "support": 5.0
+            },
+            "Double_cmere": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 5.0
+            },
+            "Drum_Roll": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1-score": 0.0,
+              "support": 5.0
+            },
+            "accuracy": 0.6333333333333333,
+            "macro avg": {
+              "precision": 0.5555555555555555,
+              "recall": 0.6333333333333333,
+              "f1-score": 0.5648148148148148,
+              "support": 30.0
+            },
+            "weighted avg": {
+              "precision": 0.5555555555555555,
+              "recall": 0.6333333333333333,
+              "f1-score": 0.5648148148148148,
+              "support": 30.0
+            }
+          },
+          "per_class": {
+            "Double_Lower": {
+              "correct": 5,
+              "total": 5,
+              "accuracy": 1.0
+            },
+            "Double_Pistol_Recoil": {
+              "correct": 4,
+              "total": 5,
+              "accuracy": 0.8
+            },
+            "Double_Raise": {
+              "correct": 5,
+              "total": 5,
+              "accuracy": 1.0
+            },
+            "Double_Wiggle": {
+              "correct": 0,
+              "total": 5,
+              "accuracy": 0.0
+            },
+            "Double_cmere": {
+              "correct": 5,
+              "total": 5,
+              "accuracy": 1.0
+            },
+            "Drum_Roll": {
+              "correct": 0,
+              "total": 5,
+              "accuracy": 0.0
+            }
+          }
+        },
+        {
+          "name": "CNN_BiLSTM",
+          "n_params": 92966,
+          "cv_mean": 0.7704340704340704,
+          "cv_std": 0.027721211809558378,
+          "cv_accs": [
+            0.7567567567567568,
+            0.8090909090909091,
+            0.7454545454545455
+          ],
+          "test_acc": 0.6333333253860474,
+          "test_loss": 0.8193561434745789,
+          "classification_report": {
+            "Double_Lower": {
+              "precision": 0.35714285714285715,
+              "recall": 1.0,
+              "f1-score": 0.5263157894736842,
+              "support": 5.0
+            },
+            "Double_Pistol_Recoil": {
+              "precision": 1.0,
+              "recall": 0.8,
+              "f1-score": 0.8888888888888888,
+              "support": 5.0
+            },
+            "Double_Raise": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 5.0
+            },
+            "Double_Wiggle": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1-score": 0.0,
+              "support": 5.0
+            },
+            "Double_cmere": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 5.0
+            },
+            "Drum_Roll": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1-score": 0.0,
+              "support": 5.0
+            },
+            "accuracy": 0.6333333333333333,
+            "macro avg": {
+              "precision": 0.5595238095238095,
+              "recall": 0.6333333333333333,
+              "f1-score": 0.5692007797270955,
+              "support": 30.0
+            },
+            "weighted avg": {
+              "precision": 0.5595238095238095,
+              "recall": 0.6333333333333333,
+              "f1-score": 0.5692007797270956,
+              "support": 30.0
+            }
+          },
+          "per_class": {
+            "Double_Lower": {
+              "correct": 5,
+              "total": 5,
+              "accuracy": 1.0
+            },
+            "Double_Pistol_Recoil": {
+              "correct": 4,
+              "total": 5,
+              "accuracy": 0.8
+            },
+            "Double_Raise": {
+              "correct": 5,
+              "total": 5,
+              "accuracy": 1.0
+            },
+            "Double_Wiggle": {
+              "correct": 0,
+              "total": 5,
+              "accuracy": 0.0
+            },
+            "Double_cmere": {
+              "correct": 5,
+              "total": 5,
+              "accuracy": 1.0
+            },
+            "Drum_Roll": {
+              "correct": 0,
+              "total": 5,
+              "accuracy": 0.0
+            }
+          }
+        }
+      ]
+    },
+    {
+      "held_out": "14_StephenV2",
+      "n_train_trials": 331,
+      "n_test_trials": 30,
+      "variants": [
+        {
+          "name": "CNN_LSTM",
+          "n_params": 55846,
+          "cv_mean": 0.7280917280917282,
+          "cv_std": 0.029713367772899228,
+          "cv_accs": [
+            0.7297297297297297,
+            0.7636363636363637,
+            0.6909090909090909
+          ],
+          "test_acc": 0.8333333134651184,
+          "test_loss": 0.3739929795265198,
+          "classification_report": {
+            "Double_Lower": {
+              "precision": 0.5,
+              "recall": 1.0,
+              "f1-score": 0.6666666666666666,
+              "support": 5.0
+            },
+            "Double_Pistol_Recoil": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 5.0
+            },
+            "Double_Raise": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 5.0
+            },
+            "Double_Wiggle": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1-score": 0.0,
+              "support": 5.0
+            },
+            "Double_cmere": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 5.0
+            },
+            "Drum_Roll": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 5.0
+            },
+            "accuracy": 0.8333333333333334,
+            "macro avg": {
+              "precision": 0.75,
+              "recall": 0.8333333333333334,
+              "f1-score": 0.7777777777777777,
+              "support": 30.0
+            },
+            "weighted avg": {
+              "precision": 0.75,
+              "recall": 0.8333333333333334,
+              "f1-score": 0.7777777777777778,
+              "support": 30.0
+            }
+          },
+          "per_class": {
+            "Double_Lower": {
+              "correct": 5,
+              "total": 5,
+              "accuracy": 1.0
+            },
+            "Double_Pistol_Recoil": {
+              "correct": 5,
+              "total": 5,
+              "accuracy": 1.0
+            },
+            "Double_Raise": {
+              "correct": 5,
+              "total": 5,
+              "accuracy": 1.0
+            },
+            "Double_Wiggle": {
+              "correct": 0,
+              "total": 5,
+              "accuracy": 0.0
+            },
+            "Double_cmere": {
+              "correct": 5,
+              "total": 5,
+              "accuracy": 1.0
+            },
+            "Drum_Roll": {
+              "correct": 5,
+              "total": 5,
+              "accuracy": 1.0
+            }
+          }
+        },
+        {
+          "name": "CNN_BiLSTM",
+          "n_params": 92966,
+          "cv_mean": 0.8005460005460004,
+          "cv_std": 0.01551890696642985,
+          "cv_accs": [
+            0.8198198198198198,
+            0.8,
+            0.7818181818181819
+          ],
+          "test_acc": 0.8333333134651184,
+          "test_loss": 0.2789628803730011,
+          "classification_report": {
+            "Double_Lower": {
+              "precision": 0.5,
+              "recall": 1.0,
+              "f1-score": 0.6666666666666666,
+              "support": 5.0
+            },
+            "Double_Pistol_Recoil": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 5.0
+            },
+            "Double_Raise": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 5.0
+            },
+            "Double_Wiggle": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1-score": 0.0,
+              "support": 5.0
+            },
+            "Double_cmere": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 5.0
+            },
+            "Drum_Roll": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 5.0
+            },
+            "accuracy": 0.8333333333333334,
+            "macro avg": {
+              "precision": 0.75,
+              "recall": 0.8333333333333334,
+              "f1-score": 0.7777777777777777,
+              "support": 30.0
+            },
+            "weighted avg": {
+              "precision": 0.75,
+              "recall": 0.8333333333333334,
+              "f1-score": 0.7777777777777778,
+              "support": 30.0
+            }
+          },
+          "per_class": {
+            "Double_Lower": {
+              "correct": 5,
+              "total": 5,
+              "accuracy": 1.0
+            },
+            "Double_Pistol_Recoil": {
+              "correct": 5,
+              "total": 5,
+              "accuracy": 1.0
+            },
+            "Double_Raise": {
+              "correct": 5,
+              "total": 5,
+              "accuracy": 1.0
+            },
+            "Double_Wiggle": {
+              "correct": 0,
+              "total": 5,
+              "accuracy": 0.0
+            },
+            "Double_cmere": {
+              "correct": 5,
+              "total": 5,
+              "accuracy": 1.0
+            },
+            "Drum_Roll": {
+              "correct": 5,
+              "total": 5,
+              "accuracy": 1.0
+            }
+          }
+        }
+      ]
+    },
+    {
+      "held_out": "15_Tash",
+      "n_train_trials": 331,
+      "n_test_trials": 30,
+      "variants": [
+        {
+          "name": "CNN_LSTM",
+          "n_params": 55846,
+          "cv_mean": 0.7885339885339886,
+          "cv_std": 0.02251999092316593,
+          "cv_accs": [
+            0.7837837837837838,
+            0.8181818181818182,
+            0.7636363636363637
+          ],
+          "test_acc": 0.3333333432674408,
+          "test_loss": 1.6433886289596558,
+          "classification_report": {
+            "Double_Lower": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1-score": 0.0,
+              "support": 5.0
+            },
+            "Double_Pistol_Recoil": {
+              "precision": 1.0,
+              "recall": 0.8,
+              "f1-score": 0.8888888888888888,
+              "support": 5.0
+            },
+            "Double_Raise": {
+              "precision": 0.5,
+              "recall": 1.0,
+              "f1-score": 0.6666666666666666,
+              "support": 5.0
+            },
+            "Double_Wiggle": {
+              "precision": 0.3333333333333333,
+              "recall": 0.2,
+              "f1-score": 0.25,
+              "support": 5.0
+            },
+            "Double_cmere": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1-score": 0.0,
+              "support": 5.0
+            },
+            "Drum_Roll": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1-score": 0.0,
+              "support": 5.0
+            },
+            "accuracy": 0.3333333333333333,
+            "macro avg": {
+              "precision": 0.3055555555555555,
+              "recall": 0.3333333333333333,
+              "f1-score": 0.3009259259259259,
+              "support": 30.0
+            },
+            "weighted avg": {
+              "precision": 0.3055555555555555,
+              "recall": 0.3333333333333333,
+              "f1-score": 0.30092592592592593,
+              "support": 30.0
+            }
+          },
+          "per_class": {
+            "Double_Lower": {
+              "correct": 0,
+              "total": 5,
+              "accuracy": 0.0
+            },
+            "Double_Pistol_Recoil": {
+              "correct": 4,
+              "total": 5,
+              "accuracy": 0.8
+            },
+            "Double_Raise": {
+              "correct": 5,
+              "total": 5,
+              "accuracy": 1.0
+            },
+            "Double_Wiggle": {
+              "correct": 1,
+              "total": 5,
+              "accuracy": 0.2
+            },
+            "Double_cmere": {
+              "correct": 0,
+              "total": 5,
+              "accuracy": 0.0
+            },
+            "Drum_Roll": {
+              "correct": 0,
+              "total": 5,
+              "accuracy": 0.0
+            }
+          }
+        },
+        {
+          "name": "CNN_BiLSTM",
+          "n_params": 92966,
+          "cv_mean": 0.8096642096642097,
+          "cv_std": 0.007466844435735616,
+          "cv_accs": [
+            0.8108108108108109,
+            0.8,
+            0.8181818181818182
+          ],
+          "test_acc": 0.5,
+          "test_loss": 2.1013598442077637,
+          "classification_report": {
+            "Double_Lower": {
+              "precision": 0.35714285714285715,
+              "recall": 1.0,
+              "f1-score": 0.5263157894736842,
+              "support": 5.0
+            },
+            "Double_Pistol_Recoil": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 5.0
+            },
+            "Double_Raise": {
+              "precision": 0.5,
+              "recall": 1.0,
+              "f1-score": 0.6666666666666666,
+              "support": 5.0
+            },
+            "Double_Wiggle": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1-score": 0.0,
+              "support": 5.0
+            },
+            "Double_cmere": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1-score": 0.0,
+              "support": 5.0
+            },
+            "Drum_Roll": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1-score": 0.0,
+              "support": 5.0
+            },
+            "accuracy": 0.5,
+            "macro avg": {
+              "precision": 0.30952380952380953,
+              "recall": 0.5,
+              "f1-score": 0.36549707602339176,
+              "support": 30.0
+            },
+            "weighted avg": {
+              "precision": 0.3095238095238095,
+              "recall": 0.5,
+              "f1-score": 0.36549707602339176,
+              "support": 30.0
+            }
+          },
+          "per_class": {
+            "Double_Lower": {
+              "correct": 5,
+              "total": 5,
+              "accuracy": 1.0
+            },
+            "Double_Pistol_Recoil": {
+              "correct": 5,
+              "total": 5,
+              "accuracy": 1.0
+            },
+            "Double_Raise": {
+              "correct": 5,
+              "total": 5,
+              "accuracy": 1.0
+            },
+            "Double_Wiggle": {
+              "correct": 0,
+              "total": 5,
+              "accuracy": 0.0
+            },
+            "Double_cmere": {
+              "correct": 0,
+              "total": 5,
+              "accuracy": 0.0
+            },
+            "Drum_Roll": {
+              "correct": 0,
+              "total": 5,
+              "accuracy": 0.0
+            }
+          }
+        }
+      ]
+    },
+    {
+      "held_out": "16_Bella",
+      "n_train_trials": 331,
+      "n_test_trials": 30,
+      "variants": [
+        {
+          "name": "CNN_LSTM",
+          "n_params": 55846,
+          "cv_mean": 0.7008736008736008,
+          "cv_std": 0.03427002775908461,
+          "cv_accs": [
+            0.7117117117117117,
+            0.7363636363636363,
+            0.6545454545454545
+          ],
+          "test_acc": 0.6666666865348816,
+          "test_loss": 0.5679424405097961,
+          "classification_report": {
+            "Double_Lower": {
+              "precision": 0.5,
+              "recall": 1.0,
+              "f1-score": 0.6666666666666666,
+              "support": 5.0
+            },
+            "Double_Pistol_Recoil": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 5.0
+            },
+            "Double_Raise": {
+              "precision": 1.0,
+              "recall": 0.2,
+              "f1-score": 0.3333333333333333,
+              "support": 5.0
+            },
+            "Double_Wiggle": {
+              "precision": 0.5,
+              "recall": 0.2,
+              "f1-score": 0.2857142857142857,
+              "support": 5.0
+            },
+            "Double_cmere": {
+              "precision": 0.5555555555555556,
+              "recall": 1.0,
+              "f1-score": 0.7142857142857143,
+              "support": 5.0
+            },
+            "Drum_Roll": {
+              "precision": 1.0,
+              "recall": 0.6,
+              "f1-score": 0.75,
+              "support": 5.0
+            },
+            "accuracy": 0.6666666666666666,
+            "macro avg": {
+              "precision": 0.7592592592592592,
+              "recall": 0.6666666666666666,
+              "f1-score": 0.625,
+              "support": 30.0
+            },
+            "weighted avg": {
+              "precision": 0.7592592592592593,
+              "recall": 0.6666666666666666,
+              "f1-score": 0.625,
+              "support": 30.0
+            }
+          },
+          "per_class": {
+            "Double_Lower": {
+              "correct": 5,
+              "total": 5,
+              "accuracy": 1.0
+            },
+            "Double_Pistol_Recoil": {
+              "correct": 5,
+              "total": 5,
+              "accuracy": 1.0
+            },
+            "Double_Raise": {
+              "correct": 1,
+              "total": 5,
+              "accuracy": 0.2
+            },
+            "Double_Wiggle": {
+              "correct": 1,
+              "total": 5,
+              "accuracy": 0.2
+            },
+            "Double_cmere": {
+              "correct": 5,
+              "total": 5,
+              "accuracy": 1.0
+            },
+            "Drum_Roll": {
+              "correct": 3,
+              "total": 5,
+              "accuracy": 0.6
+            }
+          }
+        },
+        {
+          "name": "CNN_BiLSTM",
+          "n_params": 92966,
+          "cv_mean": 0.7552279552279552,
+          "cv_std": 0.026208907756581634,
+          "cv_accs": [
+            0.7747747747747747,
+            0.7727272727272727,
+            0.7181818181818181
+          ],
+          "test_acc": 0.6666666865348816,
+          "test_loss": 1.0333532094955444,
+          "classification_report": {
+            "Double_Lower": {
+              "precision": 0.45454545454545453,
+              "recall": 1.0,
+              "f1-score": 0.625,
+              "support": 5.0
+            },
+            "Double_Pistol_Recoil": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 5.0
+            },
+            "Double_Raise": {
+              "precision": 1.0,
+              "recall": 0.2,
+              "f1-score": 0.3333333333333333,
+              "support": 5.0
+            },
+            "Double_Wiggle": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1-score": 0.0,
+              "support": 5.0
+            },
+            "Double_cmere": {
+              "precision": 0.5555555555555556,
+              "recall": 1.0,
+              "f1-score": 0.7142857142857143,
+              "support": 5.0
+            },
+            "Drum_Roll": {
+              "precision": 1.0,
+              "recall": 0.8,
+              "f1-score": 0.8888888888888888,
+              "support": 5.0
+            },
+            "accuracy": 0.6666666666666666,
+            "macro avg": {
+              "precision": 0.6683501683501684,
+              "recall": 0.6666666666666666,
+              "f1-score": 0.593584656084656,
+              "support": 30.0
+            },
+            "weighted avg": {
+              "precision": 0.6683501683501684,
+              "recall": 0.6666666666666666,
+              "f1-score": 0.5935846560846562,
+              "support": 30.0
+            }
+          },
+          "per_class": {
+            "Double_Lower": {
+              "correct": 5,
+              "total": 5,
+              "accuracy": 1.0
+            },
+            "Double_Pistol_Recoil": {
+              "correct": 5,
+              "total": 5,
+              "accuracy": 1.0
+            },
+            "Double_Raise": {
+              "correct": 1,
+              "total": 5,
+              "accuracy": 0.2
+            },
+            "Double_Wiggle": {
+              "correct": 0,
+              "total": 5,
+              "accuracy": 0.0
+            },
+            "Double_cmere": {
+              "correct": 5,
+              "total": 5,
+              "accuracy": 1.0
+            },
+            "Drum_Roll": {
+              "correct": 4,
+              "total": 5,
+              "accuracy": 0.8
+            }
+          }
+        }
+      ]
+    },
+    {
+      "held_out": "17_Raquel",
+      "n_train_trials": 331,
+      "n_test_trials": 30,
+      "variants": [
+        {
+          "name": "CNN_LSTM",
+          "n_params": 55846,
+          "cv_mean": 0.7313950313950315,
+          "cv_std": 0.06582927084695277,
+          "cv_accs": [
+            0.6396396396396397,
+            0.7636363636363637,
+            0.7909090909090909
+          ],
+          "test_acc": 0.6666666865348816,
+          "test_loss": 0.6644489169120789,
+          "classification_report": {
+            "Double_Lower": {
+              "precision": 0.3333333333333333,
+              "recall": 1.0,
+              "f1-score": 0.5,
+              "support": 5.0
+            },
+            "Double_Pistol_Recoil": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 5.0
+            },
+            "Double_Raise": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 5.0
+            },
+            "Double_Wiggle": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1-score": 0.0,
+              "support": 5.0
+            },
+            "Double_cmere": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 5.0
+            },
+            "Drum_Roll": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1-score": 0.0,
+              "support": 5.0
+            },
+            "accuracy": 0.6666666666666666,
+            "macro avg": {
+              "precision": 0.5555555555555555,
+              "recall": 0.6666666666666666,
+              "f1-score": 0.5833333333333334,
+              "support": 30.0
+            },
+            "weighted avg": {
+              "precision": 0.5555555555555555,
+              "recall": 0.6666666666666666,
+              "f1-score": 0.5833333333333334,
+              "support": 30.0
+            }
+          },
+          "per_class": {
+            "Double_Lower": {
+              "correct": 5,
+              "total": 5,
+              "accuracy": 1.0
+            },
+            "Double_Pistol_Recoil": {
+              "correct": 5,
+              "total": 5,
+              "accuracy": 1.0
+            },
+            "Double_Raise": {
+              "correct": 5,
+              "total": 5,
+              "accuracy": 1.0
+            },
+            "Double_Wiggle": {
+              "correct": 0,
+              "total": 5,
+              "accuracy": 0.0
+            },
+            "Double_cmere": {
+              "correct": 5,
+              "total": 5,
+              "accuracy": 1.0
+            },
+            "Drum_Roll": {
+              "correct": 0,
+              "total": 5,
+              "accuracy": 0.0
+            }
+          }
+        },
+        {
+          "name": "CNN_BiLSTM",
+          "n_params": 92966,
+          "cv_mean": 0.7222222222222222,
+          "cv_std": 0.03945863633257499,
+          "cv_accs": [
+            0.6666666666666666,
+            0.7545454545454545,
+            0.7454545454545455
+          ],
+          "test_acc": 0.6666666865348816,
+          "test_loss": 0.9128209352493286,
+          "classification_report": {
+            "Double_Lower": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1-score": 0.0,
+              "support": 5.0
+            },
+            "Double_Pistol_Recoil": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 5.0
+            },
+            "Double_Raise": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 5.0
+            },
+            "Double_Wiggle": {
+              "precision": 0.5,
+              "recall": 1.0,
+              "f1-score": 0.6666666666666666,
+              "support": 5.0
+            },
+            "Double_cmere": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 5.0
+            },
+            "Drum_Roll": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1-score": 0.0,
+              "support": 5.0
+            },
+            "accuracy": 0.6666666666666666,
+            "macro avg": {
+              "precision": 0.5833333333333334,
+              "recall": 0.6666666666666666,
+              "f1-score": 0.611111111111111,
+              "support": 30.0
+            },
+            "weighted avg": {
+              "precision": 0.5833333333333334,
+              "recall": 0.6666666666666666,
+              "f1-score": 0.611111111111111,
+              "support": 30.0
+            }
+          },
+          "per_class": {
+            "Double_Lower": {
+              "correct": 0,
+              "total": 5,
+              "accuracy": 0.0
+            },
+            "Double_Pistol_Recoil": {
+              "correct": 5,
+              "total": 5,
+              "accuracy": 1.0
+            },
+            "Double_Raise": {
+              "correct": 5,
+              "total": 5,
+              "accuracy": 1.0
+            },
+            "Double_Wiggle": {
+              "correct": 5,
+              "total": 5,
+              "accuracy": 1.0
+            },
+            "Double_cmere": {
+              "correct": 5,
+              "total": 5,
+              "accuracy": 1.0
+            },
+            "Drum_Roll": {
+              "correct": 0,
+              "total": 5,
+              "accuracy": 0.0
+            }
+          }
+        }
+      ]
+    },
+    {
+      "held_out": "18_Bridgette",
+      "n_train_trials": 331,
+      "n_test_trials": 30,
+      "variants": [
+        {
+          "name": "CNN_LSTM",
+          "n_params": 55846,
+          "cv_mean": 0.7764673764673765,
+          "cv_std": 0.01666277019992608,
+          "cv_accs": [
+            0.7657657657657657,
+            0.7636363636363637,
+            0.8
+          ],
+          "test_acc": 0.6666666865348816,
+          "test_loss": 0.650006115436554,
+          "classification_report": {
+            "Double_Lower": {
+              "precision": 0.3333333333333333,
+              "recall": 1.0,
+              "f1-score": 0.5,
+              "support": 5.0
+            },
+            "Double_Pistol_Recoil": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 5.0
+            },
+            "Double_Raise": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 5.0
+            },
+            "Double_Wiggle": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1-score": 0.0,
+              "support": 5.0
+            },
+            "Double_cmere": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 5.0
+            },
+            "Drum_Roll": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1-score": 0.0,
+              "support": 5.0
+            },
+            "accuracy": 0.6666666666666666,
+            "macro avg": {
+              "precision": 0.5555555555555555,
+              "recall": 0.6666666666666666,
+              "f1-score": 0.5833333333333334,
+              "support": 30.0
+            },
+            "weighted avg": {
+              "precision": 0.5555555555555555,
+              "recall": 0.6666666666666666,
+              "f1-score": 0.5833333333333334,
+              "support": 30.0
+            }
+          },
+          "per_class": {
+            "Double_Lower": {
+              "correct": 5,
+              "total": 5,
+              "accuracy": 1.0
+            },
+            "Double_Pistol_Recoil": {
+              "correct": 5,
+              "total": 5,
+              "accuracy": 1.0
+            },
+            "Double_Raise": {
+              "correct": 5,
+              "total": 5,
+              "accuracy": 1.0
+            },
+            "Double_Wiggle": {
+              "correct": 0,
+              "total": 5,
+              "accuracy": 0.0
+            },
+            "Double_cmere": {
+              "correct": 5,
+              "total": 5,
+              "accuracy": 1.0
+            },
+            "Drum_Roll": {
+              "correct": 0,
+              "total": 5,
+              "accuracy": 0.0
+            }
+          }
+        },
+        {
+          "name": "CNN_BiLSTM",
+          "n_params": 92966,
+          "cv_mean": 0.7761670761670763,
+          "cv_std": 0.06282852031221159,
+          "cv_accs": [
+            0.8648648648648649,
+            0.7363636363636363,
+            0.7272727272727273
+          ],
+          "test_acc": 0.5,
+          "test_loss": 1.121163249015808,
+          "classification_report": {
+            "Double_Lower": {
+              "precision": 0.3333333333333333,
+              "recall": 1.0,
+              "f1-score": 0.5,
+              "support": 5.0
+            },
+            "Double_Pistol_Recoil": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 5.0
+            },
+            "Double_Raise": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1-score": 0.0,
+              "support": 5.0
+            },
+            "Double_Wiggle": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1-score": 0.0,
+              "support": 5.0
+            },
+            "Double_cmere": {
+              "precision": 0.5,
+              "recall": 1.0,
+              "f1-score": 0.6666666666666666,
+              "support": 5.0
+            },
+            "Drum_Roll": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1-score": 0.0,
+              "support": 5.0
+            },
+            "accuracy": 0.5,
+            "macro avg": {
+              "precision": 0.3055555555555555,
+              "recall": 0.5,
+              "f1-score": 0.3611111111111111,
+              "support": 30.0
+            },
+            "weighted avg": {
+              "precision": 0.3055555555555555,
+              "recall": 0.5,
+              "f1-score": 0.36111111111111105,
+              "support": 30.0
+            }
+          },
+          "per_class": {
+            "Double_Lower": {
+              "correct": 5,
+              "total": 5,
+              "accuracy": 1.0
+            },
+            "Double_Pistol_Recoil": {
+              "correct": 5,
+              "total": 5,
+              "accuracy": 1.0
+            },
+            "Double_Raise": {
+              "correct": 0,
+              "total": 5,
+              "accuracy": 0.0
+            },
+            "Double_Wiggle": {
+              "correct": 0,
+              "total": 5,
+              "accuracy": 0.0
+            },
+            "Double_cmere": {
+              "correct": 5,
+              "total": 5,
+              "accuracy": 1.0
+            },
+            "Drum_Roll": {
+              "correct": 0,
+              "total": 5,
+              "accuracy": 0.0
+            }
+          }
+        }
+      ]
+    },
+    {
+      "held_out": "1_Alan",
+      "n_train_trials": 331,
+      "n_test_trials": 30,
+      "variants": [
+        {
+          "name": "CNN_LSTM",
+          "n_params": 55846,
+          "cv_mean": 0.7645372645372644,
+          "cv_std": 0.04511899224035134,
+          "cv_accs": [
+            0.7027027027027027,
+            0.8090909090909091,
+            0.7818181818181819
+          ],
+          "test_acc": 0.36666667461395264,
+          "test_loss": 2.1835153102874756,
+          "classification_report": {
+            "Double_Lower": {
+              "precision": 0.45454545454545453,
+              "recall": 1.0,
+              "f1-score": 0.625,
+              "support": 5.0
+            },
+            "Double_Pistol_Recoil": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1-score": 0.0,
+              "support": 5.0
+            },
+            "Double_Raise": {
+              "precision": 1.0,
+              "recall": 0.2,
+              "f1-score": 0.3333333333333333,
+              "support": 5.0
+            },
+            "Double_Wiggle": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1-score": 0.0,
+              "support": 5.0
+            },
+            "Double_cmere": {
+              "precision": 0.5555555555555556,
+              "recall": 1.0,
+              "f1-score": 0.7142857142857143,
+              "support": 5.0
+            },
+            "Drum_Roll": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1-score": 0.0,
+              "support": 5.0
+            },
+            "accuracy": 0.36666666666666664,
+            "macro avg": {
+              "precision": 0.33501683501683505,
+              "recall": 0.3666666666666667,
+              "f1-score": 0.2787698412698412,
+              "support": 30.0
+            },
+            "weighted avg": {
+              "precision": 0.335016835016835,
+              "recall": 0.36666666666666664,
+              "f1-score": 0.2787698412698412,
+              "support": 30.0
+            }
+          },
+          "per_class": {
+            "Double_Lower": {
+              "correct": 5,
+              "total": 5,
+              "accuracy": 1.0
+            },
+            "Double_Pistol_Recoil": {
+              "correct": 0,
+              "total": 5,
+              "accuracy": 0.0
+            },
+            "Double_Raise": {
+              "correct": 1,
+              "total": 5,
+              "accuracy": 0.2
+            },
+            "Double_Wiggle": {
+              "correct": 0,
+              "total": 5,
+              "accuracy": 0.0
+            },
+            "Double_cmere": {
+              "correct": 5,
+              "total": 5,
+              "accuracy": 1.0
+            },
+            "Drum_Roll": {
+              "correct": 0,
+              "total": 5,
+              "accuracy": 0.0
+            }
+          }
+        },
+        {
+          "name": "CNN_BiLSTM",
+          "n_params": 92966,
+          "cv_mean": 0.7765765765765766,
+          "cv_std": 0.0339471640712261,
+          "cv_accs": [
+            0.7297297297297297,
+            0.8090909090909091,
+            0.7909090909090909
+          ],
+          "test_acc": 0.4000000059604645,
+          "test_loss": 3.1764109134674072,
+          "classification_report": {
+            "Double_Lower": {
+              "precision": 0.5,
+              "recall": 1.0,
+              "f1-score": 0.6666666666666666,
+              "support": 5.0
+            },
+            "Double_Pistol_Recoil": {
+              "precision": 1.0,
+              "recall": 0.4,
+              "f1-score": 0.5714285714285714,
+              "support": 5.0
+            },
+            "Double_Raise": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1-score": 0.0,
+              "support": 5.0
+            },
+            "Double_Wiggle": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1-score": 0.0,
+              "support": 5.0
+            },
+            "Double_cmere": {
+              "precision": 0.5,
+              "recall": 1.0,
+              "f1-score": 0.6666666666666666,
+              "support": 5.0
+            },
+            "Drum_Roll": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1-score": 0.0,
+              "support": 5.0
+            },
+            "accuracy": 0.4,
+            "macro avg": {
+              "precision": 0.3333333333333333,
+              "recall": 0.39999999999999997,
+              "f1-score": 0.31746031746031744,
+              "support": 30.0
+            },
+            "weighted avg": {
+              "precision": 0.3333333333333333,
+              "recall": 0.4,
+              "f1-score": 0.3174603174603174,
+              "support": 30.0
+            }
+          },
+          "per_class": {
+            "Double_Lower": {
+              "correct": 5,
+              "total": 5,
+              "accuracy": 1.0
+            },
+            "Double_Pistol_Recoil": {
+              "correct": 2,
+              "total": 5,
+              "accuracy": 0.4
+            },
+            "Double_Raise": {
+              "correct": 0,
+              "total": 5,
+              "accuracy": 0.0
+            },
+            "Double_Wiggle": {
+              "correct": 0,
+              "total": 5,
+              "accuracy": 0.0
+            },
+            "Double_cmere": {
+              "correct": 5,
+              "total": 5,
+              "accuracy": 1.0
+            },
+            "Drum_Roll": {
+              "correct": 0,
+              "total": 5,
+              "accuracy": 0.0
+            }
+          }
+        }
+      ]
+    },
+    {
+      "held_out": "2_Alex",
+      "n_train_trials": 331,
+      "n_test_trials": 30,
+      "variants": [
+        {
+          "name": "CNN_LSTM",
+          "n_params": 55846,
+          "cv_mean": 0.8036036036036037,
+          "cv_std": 0.030124983279469646,
+          "cv_accs": [
+            0.8108108108108109,
+            0.8363636363636363,
+            0.7636363636363637
+          ],
+          "test_acc": 0.800000011920929,
+          "test_loss": 0.5659906268119812,
+          "classification_report": {
+            "Double_Lower": {
+              "precision": 0.45454545454545453,
+              "recall": 1.0,
+              "f1-score": 0.625,
+              "support": 5.0
+            },
+            "Double_Pistol_Recoil": {
+              "precision": 1.0,
+              "recall": 0.8,
+              "f1-score": 0.8888888888888888,
+              "support": 5.0
+            },
+            "Double_Raise": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 5.0
+            },
+            "Double_Wiggle": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1-score": 0.0,
+              "support": 5.0
+            },
+            "Double_cmere": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 5.0
+            },
+            "Drum_Roll": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 5.0
+            },
+            "accuracy": 0.8,
+            "macro avg": {
+              "precision": 0.7424242424242425,
+              "recall": 0.7999999999999999,
+              "f1-score": 0.7523148148148149,
+              "support": 30.0
+            },
+            "weighted avg": {
+              "precision": 0.7424242424242424,
+              "recall": 0.8,
+              "f1-score": 0.7523148148148148,
+              "support": 30.0
+            }
+          },
+          "per_class": {
+            "Double_Lower": {
+              "correct": 5,
+              "total": 5,
+              "accuracy": 1.0
+            },
+            "Double_Pistol_Recoil": {
+              "correct": 4,
+              "total": 5,
+              "accuracy": 0.8
+            },
+            "Double_Raise": {
+              "correct": 5,
+              "total": 5,
+              "accuracy": 1.0
+            },
+            "Double_Wiggle": {
+              "correct": 0,
+              "total": 5,
+              "accuracy": 0.0
+            },
+            "Double_cmere": {
+              "correct": 5,
+              "total": 5,
+              "accuracy": 1.0
+            },
+            "Drum_Roll": {
+              "correct": 5,
+              "total": 5,
+              "accuracy": 1.0
+            }
+          }
+        },
+        {
+          "name": "CNN_BiLSTM",
+          "n_params": 92966,
+          "cv_mean": 0.719082719082719,
+          "cv_std": 0.01882918328648197,
+          "cv_accs": [
+            0.7027027027027027,
+            0.7090909090909091,
+            0.7454545454545455
+          ],
+          "test_acc": 0.7333333492279053,
+          "test_loss": 0.6429754495620728,
+          "classification_report": {
+            "Double_Lower": {
+              "precision": 0.45454545454545453,
+              "recall": 1.0,
+              "f1-score": 0.625,
+              "support": 5.0
+            },
+            "Double_Pistol_Recoil": {
+              "precision": 0.75,
+              "recall": 0.6,
+              "f1-score": 0.6666666666666666,
+              "support": 5.0
+            },
+            "Double_Raise": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 5.0
+            },
+            "Double_Wiggle": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1-score": 0.0,
+              "support": 5.0
+            },
+            "Double_cmere": {
+              "precision": 0.8333333333333334,
+              "recall": 1.0,
+              "f1-score": 0.9090909090909091,
+              "support": 5.0
+            },
+            "Drum_Roll": {
+              "precision": 1.0,
+              "recall": 0.8,
+              "f1-score": 0.8888888888888888,
+              "support": 5.0
+            },
+            "accuracy": 0.7333333333333333,
+            "macro avg": {
+              "precision": 0.672979797979798,
+              "recall": 0.7333333333333334,
+              "f1-score": 0.681607744107744,
+              "support": 30.0
+            },
+            "weighted avg": {
+              "precision": 0.672979797979798,
+              "recall": 0.7333333333333333,
+              "f1-score": 0.6816077441077439,
+              "support": 30.0
+            }
+          },
+          "per_class": {
+            "Double_Lower": {
+              "correct": 5,
+              "total": 5,
+              "accuracy": 1.0
+            },
+            "Double_Pistol_Recoil": {
+              "correct": 3,
+              "total": 5,
+              "accuracy": 0.6
+            },
+            "Double_Raise": {
+              "correct": 5,
+              "total": 5,
+              "accuracy": 1.0
+            },
+            "Double_Wiggle": {
+              "correct": 0,
+              "total": 5,
+              "accuracy": 0.0
+            },
+            "Double_cmere": {
+              "correct": 5,
+              "total": 5,
+              "accuracy": 1.0
+            },
+            "Drum_Roll": {
+              "correct": 4,
+              "total": 5,
+              "accuracy": 0.8
+            }
+          }
+        }
+      ]
+    },
+    {
+      "held_out": "3_Anghad",
+      "n_train_trials": 330,
+      "n_test_trials": 31,
+      "variants": [
+        {
+          "name": "CNN_LSTM",
+          "n_params": 55846,
+          "cv_mean": 0.7606060606060607,
+          "cv_std": 0.02386062992124791,
+          "cv_accs": [
+            0.7272727272727273,
+            0.7818181818181819,
+            0.7727272727272727
+          ],
+          "test_acc": 0.8387096524238586,
+          "test_loss": 0.33783867955207825,
+          "classification_report": {
+            "Double_Lower": {
+              "precision": 0.5,
+              "recall": 1.0,
+              "f1-score": 0.6666666666666666,
+              "support": 5.0
+            },
+            "Double_Pistol_Recoil": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 5.0
+            },
+            "Double_Raise": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 5.0
+            },
+            "Double_Wiggle": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1-score": 0.0,
+              "support": 5.0
+            },
+            "Double_cmere": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 6.0
+            },
+            "Drum_Roll": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 5.0
+            },
+            "accuracy": 0.8387096774193549,
+            "macro avg": {
+              "precision": 0.75,
+              "recall": 0.8333333333333334,
+              "f1-score": 0.7777777777777777,
+              "support": 31.0
+            },
+            "weighted avg": {
+              "precision": 0.7580645161290323,
+              "recall": 0.8387096774193549,
+              "f1-score": 0.7849462365591398,
+              "support": 31.0
+            }
+          },
+          "per_class": {
+            "Double_Lower": {
+              "correct": 5,
+              "total": 5,
+              "accuracy": 1.0
+            },
+            "Double_Pistol_Recoil": {
+              "correct": 5,
+              "total": 5,
+              "accuracy": 1.0
+            },
+            "Double_Raise": {
+              "correct": 5,
+              "total": 5,
+              "accuracy": 1.0
+            },
+            "Double_Wiggle": {
+              "correct": 0,
+              "total": 5,
+              "accuracy": 0.0
+            },
+            "Double_cmere": {
+              "correct": 6,
+              "total": 6,
+              "accuracy": 1.0
+            },
+            "Drum_Roll": {
+              "correct": 5,
+              "total": 5,
+              "accuracy": 1.0
+            }
+          }
+        },
+        {
+          "name": "CNN_BiLSTM",
+          "n_params": 92966,
+          "cv_mean": 0.6878787878787879,
+          "cv_std": 0.026067652324371585,
+          "cv_accs": [
+            0.6909090909090909,
+            0.7181818181818181,
+            0.6545454545454545
+          ],
+          "test_acc": 0.8064516186714172,
+          "test_loss": 0.4924582540988922,
+          "classification_report": {
+            "Double_Lower": {
+              "precision": 0.8333333333333334,
+              "recall": 1.0,
+              "f1-score": 0.9090909090909091,
+              "support": 5.0
+            },
+            "Double_Pistol_Recoil": {
+              "precision": 0.8333333333333334,
+              "recall": 1.0,
+              "f1-score": 0.9090909090909091,
+              "support": 5.0
+            },
+            "Double_Raise": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 5.0
+            },
+            "Double_Wiggle": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1-score": 0.0,
+              "support": 5.0
+            },
+            "Double_cmere": {
+              "precision": 1.0,
+              "recall": 0.8333333333333334,
+              "f1-score": 0.9090909090909091,
+              "support": 6.0
+            },
+            "Drum_Roll": {
+              "precision": 0.5555555555555556,
+              "recall": 1.0,
+              "f1-score": 0.7142857142857143,
+              "support": 5.0
+            },
+            "accuracy": 0.8064516129032258,
+            "macro avg": {
+              "precision": 0.7037037037037037,
+              "recall": 0.8055555555555557,
+              "f1-score": 0.7402597402597403,
+              "support": 31.0
+            },
+            "weighted avg": {
+              "precision": 0.7132616487455198,
+              "recall": 0.8064516129032258,
+              "f1-score": 0.7457059069962295,
+              "support": 31.0
+            }
+          },
+          "per_class": {
+            "Double_Lower": {
+              "correct": 5,
+              "total": 5,
+              "accuracy": 1.0
+            },
+            "Double_Pistol_Recoil": {
+              "correct": 5,
+              "total": 5,
+              "accuracy": 1.0
+            },
+            "Double_Raise": {
+              "correct": 5,
+              "total": 5,
+              "accuracy": 1.0
+            },
+            "Double_Wiggle": {
+              "correct": 0,
+              "total": 5,
+              "accuracy": 0.0
+            },
+            "Double_cmere": {
+              "correct": 5,
+              "total": 6,
+              "accuracy": 0.8333333333333334
+            },
+            "Drum_Roll": {
+              "correct": 5,
+              "total": 5,
+              "accuracy": 1.0
+            }
+          }
+        }
+      ]
+    },
+    {
+      "held_out": "4_Daniel",
+      "n_train_trials": 331,
+      "n_test_trials": 30,
+      "variants": [
+        {
+          "name": "CNN_LSTM",
+          "n_params": 55846,
+          "cv_mean": 0.7065793065793066,
+          "cv_std": 0.08770894207576181,
+          "cv_accs": [
+            0.8288288288288288,
+            0.6636363636363637,
+            0.6272727272727273
+          ],
+          "test_acc": 0.8333333134651184,
+          "test_loss": 0.26741883158683777,
+          "classification_report": {
+            "Double_Lower": {
+              "precision": 0.5,
+              "recall": 1.0,
+              "f1-score": 0.6666666666666666,
+              "support": 5.0
+            },
+            "Double_Pistol_Recoil": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 5.0
+            },
+            "Double_Raise": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 5.0
+            },
+            "Double_Wiggle": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1-score": 0.0,
+              "support": 5.0
+            },
+            "Double_cmere": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 5.0
+            },
+            "Drum_Roll": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 5.0
+            },
+            "accuracy": 0.8333333333333334,
+            "macro avg": {
+              "precision": 0.75,
+              "recall": 0.8333333333333334,
+              "f1-score": 0.7777777777777777,
+              "support": 30.0
+            },
+            "weighted avg": {
+              "precision": 0.75,
+              "recall": 0.8333333333333334,
+              "f1-score": 0.7777777777777778,
+              "support": 30.0
+            }
+          },
+          "per_class": {
+            "Double_Lower": {
+              "correct": 5,
+              "total": 5,
+              "accuracy": 1.0
+            },
+            "Double_Pistol_Recoil": {
+              "correct": 5,
+              "total": 5,
+              "accuracy": 1.0
+            },
+            "Double_Raise": {
+              "correct": 5,
+              "total": 5,
+              "accuracy": 1.0
+            },
+            "Double_Wiggle": {
+              "correct": 0,
+              "total": 5,
+              "accuracy": 0.0
+            },
+            "Double_cmere": {
+              "correct": 5,
+              "total": 5,
+              "accuracy": 1.0
+            },
+            "Drum_Roll": {
+              "correct": 5,
+              "total": 5,
+              "accuracy": 1.0
+            }
+          }
+        },
+        {
+          "name": "CNN_BiLSTM",
+          "n_params": 92966,
+          "cv_mean": 0.6403221403221404,
+          "cv_std": 0.03934753228342339,
+          "cv_accs": [
+            0.6936936936936937,
+            0.6272727272727273,
+            0.6
+          ],
+          "test_acc": 0.6666666865348816,
+          "test_loss": 0.6442264318466187,
+          "classification_report": {
+            "Double_Lower": {
+              "precision": 0.35714285714285715,
+              "recall": 1.0,
+              "f1-score": 0.5263157894736842,
+              "support": 5.0
+            },
+            "Double_Pistol_Recoil": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 5.0
+            },
+            "Double_Raise": {
+              "precision": 1.0,
+              "recall": 0.8,
+              "f1-score": 0.8888888888888888,
+              "support": 5.0
+            },
+            "Double_Wiggle": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1-score": 0.0,
+              "support": 5.0
+            },
+            "Double_cmere": {
+              "precision": 0.8333333333333334,
+              "recall": 1.0,
+              "f1-score": 0.9090909090909091,
+              "support": 5.0
+            },
+            "Drum_Roll": {
+              "precision": 1.0,
+              "recall": 0.2,
+              "f1-score": 0.3333333333333333,
+              "support": 5.0
+            },
+            "accuracy": 0.6666666666666666,
+            "macro avg": {
+              "precision": 0.6984126984126985,
+              "recall": 0.6666666666666666,
+              "f1-score": 0.6096048201311359,
+              "support": 30.0
+            },
+            "weighted avg": {
+              "precision": 0.6984126984126984,
+              "recall": 0.6666666666666666,
+              "f1-score": 0.6096048201311359,
+              "support": 30.0
+            }
+          },
+          "per_class": {
+            "Double_Lower": {
+              "correct": 5,
+              "total": 5,
+              "accuracy": 1.0
+            },
+            "Double_Pistol_Recoil": {
+              "correct": 5,
+              "total": 5,
+              "accuracy": 1.0
+            },
+            "Double_Raise": {
+              "correct": 4,
+              "total": 5,
+              "accuracy": 0.8
+            },
+            "Double_Wiggle": {
+              "correct": 0,
+              "total": 5,
+              "accuracy": 0.0
+            },
+            "Double_cmere": {
+              "correct": 5,
+              "total": 5,
+              "accuracy": 1.0
+            },
+            "Drum_Roll": {
+              "correct": 1,
+              "total": 5,
+              "accuracy": 0.2
+            }
+          }
+        }
+      ]
+    },
+    {
+      "held_out": "6_Harry",
+      "n_train_trials": 331,
+      "n_test_trials": 30,
+      "variants": [
+        {
+          "name": "CNN_LSTM",
+          "n_params": 55846,
+          "cv_mean": 0.7794430794430794,
+          "cv_std": 0.0115493635857334,
+          "cv_accs": [
+            0.7837837837837838,
+            0.7909090909090909,
+            0.7636363636363637
+          ],
+          "test_acc": 0.6666666865348816,
+          "test_loss": 1.3188927173614502,
+          "classification_report": {
+            "Double_Lower": {
+              "precision": 0.5,
+              "recall": 1.0,
+              "f1-score": 0.6666666666666666,
+              "support": 5.0
+            },
+            "Double_Pistol_Recoil": {
+              "precision": 0.5,
+              "recall": 1.0,
+              "f1-score": 0.6666666666666666,
+              "support": 5.0
+            },
+            "Double_Raise": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 5.0
+            },
+            "Double_Wiggle": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1-score": 0.0,
+              "support": 5.0
+            },
+            "Double_cmere": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1-score": 0.0,
+              "support": 5.0
+            },
+            "Drum_Roll": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1-score": 1.0,
+              "support": 5.0
+            },
+            "accuracy": 0.6666666666666666,
+            "macro avg": {
+              "precision": 0.5,
+              "recall": 0.6666666666666666,
+              "f1-score": 0.5555555555555555,
+              "support": 30.0
+            },
+            "weighted avg": {
+              "precision": 0.5,
+              "recall": 0.6666666666666666,
+              "f1-score": 0.5555555555555555,
+              "support": 30.0
+            }
+          },
+          "per_class": {
+            "Double_Lower": {
+              "correct": 5,
+              "total": 5,
+              "accuracy": 1.0
+            },
+            "Double_Pistol_Recoil": {
+              "correct": 5,
+              "total": 5,
+              "accuracy": 1.0
+            },
+            "Double_Raise": {
+              "correct": 5,
+              "total": 5,
+              "accuracy": 1.0
+            },
+            "Double_Wiggle": {
+              "correct": 0,
+              "total": 5,
+              "accuracy": 0.0
+            },
+            "Double_cmere": {
+              "correct": 0,
+              "total": 5,
+              "accuracy": 0.0
+            },
+            "Drum_Roll": {
+              "correct": 5,
+              "total": 5,
+              "accuracy": 1.0
+            }
+          }
+        },
+        {
+          "name": "CNN_BiLSTM",
+          "n_params": 92966,
+          "cv_mean": 0.7944307944307943,
+          "cv_std": 0.05408841634814836,
+          "cv_accs": [
+            0.8378378378378378,
+            0.7181818181818181,
+            0.8272727272727273
+          ],
+          "test_acc": 0.5,
+          "test_loss": 0.7719768285751343,
+          "classification_report": {
+            "Double_Lower": {
+              "precision": 0.5,
+              "recall": 1.0,
+              "f1-score": 0.6666666666666666,
+              "support": 5.0
+            },
+            "Double_Pistol_Recoil": {
+              "precision": 0.8,
+              "recall": 0.8,
+              "f1-score": 0.8,
+              "support": 5.0
+            },
+            "Double_Raise": {
+              "precision": 1.0,
+              "recall": 0.2,
+              "f1-score": 0.3333333333333333,
+              "support": 5.0
+            },
+            "Double_Wiggle": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1-score": 0.0,
+              "support": 5.0
+            },
+            "Double_cmere": {
+              "precision": 0.5,
+              "recall": 0.8,
+              "f1-score": 0.6153846153846154,
+              "support": 5.0
+            },
+            "Drum_Roll": {
+              "precision": 0.5,
+              "recall": 0.2,
+              "f1-score": 0.2857142857142857,
+              "support": 5.0
+            },
+            "accuracy": 0.5,
+            "macro avg": {
+              "precision": 0.5499999999999999,
+              "recall": 0.5,
+              "f1-score": 0.4501831501831502,
+              "support": 30.0
+            },
+            "weighted avg": {
+              "precision": 0.55,
+              "recall": 0.5,
+              "f1-score": 0.4501831501831502,
+              "support": 30.0
+            }
+          },
+          "per_class": {
+            "Double_Lower": {
+              "correct": 5,
+              "total": 5,
+              "accuracy": 1.0
+            },
+            "Double_Pistol_Recoil": {
+              "correct": 4,
+              "total": 5,
+              "accuracy": 0.8
+            },
+            "Double_Raise": {
+              "correct": 1,
+              "total": 5,
+              "accuracy": 0.2
+            },
+            "Double_Wiggle": {
+              "correct": 0,
+              "total": 5,
+              "accuracy": 0.0
+            },
+            "Double_cmere": {
+              "correct": 4,
+              "total": 5,
+              "accuracy": 0.8
+            },
+            "Drum_Roll": {
+              "correct": 1,
+              "total": 5,
+              "accuracy": 0.2
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

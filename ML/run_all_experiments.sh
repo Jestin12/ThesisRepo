@@ -48,17 +48,17 @@ run_exp () {
 # ──────────────────────────────────────────────────────────────────────────────
 # Group A — Nothing-class ablation (full sensors, both hands)
 # ──────────────────────────────────────────────────────────────────────────────
-run_exp A1 "Full sensors (flex+ypr+accel, both hands), INCLUDING Double_Nothing class" \
-    --use_flex --use_ypr --use_accel --use_left --use_right --include_nothing
+# run_exp A1 "Full sensors (flex+ypr+accel, both hands), INCLUDING Double_Nothing class" \
+#     --use_flex --use_ypr --use_accel --use_left --use_right --include_nothing
 
-run_exp A2 "Full sensors (flex+ypr+accel, both hands), EXCLUDING Double_Nothing class" \
-    --use_flex --use_ypr --use_accel --use_left --use_right
+# run_exp A2 "Full sensors (flex+ypr+accel, both hands), EXCLUDING Double_Nothing class" \
+#     --use_flex --use_ypr --use_accel --use_left --use_right
 
 # ──────────────────────────────────────────────────────────────────────────────
 # Group B — Sensor-modality ablation, Nothing excluded, both hands
 # ──────────────────────────────────────────────────────────────────────────────
 run_exp B_flex       "Flex only (both hands), no Nothing" \
-    --use_flex --use_left --use_right
+    --use_flex --use_left --use_right 
 run_exp B_ypr        "YPR only (both hands), no Nothing" \
     --use_ypr --use_left --use_right
 run_exp B_accel      "Accelerometers only (both hands), no Nothing" \

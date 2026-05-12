@@ -35,6 +35,7 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import (
     Conv1D, MaxPooling1D, Flatten, Dense, Dropout,
     BatchNormalization, GlobalAveragePooling1D, Activation, Input,
+    LSTM, Bidirectional,
 )
 
 warnings.filterwarnings('ignore')
@@ -45,7 +46,7 @@ tf.random.set_seed(42)
 ap = argparse.ArgumentParser()
 ap.add_argument('--exp_id', required=True)
 ap.add_argument('--exp_label', default='')
-ap.add_argument('--data_root', default='./NewTestData/NewTestData',
+ap.add_argument('--data_root', default='./NewTestData',
                 help='Path to the directory that contains one folder per subject. '
                      'Each subject folder must contain a Dynamic/ subfolder with one folder per gesture.')
 ap.add_argument('--out_dir', default='./loso_results',
@@ -61,7 +62,7 @@ ap.add_argument('--use_right', action='store_true')
 ap.add_argument('--epochs', type=int, default=8)
 ap.add_argument('--cv_folds', type=int, default=3)
 ap.add_argument('--max_subjects', type=int, default=0)  # 0 = all
-ap.add_argument('--variants', default='Baseline,Shallow,Deep,BN_GAP,WideKernel')
+ap.add_argument('--variants', default='Baseline,Shallow,Deep,BN_GAP,WideKernel,CNN_LSTM,CNN_BiLSTM')
 ap.add_argument('--fold_start', type=int, default=0, help='0-based fold index to start (inclusive)')
 ap.add_argument('--fold_end',   type=int, default=-1, help='0-based fold index to end (exclusive). -1 = all')
 ap.add_argument('--resume_from', default='', help='Path to JSON of partial results to merge with')
@@ -282,8 +283,36 @@ def build_wide(s, c, n):
         Dense(n, activation='softmax')], name='WideKernel')
     m.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy']); return m
 
+def build_cnn_lstm(s, c, n):
+    # Conv front-end (padding='same' so MaxPooling controls temporal downsampling)
+    # -> LSTM -> Dense head. Matches build_cnn_lstm in 1D_CNN_variants_lstm.ipynb.
+    m = Sequential([Input(shape=(s, c)),
+        Conv1D(32, 4, padding='same', activation='relu'), MaxPooling1D(2),
+        Conv1D(64, 4, padding='same', activation='relu'), MaxPooling1D(2),
+        Dropout(0.3),
+        LSTM(64, return_sequences=False),
+        Dropout(0.3),
+        Dense(64, activation='relu'), Dropout(0.3),
+        Dense(n, activation='softmax')], name='CNN_LSTM')
+    m.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy']); return m
+
+def build_cnn_bilstm(s, c, n):
+    # Same Conv front-end as CNN_LSTM but the recurrent stage is bidirectional,
+    # so each timestep sees both past and future context within the trial.
+    # Matches build_cnn_bilstm in 1D_CNN_variants_lstm.ipynb.
+    m = Sequential([Input(shape=(s, c)),
+        Conv1D(32, 4, padding='same', activation='relu'), MaxPooling1D(2),
+        Conv1D(64, 4, padding='same', activation='relu'), MaxPooling1D(2),
+        Dropout(0.3),
+        Bidirectional(LSTM(64, return_sequences=False)),
+        Dropout(0.3),
+        Dense(64, activation='relu'), Dropout(0.3),
+        Dense(n, activation='softmax')], name='CNN_BiLSTM')
+    m.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy']); return m
+
 ALL_BUILDERS = {'Baseline': build_baseline, 'Shallow': build_shallow,
-                'Deep': build_deep, 'BN_GAP': build_bn_gap, 'WideKernel': build_wide}
+                'Deep': build_deep, 'BN_GAP': build_bn_gap, 'WideKernel': build_wide,
+                'CNN_LSTM': build_cnn_lstm, 'CNN_BiLSTM': build_cnn_bilstm}
 WANT = [v.strip() for v in args.variants.split(',') if v.strip()]
 VARIANTS = [(n, ALL_BUILDERS[n]) for n in WANT if n in ALL_BUILDERS]
 
