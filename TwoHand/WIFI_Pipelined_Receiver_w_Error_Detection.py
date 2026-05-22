@@ -18,7 +18,7 @@ DELAY_AFTER_ENTER = 2.0             # delay after pressing Enter before requests
 
 
 
-OUTPUT_DIR = r"/home/jestin/ThesisRepo/ML/NewTestData/20_Mia/NewDynamic/Double_Thumbs" 
+OUTPUT_DIR = r"/home/jestin/ThesisRepo/ML/NewTestData/8_Jestin/NewNewDynamic/Double_Snap" 
 
 
 
